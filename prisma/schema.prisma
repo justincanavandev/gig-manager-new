@@ -71,3 +71,79 @@ model VerificationToken {
 
     @@unique([identifier, token])
 }
+
+// Music models
+
+model Musician {
+    id          String                   @id @default(cuid())
+    name        String
+    instruments MusiciansOnInstruments[]
+    phoneNumber String
+    email       String                   @unique
+    gigs        GigsOnMusicians[]
+}
+
+model Instrument {
+    id        String                   @id @default(cuid())
+    name      String                   @unique
+    musicians MusiciansOnInstruments[]
+    gigs      GigsOnInstrument[]
+}
+
+model MusiciansOnInstruments {
+    musician     Musician   @relation(fields: [musicianId], references: [id])
+    musicianId   String
+    instrument   Instrument @relation(fields: [instrumentId], references: [id])
+    instrumentId String
+
+    @@id([musicianId, instrumentId])
+}
+
+model GigsOnMusicians {
+    musician   Musician @relation(fields: [musicianId], references: [id])
+    musicianId String
+    gig        Gig      @relation(fields: [gigId], references: [id])
+    gigId      String
+
+    @@id([musicianId, gigId])
+}
+
+model GigsOnInstrument {
+    gig          Gig        @relation(fields: [gigId], references: [id])
+    gigId        String
+    instrument   Instrument @relation(fields: [instrumentId], references: [id])
+    instrumentId String
+
+    @@id([gigId, instrumentId])
+}
+
+model Gig {
+    id              String             @id @default(cuid())
+    name            String             @unique
+    startTime       DateTime
+    endTime         DateTime
+    venue           Venue              @relation(fields: [venueId], references: [id])
+    venueId         String
+    musicians       GigsOnMusicians[]
+    instrumentation GigsOnInstrument[]
+}
+
+model Venue {
+    id       String    @id @default(cuid())
+    name     String    @unique
+    gigs     Gig[]
+    location Location?
+}
+
+model Location {
+    id      String @id @default(cuid())
+    address String
+    city    String
+    state   String
+    zipCode String
+    venue   Venue  @relation(fields: [venueId], references: [id])
+    venueId String @unique
+}
+
+// Musician hasMany Gigs, Gigs hasMany Musicians
+// Gig hasMany instruments, instrument hasManyGigs
