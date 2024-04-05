@@ -1,9 +1,4 @@
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  // publicProcedure,
-} from "~/server/api/trpc";
-// import type { Instrument } from "@prisma/client";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import z from "zod";
 
@@ -27,93 +22,41 @@ export const musicianRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { name, instrument, phoneNumber, email } = input;
-      const allInstruments = await ctx.db.instrument.findMany();
-    //   const dupInst = allInstruments.find(
-    //     (inst: Instrument) => inst.name === instrument,
-    //   );
 
       try {
-        // if (!dupInst) {
-          const musician = await ctx.db.musician.create({
-            data: {
-              name,
-              email,
-              phoneNumber,
-              instruments: {
-                create: [
-                  {
-                    instrument: {
-                      connectOrCreate: {
-                        where: {
-                          name: instrument,
-                        },
-                        create: {
-                          name: instrument,
-                    
-                        },
+        const musician = await ctx.db.musician.create({
+          data: {
+            name,
+            email,
+            phoneNumber,
+            instruments: {
+              create: [
+                {
+                  instrument: {
+                    connectOrCreate: {
+                      where: {
+                        name: instrument,
                       },
-                      // create: {
-                      //   name: instrument
-                      // }
+                      create: {
+                        name: instrument,
+                      },
                     },
                   },
-                ],
-              },
-              //   gigs: {
-              //     create: [
-              //         {
-              //             gig: {
-              //                 connect: {
-
-              //                 }
-              //             }
-              //         }
-              //     ]
-              //   }
-            //   gigs: {
-            //     create: [],
-            //   },
+                },
+              ],
             },
+          },
+        });
+        if (!musician) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Unable to fetch instruments",
           });
-          if (!musician) {
-            throw new TRPCError({
-              code: "BAD_REQUEST",
-              message: "Unable to fetch instruments",
-              cause: `allInstruments: ${!!allInstruments}`,
-            });
-          } else {
-            return musician;
-          }
-        // } 
-        // else {
-        //   const musician = await ctx.db.musician.create({
-        //     data: {
-        //       name,
-        //       email,
-        //       phoneNumber,
-        //       instruments: {
-        //         create: {
-        //           instrument: {
-        //             connect: {
-        //               id: dupInst.id,
-        //             },
-        //           },
-        //         },
-        //       },
-        //     },
-        //   });
-        //   if (!musician) {
-        //     throw new TRPCError({
-        //       code: "BAD_REQUEST",
-        //       message: "Unable to fetch instruments",
-        //       cause: `allInstruments: ${!!allInstruments}`,
-        //     });
-        //   } else {
-        //     return musician;
-        //   }
-        // }
+        } else {
+          return musician;
+        }
       } catch (e) {
-        throw e;
+        console.error("Unable to fetch instruments", e);
       }
     }),
   // delete: protectedProcedure
