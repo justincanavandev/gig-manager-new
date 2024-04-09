@@ -9,15 +9,6 @@ export const gigRouter = createTRPCRouter({
         name: z.string().min(3),
         startTime: z.date(),
         endTime: z.date(),
-        // venue: z.object({
-        //   name: z.string(),
-        //   location: z.object({
-        //     address: z.string(),
-        //     city: z.string(),
-        //     state: z.string(),
-        //     zipCode: z.string(),
-        //   }),
-        // }),
         venue: z.string(),
         musicianIds: z.string().array(),
         instruments: z.string().array(),
@@ -27,32 +18,12 @@ export const gigRouter = createTRPCRouter({
       const { name, startTime, endTime, venue, musicianIds, instruments } =
         input;
 
-      // const { location } = venue;
-
       try {
         const gig = await ctx.db.gig.create({
           data: {
             name,
             startTime,
             endTime,
-            // venue: {
-            //   connectOrCreate: {
-            //     where: {
-            //       name,
-            //     },
-            //     create: {
-            //       name
-            //       location: {
-            //         create: {
-            //           address: location.address,
-            //           city: location.city,
-            //           state: location.state,
-            //           zipCode: location.zipCode,
-            //         },
-            //       },
-            //     },
-            //   },
-            // },
             venue: {
               connect: {
                 name: venue
@@ -84,7 +55,7 @@ export const gigRouter = createTRPCRouter({
           throw new TRPCError({
             code: "BAD_REQUEST",
             message: "Unable to create gig",
-            // cause: ""
+
           });
         }
 
