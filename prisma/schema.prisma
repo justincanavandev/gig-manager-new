@@ -78,7 +78,7 @@ model Instrument {
 }
 
 model MusiciansOnInstruments {
-    musician     Musician   @relation(fields: [musicianId], references: [id])
+    musician     Musician   @relation(fields: [musicianId], references: [id], onDelete: Cascade)
     musicianId   String
     instrument   Instrument @relation(fields: [instrumentId], references: [id], onDelete: Cascade)
     instrumentId String
@@ -87,7 +87,7 @@ model MusiciansOnInstruments {
 }
 
 model GigsOnMusicians {
-    musician   Musician @relation(fields: [musicianId], references: [id])
+    musician   Musician @relation(fields: [musicianId], references: [id], onDelete: Cascade)
     musicianId String
     gig        Gig      @relation(fields: [gigId], references: [id])
     gigId      String
