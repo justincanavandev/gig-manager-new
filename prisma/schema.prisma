@@ -89,14 +89,14 @@ model MusiciansOnInstruments {
 model GigsOnMusicians {
     musician   Musician @relation(fields: [musicianId], references: [id], onDelete: Cascade)
     musicianId String
-    gig        Gig      @relation(fields: [gigId], references: [id])
+    gig        Gig      @relation(fields: [gigId], references: [id], onDelete: Cascade)
     gigId      String
 
     @@id([musicianId, gigId])
 }
 
 model GigsOnInstrument {
-    gig          Gig        @relation(fields: [gigId], references: [id])
+    gig          Gig        @relation(fields: [gigId], references: [id], onDelete: Cascade)
     gigId        String
     instrument   Instrument @relation(fields: [instrumentId], references: [id], onDelete: Cascade)
     instrumentId String
@@ -109,7 +109,7 @@ model Gig {
     name            String             @unique
     startTime       DateTime
     endTime         DateTime
-    venue           Venue              @relation(fields: [venueId], references: [id])
+    venue           Venue?              @relation(fields: [venueId], references: [id])
     venueId         String
     musicians       GigsOnMusicians[]
     instrumentation GigsOnInstrument[]
@@ -128,7 +128,7 @@ model Location {
     city    String
     state   String
     zipCode String
-    venue   Venue  @relation(fields: [venueId], references: [id])
+    venue   Venue  @relation(fields: [venueId], references: [id], onDelete: Cascade)
     venueId String @unique
 }
 
