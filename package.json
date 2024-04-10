@@ -25,6 +25,7 @@
     "@trpc/next": "next",
     "@trpc/react-query": "next",
     "@trpc/server": "next",
+    "luxon": "^3.4.4",
     "next": "^14.1.3",
     "next-auth": "^4.24.6",
     "react": "18.2.0",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "@types/eslint": "^8.56.2",
+    "@types/luxon": "^3.4.2",
     "@types/node": "^20.11.20",
     "@types/react": "^18.2.57",
     "@types/react-dom": "^18.2.19",

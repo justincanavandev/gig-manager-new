@@ -1,8 +1,26 @@
-import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import z from "zod"
+import z from "zod";
+import { returnDataOrError } from "~/server/utils/trpcErrorHandler";
 
 export const gigRouter = createTRPCRouter({
+  getAll: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const gigs = await ctx.db.gig.findMany({
+        orderBy: {
+          startTime: "asc"
+        },
+        include: {
+          venue: true,
+          musicians: true,
+          instrumentation: true,
+        },
+      });
+      // return returnDataOrError(gigs, "fetch", "gigs");
+      return gigs
+    } catch (e) {
+      console.error("Unable to fetch gigs");
+    }
+  }),
   create: protectedProcedure
     .input(
       z.object({
@@ -26,9 +44,8 @@ export const gigRouter = createTRPCRouter({
             endTime,
             venue: {
               connect: {
-                name: venue
-
-              }
+                name: venue,
+              },
             },
             musicians: {
               create: musicianIds.map((id) => ({
@@ -51,13 +68,9 @@ export const gigRouter = createTRPCRouter({
           },
         });
 
-        if (!gig) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "Unable to create gig",
-
-          });
-        }
+  
+        // returnDataOrError(gig, "create", "gig");
+        return gig
 
         return gig;
       } catch (e) {
