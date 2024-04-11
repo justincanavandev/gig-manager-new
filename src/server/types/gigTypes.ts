@@ -37,3 +37,12 @@ export type MusiciansFromAllGigs = {
   musicianId: string;
   gigId: string;
 }[];
+
+export type GigForm = {
+  name: string;
+  venueId: string;
+  startTime: Date;
+  endTime: Date;
+  instrumentation: string[];
+  musicianIds: string[];
+};

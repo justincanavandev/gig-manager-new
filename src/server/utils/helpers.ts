@@ -68,6 +68,11 @@ export const parseDate = (date: Date) => {
   return { parsedDate, parsedTime, parsedTimeForCal, parsedDateForCal };
 };
 
+export const compareTimes = (startTime: Date, endTime: Date) => {
+
+  return new Date(startTime) < new Date(endTime)
+}
+
 export const hasDateHappened = (date: Date) => {
   return date < new Date()
 }

@@ -1,27 +1,96 @@
-"use client";
+import { api } from "~/trpc/server";
+import StoreProvider from "~/app/StoreProvider";
+import GigForm from "~/app/_components/gigs/create/GigForm";
+import type { GigForm as GigFormType } from "~/server/types/gigTypes";
 
-import { api } from "~/trpc/react";
+const GigCreate = async () => {
+  // const { mutate: createGig } = api.gig.create.useMutation();
+  const allInstruments = await api.instrument.getAll();
 
-const GigCreate = () => {
-  const { mutate: createGig } = api.gig.create.useMutation();
 
-  const handleCreateGig = () => {
-    const dateNow = new Date();
-    const result = createGig({
-      name: "gig 3",
-      startTime: dateNow,
-      endTime: dateNow,
-      venue: "gig 1",
-      musicianIds: ["clullr7rl000050el2mv5d1f1", "clullucsa000250elpf5nr8qp"],
-      instruments: ["Guitar"],
-    });
-    return result;
+  // const handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
+  //   const { name, value } = e.target
+  //   setGigForm((prevFormData: GigForm) => ({
+  //     ...prevFormData,
+  //     [name]: value,
+  //   }))
+  // }
+
+  const handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void = (e) => {
+    e.preventDefault();
+
+    // const areInstrumentsCovered: boolean | (boolean | string[])[] =
+    //   checkInstrumentation(gigForm.instrumentation, gigForm.selectedMusicians)
+
+    // if (areInstrumentsCovered === true) {
+    //   console.log("send data")
+    //   //do mutation, onSuccess, form submitted
+    //   console.log("Form submitted:", gigForm)
+    // } else {
+    //   if (Array.isArray(areInstrumentsCovered[1])) {
+    //     const neededInstruments: string = areInstrumentsCovered[1]
+    //       .toString()
+    //       .split(",")
+    //       .join(", ")
+
+    //     //send modal to user, tell them what instruments are needed
+
+    //     console.log(`Please make sure to add ${neededInstruments}`)
+    //   }
+    // }
   };
+  // const handleCreateGig = () => {
+  //   const dateNow = new Date();
+  //   const result = createGig({
+  //     name: "gig 3",
+  //     startTime: dateNow,
+  //     endTime: dateNow,
+  //     venue: "gig 1",
+  //     musicianIds: ["clullr7rl000050el2mv5d1f1", "clullucsa000250elpf5nr8qp"],
+  //     instruments: ["Guitar"],
+  //   });
+  //   return result;
+  // };
+
+  const defaultGigForm: GigFormType = {
+    name: "",
+    venueId: "",
+    startTime: new Date(),
+    endTime: new Date(),
+    instrumentation: [],
+    musicianIds: [],
+  };
+
   return (
-    <div>
-      <h1>Gig create</h1>
-      <button className="border" onClick={handleCreateGig}>Create Gig</button>
-    </div>
+    <StoreProvider gigForm={defaultGigForm}>
+      <div>
+        <h1>Gig create</h1>
+        {/* <button className="border" onClick={handleCreateGig}>Create Gig</button> */}
+        <GigForm instruments={allInstruments ? allInstruments : []} />
+        {/* <label>
+        Instrumentation:
+        <select
+          className="border border-black"
+          name="instrumentation"
+          // onChange={(e) => addInstrument(e)}
+          // onChange={(e) => {
+          //   return dispatch(
+          //     setGigForm({
+                
+          //     }),
+          //   );
+          // }}
+        >
+          <option value="">Select an instrument</option>
+          {allInstruments?.map((instrument) => (
+            <option key={`${instrument.name}-select`} value={instrument.name}>
+              {instrument.name}
+            </option>
+          ))}
+        </select>
+      </label> */}
+      </div>
+    </StoreProvider>
   );
 };
 
