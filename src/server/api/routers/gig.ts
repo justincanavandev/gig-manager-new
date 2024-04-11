@@ -60,13 +60,13 @@ export const gigRouter = createTRPCRouter({
         name: z.string().min(3),
         startTime: z.date(),
         endTime: z.date(),
-        venue: z.string(),
+        venueId: z.string(),
         musicianIds: z.string().array(),
         instruments: z.string().array(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { name, startTime, endTime, venue, musicianIds, instruments } =
+      const { name, startTime, endTime, venueId, musicianIds, instruments } =
         input;
 
       try {
@@ -77,7 +77,7 @@ export const gigRouter = createTRPCRouter({
             endTime,
             venue: {
               connect: {
-                name: venue,
+                id: venueId,
               },
             },
             musicians: {
