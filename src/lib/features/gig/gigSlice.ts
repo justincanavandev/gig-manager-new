@@ -32,4 +32,4 @@ export const { setGigForm } = gigSlice.actions;
 
 
 export const useGigForm = () =>
-  useSelector((state: RootState) => state.gigForm);
+  useSelector((state: RootState) => state.gigForm.gigForm);

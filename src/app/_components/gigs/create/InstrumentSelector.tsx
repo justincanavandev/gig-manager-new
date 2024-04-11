@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
 import type { Instrument } from "@prisma/client";
-import { GigForm } from "~/server/types/gigTypes";
+
 import { useDispatch } from "react-redux";
 import { setGigForm } from "~/lib/features/gig/gigSlice";
 import { useGigForm } from "~/lib/features/gig/gigSlice";
@@ -11,9 +11,8 @@ type GigFormProps = {
 };
 
 const InstrumentSelector = ({ instruments }: GigFormProps) => {
-
-    const dispatch = useDispatch();
-    const gigForm = useGigForm();
+  const dispatch = useDispatch();
+  const gigForm = useGigForm();
 
   return (
     <>
@@ -23,13 +22,11 @@ const InstrumentSelector = ({ instruments }: GigFormProps) => {
           className="border border-black"
           name="instrumentation"
           onChange={(e) => {
+            const { instrumentation } = gigForm;
             return dispatch(
               setGigForm({
-                ...gigForm.gigForm,
-                instrumentation: [
-                  ...gigForm.gigForm.instrumentation,
-                  e.target.value,
-                ],
+                ...gigForm,
+                instrumentation: [...instrumentation, e.target.value],
               }),
             );
           }}

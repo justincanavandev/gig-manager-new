@@ -1,6 +1,5 @@
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-// import { compareTimes } from "../EventCreate/utils/dateTime"
 import { useGigForm } from "~/lib/features/gig/gigSlice";
 import { setGigForm } from "~/lib/features/gig/gigSlice";
 import { compareTimes } from "~/server/utils/helpers";
@@ -20,14 +19,14 @@ const DateTimePicker: React.FC<DateTimeProps> = ({ index }) => {
     if (index === 0) {
       dispatch(
         setGigForm({
-          ...gigForm.gigForm,
+          ...gigForm,
           startTime: date,
         }),
       );
     } else {
       dispatch(
         setGigForm({
-          ...gigForm.gigForm,
+          ...gigForm,
           endTime: date,
         }),
       );
@@ -38,17 +37,17 @@ const DateTimePicker: React.FC<DateTimeProps> = ({ index }) => {
     <div>
       <ReactDatePicker
         className={
-          compareTimes(gigForm.gigForm.startTime, gigForm.gigForm.endTime)
+          compareTimes(gigForm.startTime, gigForm.endTime)
             ? "border border-green-500"
             : "border border-red-500"
         }
-        minDate={index === 0 ? new Date() : gigForm.gigForm.startTime}
+        minDate={index === 0 ? new Date() : gigForm.startTime}
         showIcon
         showTimeSelect
         timeIntervals={15}
         dateFormat="MM/dd/yyyy h:mm aa"
         selected={
-          index === 0 ? gigForm.gigForm.startTime : gigForm.gigForm.endTime
+          index === 0 ? gigForm.startTime : gigForm.endTime
         }
         onChange={(date) => {
           date instanceof Date && handleDateChange(date);

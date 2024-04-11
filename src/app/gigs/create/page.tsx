@@ -16,29 +16,6 @@ const GigCreate = async () => {
   //   }))
   // }
 
-  const handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void = (e) => {
-    e.preventDefault();
-
-    // const areInstrumentsCovered: boolean | (boolean | string[])[] =
-    //   checkInstrumentation(gigForm.instrumentation, gigForm.selectedMusicians)
-
-    // if (areInstrumentsCovered === true) {
-    //   console.log("send data")
-    //   //do mutation, onSuccess, form submitted
-    //   console.log("Form submitted:", gigForm)
-    // } else {
-    //   if (Array.isArray(areInstrumentsCovered[1])) {
-    //     const neededInstruments: string = areInstrumentsCovered[1]
-    //       .toString()
-    //       .split(",")
-    //       .join(", ")
-
-    //     //send modal to user, tell them what instruments are needed
-
-    //     console.log(`Please make sure to add ${neededInstruments}`)
-    //   }
-    // }
-  };
   // const handleCreateGig = () => {
   //   const dateNow = new Date();
   //   const result = createGig({
