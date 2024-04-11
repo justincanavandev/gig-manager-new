@@ -1,18 +1,14 @@
 "use client";
 
-import type { Instrument } from "@prisma/client";
-
 import { useDispatch } from "react-redux";
-import { setGigForm } from "~/lib/features/gig/gigSlice";
-import { useGigForm } from "~/lib/features/gig/gigSlice";
+import { setGigForm, useGigForm } from "~/lib/features/gig/gigSlice";
+import { useInstruments } from "~/lib/features/instrument/instrumentSlice";
 
-type GigFormProps = {
-  instruments: Instrument[];
-};
 
-const InstrumentSelector = ({ instruments }: GigFormProps) => {
+const InstrumentSelector = () => {
   const dispatch = useDispatch();
   const gigForm = useGigForm();
+  const instruments = useInstruments()
 
   return (
     <>

@@ -1,21 +1,22 @@
-'use client'
+"use client";
 
 import type { GigForm } from "~/server/types/gigTypes";
-import type { Instrument } from "@prisma/client";
 import InstrumentSelector from "./InstrumentSelector";
 import DateSelector from "./DateSelector";
+import { useInstruments } from "~/lib/features/instrument/instrumentSlice";
 
-type GigFormProps = {
-  instruments: Instrument[];
-};
 
-const GigForm = ({ instruments }: GigFormProps) => {
+const GigForm = () => {
+
+  const instruments = useInstruments()
+
+  console.log('instruments', instruments)
 
   return (
     <>
-      <form onSubmit={(e)=> console.log('e', e)}>
-      <DateSelector />
-      <InstrumentSelector instruments={instruments} />
+      <form onSubmit={(e) => console.log("e", e)}>
+        <DateSelector />
+        <InstrumentSelector />
       </form>
     </>
   );

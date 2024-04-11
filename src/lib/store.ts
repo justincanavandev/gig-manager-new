@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { gigSlice } from "./features/gig/gigSlice"
+import { instrumentSlice } from "./features/instrument/instrumentSlice"
 
 export const makeStore = () => 
   configureStore({
     reducer: {
       gigForm: gigSlice.reducer,
+      instruments: instrumentSlice.reducer
       
     }
   })
