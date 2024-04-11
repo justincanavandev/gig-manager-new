@@ -1,25 +1,39 @@
 export type SingleGig = {
-    id: string;
+  id: string;
+  name: string;
+  startTime: Date;
+  endTime: Date;
+  venue: { name: string } | null;
+  musicians: {
+    musician: {
+      name: string;
+      instruments: {
+        instrument: {
+          id: string;
+          name: string;
+        };
+      }[];
+    };
+    musicianId: string;
+    gigId: string;
+  }[];
+  instrumentation: {
+    gigId: string;
+    instrumentId: string;
+    instrument: { name: string };
+  }[];
+};
+
+export type MusiciansFromAllGigs = {
+  musician: {
     name: string;
-    startTime: Date;
-    endTime: Date;
-    venue: { name: string } | null;
-    musicians: {
-      musician: { 
+    instruments: {
+      instrument: {
+        id: string;
         name: string;
-        instruments: {
-          instrument: {
-            id: string;
-            name: string;
-          };
-        }[];
       };
-      musicianId: string;
-      gigId: string;
-    }[];
-    instrumentation: {
-      gigId: string;
-      instrumentId: string;
-      instrument: { name: string };
     }[];
   };
+  musicianId: string;
+  gigId: string;
+}[];
