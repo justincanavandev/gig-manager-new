@@ -36,4 +36,4 @@ export const venueSlice = createSlice({
 
 export const { setVenues } = venueSlice.actions;
 
-export const useVenues = () => useSelector((state: RootState) => state.venues);
+export const useVenues = () => useSelector((state: RootState) => state.venues.venues);
