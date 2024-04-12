@@ -1,0 +1,26 @@
+import { createTRPCRouter, publicProcedure } from "../trpc";
+import { TRPCError } from "@trpc/server";
+
+export const venueRouter = createTRPCRouter({
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    try {
+      const allVenues = await ctx.db.venue.findMany({
+        include: {
+          location: true,
+        },
+      });
+
+      if (!allVenues) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Unable to fetch venues",
+          cause: `allVenues: ${!!allVenues}`,
+        });
+      } else {
+        return allVenues;
+      }
+    } catch (e) {
+      console.error("Unable to fetch venues", e);
+    }
+  }),
+});

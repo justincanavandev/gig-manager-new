@@ -7,13 +7,17 @@ import type { GigForm } from "~/server/types/gigTypes";
 import type { AppStore } from "../lib/store";
 import { setInstruments } from "~/lib/features/instrument/instrumentSlice";
 import type { Instrument } from "@prisma/client";
+import type { VenueType } from "~/server/types/venueTypes";
+import { setVenues } from "~/lib/features/venues/venueSlice";
 
 export default function StoreProvider({
   instruments,
   gigForm,
   children,
+  venues
 }: {
   instruments: Instrument[]
+  venues: VenueType[]
   gigForm: GigForm;
   children: React.ReactNode;
 }) {
@@ -24,6 +28,7 @@ export default function StoreProvider({
     storeRef.current = makeStore();
     storeRef.current.dispatch(setGigForm(gigForm));
     storeRef.current.dispatch(setInstruments(instruments))
+    storeRef.current.dispatch(setVenues(venues))
   }
 
   return <Provider store={storeRef.current}>{children}</Provider>;
