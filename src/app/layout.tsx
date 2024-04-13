@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import { api } from "~/trpc/server";
 import { TRPCReactProvider } from "~/trpc/react";
 import StoreProvider from "./StoreProvider";
-import { defaultGigForm } from "~/api/gig";
+import { defaultGigForm } from "~/default/gig";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -21,14 +21,20 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
-const allInstruments = await api.instrument.getAll();
+  const allInstruments = await api.instrument.getAll();
+  const allVenues = await api.venue.getAll();
+  const allMusicians = await api.musician.getAll();
 
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
-      <StoreProvider instruments={allInstruments ? allInstruments : []} gigForm={defaultGigForm}>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <StoreProvider
+          venues={allVenues ? allVenues : []}
+          instruments={allInstruments ? allInstruments : []}
+          musicians={allMusicians ? allMusicians : []}
+          gigForm={defaultGigForm}
+        >
+          <TRPCReactProvider>{children}</TRPCReactProvider>
         </StoreProvider>
       </body>
     </html>

@@ -62,5 +62,5 @@ function getBaseUrl() {
   return `http://localhost:${process.env.PORT ?? 3000}`;
 }
 
-export type RouterInputs = inferRouterInputs<AppRouter>
-export type RouterOutputs = inferRouterOutputs<AppRouter>
+export type RouterInput = inferRouterInputs<AppRouter>
+export type RouterOutput = inferRouterOutputs<AppRouter>

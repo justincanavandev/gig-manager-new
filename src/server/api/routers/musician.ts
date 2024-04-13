@@ -3,13 +3,33 @@ import { TRPCError } from "@trpc/server";
 import z from "zod";
 
 export const musicianRouter = createTRPCRouter({
-  // getAll: protectedProcedure.query(async ({ ctx }) => {
-  //   try {
-  //     return await ctx.db.musician.findMany();
-  //   } catch (e) {
-  //     throw e;
-  //   }
-  // }),
+  getAll: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const musicians = await ctx.db.musician.findMany({
+        include: {
+          instruments: {
+            select: {
+              instrument: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+      });
+      if (!musicians) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Unable to create musicians",
+        });
+      } else {
+        return musicians;
+      }
+    } catch (e) {
+      console.error("Unable to create musicians", e);
+    }
+  }),
   create: protectedProcedure
 
     .input(
@@ -50,13 +70,13 @@ export const musicianRouter = createTRPCRouter({
         if (!musician) {
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: "Unable to fetch instruments",
+            message: "Unable to create musicians",
           });
         } else {
           return musician;
         }
       } catch (e) {
-        console.error("Unable to fetch instruments", e);
+        console.error("Unable to create musicians", e);
       }
     }),
   // delete: protectedProcedure
