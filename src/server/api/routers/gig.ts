@@ -62,11 +62,11 @@ export const gigRouter = createTRPCRouter({
         endTime: z.date(),
         venueId: z.string(),
         musicianIds: z.string().array(),
-        instruments: z.string().array(),
+        instrumentation: z.string().array(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { name, startTime, endTime, venueId, musicianIds, instruments } =
+      const { name, startTime, endTime, venueId, musicianIds, instrumentation } =
         input;
 
       try {
@@ -90,7 +90,7 @@ export const gigRouter = createTRPCRouter({
               })),
             },
             instrumentation: {
-              create: instruments.map((name) => ({
+              create: instrumentation.map((name) => ({
                 instrument: {
                   connect: {
                     name,
