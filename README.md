@@ -1,21 +1,24 @@
-# Create T3 App
+# Gig Manager
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+This is a [T3 Stack](https://create.t3.gg/) gig managing application bootstrapped with `create-t3-app`.
 
-## What's next? How do I make an app with this?
+## Getting Started
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+1. Clone the repo
+2. `pnpm install`
+3. `pnpm run dev`
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+### Environment Variables
 
-- [Next.js](https://nextjs.org)
+The app shouldn't start without `.env` variables! Please don't hesitate to reach out, I would be happy to send over `.env` varaibles! Please do not commit to source control.
+
+## Useful Documentation
+- [Next.js (use App router)](https://nextjs.org)
 - [NextAuth.js](https://next-auth.js.org)
 - [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
 - [Tailwind CSS](https://tailwindcss.com)
 - [tRPC](https://trpc.io)
-
-## Learn More
+- [Tanstack Query](https://tanstack.com/query/latest/docs/framework/react/overview)
 
 To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
 
