@@ -21,7 +21,12 @@ const GigForm = () => {
       gigForm;
 
     createGig({
-      name, startTime, endTime, venueId, musicianIds, instruments: instrumentation
+      name,
+      startTime: new Date(startTime),
+      endTime: new Date(endTime),
+      venueId,
+      musicianIds,
+      instrumentation,
     });
   };
 

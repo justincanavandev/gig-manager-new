@@ -11,8 +11,8 @@ const initialState: GigFormState = {
   gigForm: {
     name: "",
     venueId: "",
-    startTime: new Date(),
-    endTime: new Date(),
+    startTime: new Date().toISOString(),
+    endTime: new Date().toISOString(),
     instrumentation: [],
     musicianIds: [],
   },

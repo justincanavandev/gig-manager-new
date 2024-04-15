@@ -32,11 +32,11 @@ const parseMinute = (minute: number) => {
 
 const getAmOrPm = (hour: number) => {
   if (hour <= 11) {
-    return "AM"
+    return "AM";
   } else {
-    return "PM"
+    return "PM";
   }
-}
+};
 
 export const parseDate = (date: Date) => {
   const luxonDateTime = DateTime.fromJSDate(date);
@@ -69,10 +69,9 @@ export const parseDate = (date: Date) => {
 };
 
 export const compareTimes = (startTime: Date, endTime: Date) => {
-
-  return new Date(startTime) < new Date(endTime)
-}
+  return startTime < endTime;
+};
 
 export const hasDateHappened = (date: Date) => {
-  return date < new Date()
-}
+  return date < new Date();
+};

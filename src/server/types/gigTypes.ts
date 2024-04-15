@@ -21,8 +21,8 @@ export type MusiciansFromAllGigs = {
 export type GigForm = {
   name: string;
   venueId: string;
-  startTime: Date;
-  endTime: Date;
+  startTime: string;
+  endTime: string;
   instrumentation: string[];
   musicianIds: string[];
 };
