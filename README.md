@@ -12,6 +12,13 @@ This is a [T3 Stack](https://create.t3.gg/) gig managing application bootstrappe
 
 The app shouldn't start without `.env` variables! Please don't hesitate to reach out, I would be happy to send over `.env` varaibles! Please do not commit to source control.
 
+## Contributing
+
+1. Create a branch (prepend with first initial and last name, for example `jcanavan/gig-create`)
+2. Make changes locally
+3. Push branch to remote repo
+4. Create a pull request
+
 ## Useful Documentation
 - [Next.js (use App router)](https://nextjs.org)
 - [NextAuth.js](https://next-auth.js.org)
