@@ -1,5 +1,6 @@
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
+import { genericErrorHandler } from "~/server/utils/errorHandling";
 
 export const venueRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
@@ -20,7 +21,7 @@ export const venueRouter = createTRPCRouter({
         return allVenues;
       }
     } catch (e) {
-      console.error("Unable to fetch venues", e);
+      throw genericErrorHandler(e);
     }
   }),
 });

@@ -1,6 +1,7 @@
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import z from "zod";
+import { genericErrorHandler } from "~/server/utils/errorHandling";
 
 export const musicianRouter = createTRPCRouter({
   getAll: protectedProcedure.query(async ({ ctx }) => {
@@ -27,7 +28,7 @@ export const musicianRouter = createTRPCRouter({
         return musicians;
       }
     } catch (e) {
-      console.error("Unable to create musicians", e);
+      throw genericErrorHandler(e)
     }
   }),
   create: protectedProcedure

@@ -1,34 +1,21 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 import type { RootState } from "~/lib/store";
-import type { VenueType } from "~/server/types/venueTypes";
+import type { GetAllVenuesOutput } from "~/server/types/venueTypes";
 
 export type VenueState = {
-  venues: VenueType[];
+  venues: GetAllVenuesOutput[];
 };
 
 const initialState: VenueState = {
-  venues: [
-    {
-      id: "",
-      name: "",
-      location: {
-        id: "",
-        address: "",
-        city: "",
-        state: "",
-        zipCode: "",
-        venueId: "",
-      },
-    },
-  ],
+  venues: [],
 };
 
 export const venueSlice = createSlice({
   name: "venues",
   initialState,
   reducers: {
-    setVenues: (state, action: PayloadAction<VenueType[]>) => {
+    setVenues: (state, action: PayloadAction<GetAllVenuesOutput[]>) => {
       state.venues = action.payload;
     },
   },
@@ -36,4 +23,5 @@ export const venueSlice = createSlice({
 
 export const { setVenues } = venueSlice.actions;
 
-export const useVenues = () => useSelector((state: RootState) => state.venues.venues);
+export const useVenues = () =>
+  useSelector((state: RootState) => state.venues.venues);

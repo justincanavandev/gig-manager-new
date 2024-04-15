@@ -1,11 +1,8 @@
 import { parseDate } from "~/server/utils/helpers";
-// import type { RouterOutputs } from "~/trpc/react";
-import type { SingleGig } from "~/server/types/gigTypes";
 import MusiciansModal from "./MusiciansModal";
+import type { SingleGig } from "~/server/types/gigTypes";
 
 /** @todo look into fixing this getAll RouterOutput. right now there's an issue w/ returning undefined and not accessing index[0] properly */
-
-// type SingleGig = RouterOutputs["gig"]["getAll"][0]
 
 type GigCardProps = {
   gig: SingleGig;

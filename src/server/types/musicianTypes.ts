@@ -1,6 +1,7 @@
-import type { RouterOutput } from "~/trpc/react";
+import type { RouterOutputs } from "~/trpc/react";
 
-export type GetAllMusiciansOutput = RouterOutput["musician"]["getAll"];
+export type GetAllMusiciansOutput = RouterOutputs["musician"]["getAll"];
+
 
 export type InstrumentName = {
   instrument: {

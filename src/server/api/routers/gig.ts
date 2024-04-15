@@ -1,6 +1,7 @@
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import z from "zod";
 import { TRPCError } from "@trpc/server";
+import { genericErrorHandler } from "~/server/utils/errorHandling";
 
 export const gigRouter = createTRPCRouter({
   getAll: protectedProcedure.query(async ({ ctx }) => {
@@ -51,7 +52,7 @@ export const gigRouter = createTRPCRouter({
 
       return gigs;
     } catch (e) {
-      console.error("Unable to fetch gigs");
+      throw genericErrorHandler(e)
     }
   }),
   create: protectedProcedure
