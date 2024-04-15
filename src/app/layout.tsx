@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import { api } from "~/trpc/server";
 import { TRPCReactProvider } from "~/trpc/react";
 import StoreProvider from "./StoreProvider";
-import { defaultGigForm } from "~/default/gig";
+import { defaultGigForm } from "~/default/defaultGigForm";
 
 const inter = Inter({
   subsets: ["latin"],
