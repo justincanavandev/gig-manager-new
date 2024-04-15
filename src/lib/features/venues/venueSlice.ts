@@ -4,7 +4,7 @@ import type { RootState } from "~/lib/store";
 import type { GetAllVenuesOutput } from "~/server/types/venueTypes";
 
 export type VenueState = {
-  venues: GetAllVenuesOutput[];
+  venues: GetAllVenuesOutput;
 };
 
 const initialState: VenueState = {
@@ -15,7 +15,7 @@ export const venueSlice = createSlice({
   name: "venues",
   initialState,
   reducers: {
-    setVenues: (state, action: PayloadAction<GetAllVenuesOutput[]>) => {
+    setVenues: (state, action: PayloadAction<GetAllVenuesOutput>) => {
       state.venues = action.payload;
     },
   },
