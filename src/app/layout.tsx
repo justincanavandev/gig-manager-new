@@ -23,7 +23,8 @@ export default async function RootLayout({
 }) {
   const allInstruments = await api.instrument.getAll();
   const allVenues = await api.venue.getAll();
-  const allMusicians = await api.musician.getAll();
+  // const users = await api.user.getAll()
+  // const allMusicians = await api.musician.getAll();
 
   return (
     <html lang="en">
@@ -31,7 +32,7 @@ export default async function RootLayout({
         <StoreProvider
           venues={allVenues ? allVenues : []}
           instruments={allInstruments ? allInstruments : []}
-          musicians={allMusicians ? allMusicians : []}
+          // musicians={allMusicians ? allMusicians : []}
           gigForm={defaultGigForm}
         >
           <TRPCReactProvider>{children}</TRPCReactProvider>

@@ -2,16 +2,16 @@ import type { Instrument } from "@prisma/client";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 import type { RootState } from "~/lib/store";
+// import type { GetAllInstruments } from "~/server/types/instrumentTypes";
+
+/** @todo Incorporate GetAllInstruments type */
 
 export type InstrumentState = {
   instruments: Instrument[];
 };
 
 const initialState = {
-  instruments: [{
-    id: "",
-    name: ""
-  }],
+  instruments: [{}],
 };
 
 export const instrumentSlice = createSlice({

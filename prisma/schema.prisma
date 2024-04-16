@@ -42,11 +42,14 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String                   @id @default(cuid())
     name          String?
-    email         String?   @unique
+    email         String?                  @unique
     emailVerified DateTime?
     image         String?
+    instruments   MusiciansOnInstruments[]
+    phoneNumber   String?
+    gigs          GigsOnMusicians[]
     accounts      Account[]
     sessions      Session[]
 }
@@ -61,14 +64,14 @@ model VerificationToken {
 
 // Music models
 
-model Musician {
-    id          String                   @id @default(cuid())
-    name        String
-    instruments MusiciansOnInstruments[]
-    phoneNumber String
-    email       String                   @unique
-    gigs        GigsOnMusicians[]
-}
+// model Musician {
+//     id          String                   @id @default(cuid())
+//     name        String
+//     instruments MusiciansOnInstruments[]
+//     phoneNumber String
+//     email       String                   @unique
+//     gigs        GigsOnMusicians[]
+// }
 
 model Instrument {
     id        String                   @id @default(cuid())
@@ -78,21 +81,21 @@ model Instrument {
 }
 
 model MusiciansOnInstruments {
-    musician     Musician   @relation(fields: [musicianId], references: [id], onDelete: Cascade)
-    musicianId   String
+    user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId       String
     instrument   Instrument @relation(fields: [instrumentId], references: [id], onDelete: Cascade)
     instrumentId String
 
-    @@id([musicianId, instrumentId])
+    @@id([userId, instrumentId])
 }
 
 model GigsOnMusicians {
-    musician   Musician @relation(fields: [musicianId], references: [id], onDelete: Cascade)
-    musicianId String
-    gig        Gig      @relation(fields: [gigId], references: [id], onDelete: Cascade)
-    gigId      String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String
+    gig    Gig    @relation(fields: [gigId], references: [id], onDelete: Cascade)
+    gigId  String
 
-    @@id([musicianId, gigId])
+    @@id([userId, gigId])
 }
 
 model GigsOnInstrument {
@@ -109,7 +112,7 @@ model Gig {
     name            String             @unique
     startTime       DateTime
     endTime         DateTime
-    venue           Venue?              @relation(fields: [venueId], references: [id])
+    venue           Venue?             @relation(fields: [venueId], references: [id])
     venueId         String
     musicians       GigsOnMusicians[]
     instrumentation GigsOnInstrument[]
