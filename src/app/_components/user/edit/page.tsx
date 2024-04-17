@@ -1,7 +1,7 @@
 "use client";
 
 import { api } from "~/trpc/react";
-import InstrumentSelector from "../../create/InstrumentSelector";
+import InstrumentSelector from "../../gigs/create/InstrumentSelector";
 import { useState } from "react";
 import type { GetUserById } from "~/server/types/userTypes";
 import type { ChangeEvent } from "react";
