@@ -6,11 +6,12 @@ import { setGigForm } from "~/lib/features/gig/gigSlice";
 import type { GigForm } from "~/server/types/gigTypes";
 import type { AppStore } from "../lib/store";
 import { setInstruments } from "~/lib/features/instrument/instrumentSlice";
-import type { Instrument } from "@prisma/client";
+// import type { Instrument } from "@prisma/client";
 import { setVenues } from "~/lib/features/venues/venueSlice";
 import { setMusicians } from "~/lib/features/musicians/musicianSlice";
 import type { GetAllMusicians } from "~/server/types/musicianTypes";
 import type { GetAllVenues } from "~/server/types/venueTypes";
+import type { GetAllInstruments } from "~/server/types/instrumentTypes";
 
 export default function StoreProvider({
   instruments,
@@ -19,7 +20,7 @@ export default function StoreProvider({
   venues,
   musicians,
 }: {
-  instruments: Instrument[];
+  instruments: GetAllInstruments;
   venues: GetAllVenues;
   musicians: GetAllMusicians;
   gigForm: GigForm;

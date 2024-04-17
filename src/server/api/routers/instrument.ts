@@ -13,10 +13,11 @@ export const instrumentRouter = createTRPCRouter({
           message: "Unable to fetch instruments",
           cause: `allInstruments: ${!!allInstruments}`,
         });
+      } else {
+        return allInstruments;
       }
-      return allInstruments;
     } catch (e) {
-      genericErrorHandler(e);
+      throw genericErrorHandler(e);
     }
   }),
 });

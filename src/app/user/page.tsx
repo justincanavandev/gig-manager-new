@@ -1,4 +1,4 @@
-import UserProfileEdit from "../_components/user/edit/page";
+import UserProfileEdit from "../_components/user/UserProfileEdit";
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/trpc/server";
 

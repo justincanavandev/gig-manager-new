@@ -1,10 +1,11 @@
 "use client";
 
 import { api } from "~/trpc/react";
-import InstrumentSelector from "../../gigs/create/InstrumentSelector";
+import InstrumentSelector from "../gigs/create/InstrumentSelector";
 import { useState } from "react";
 import type { GetUserById } from "~/server/types/userTypes";
 import type { ChangeEvent } from "react";
+
 
 const UserProfileEdit = ({ user }: { user: GetUserById }) => {
   const { mutate: updateUser } = api.user.update.useMutation();
@@ -27,17 +28,17 @@ const UserProfileEdit = ({ user }: { user: GetUserById }) => {
     try {
       const { instrumentIds } = userProfile;
       if (user?.name && user?.email) {
-        const { name, email } = user;
-        if (instrumentIds) {
-          const result = updateUser({
-            name,
-            email,
-            instrumentIds,
-            phoneNumber: "210-218-8720",
-          });
+      const { name, email } = user;
+      if (instrumentIds) {
+        const result = updateUser({
+          name,
+          email,
+          instrumentIds,
+          phoneNumber: "210-218-8720",
+        });
 
-          return result;
-        }
+        return result;
+      }
       }
     } catch (error) {
       console.error("Error updating user", error);
