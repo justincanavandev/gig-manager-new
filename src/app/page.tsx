@@ -11,6 +11,8 @@ export default async function Home() {
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
         <Link href={`/musicians`}>Musicians page</Link>
         <Link href={`/gigs`}>Gigs page</Link>
+        <Link href={`/gigs/create`}>Gig Create page</Link>
+        <Link href={`/user`}>User page</Link>
         <div className="flex flex-col items-center gap-2">
           <div className="flex flex-col items-center justify-center gap-4">
             <p className="text-center text-2xl text-white">
