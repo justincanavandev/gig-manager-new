@@ -10,8 +10,7 @@ import { genericErrorHandler } from "~/server/utils/errorHandling";
 export const userRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     try {
-      const users = await ctx.db.user.findMany({
-      });
+      const users = await ctx.db.user.findMany();
       if (!users) {
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -102,6 +101,21 @@ export const userRouter = createTRPCRouter({
         const user = await ctx.db.user.findUnique({
           where: {
             id,
+          },
+          include: {
+            musician: {
+              select: {
+                name: true,
+                phoneNumber: true,
+                email: true,
+                instruments: {
+                  select: {
+                    instrument: true,
+                  },
+                },
+                gigs: true
+              },
+            },
           },
         });
         if (!user) {

@@ -6,16 +6,17 @@ import { useState } from "react";
 import type { GetUserById } from "~/server/types/userTypes";
 import type { ChangeEvent } from "react";
 
+type DefaultUserProfile = {
+  phoneNumber: string;
+  instrumentIds: string[];
+};
 
 const UserProfileEdit = ({ user }: { user: GetUserById }) => {
   const { mutate: updateUser } = api.user.update.useMutation();
+  // const musician = user?.musician ? user.musician : null
 
-  type UserProfileDefault = {
-    phoneNumber: string;
-    instrumentIds: string[];
-  };
 
-  const [userProfile, setUserProfile] = useState<UserProfileDefault>({
+  const [userProfile, setUserProfile] = useState<DefaultUserProfile>({
     // phoneNumber: user?.phoneNumber,
     // instrumentIds: user?.instruments
     //   .map((inst) => inst.instrument)
@@ -28,17 +29,17 @@ const UserProfileEdit = ({ user }: { user: GetUserById }) => {
     try {
       const { instrumentIds } = userProfile;
       if (user?.name && user?.email) {
-      const { name, email } = user;
-      if (instrumentIds) {
-        const result = updateUser({
-          name,
-          email,
-          instrumentIds,
-          phoneNumber: "210-218-8720",
-        });
+        const { name, email } = user;
+        if (instrumentIds) {
+          const result = updateUser({
+            name,
+            email,
+            instrumentIds,
+            phoneNumber: "210-218-8720",
+          });
 
-        return result;
-      }
+          return result;
+        }
       }
     } catch (error) {
       console.error("Error updating user", error);
@@ -56,7 +57,9 @@ const UserProfileEdit = ({ user }: { user: GetUserById }) => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex flex-col items-center">
+  
+
       <InstrumentSelector action={selectInstrument} nameOrId="id" />
       <button onClick={handleUpdateUser}>Update User</button>
     </div>
