@@ -9,26 +9,35 @@ import type { ChangeEvent } from "react";
 const UserProfileEdit = ({ user }: { user: GetUserById }) => {
   const { mutate: updateUser } = api.user.update.useMutation();
 
-  const [userProfile, setUserProfile] = useState({
-    phoneNumber: user?.phoneNumber,
-    instrumentIds: user?.instruments
-      .map((inst) => inst.instrument)
-      .map((ins) => ins.id),
-  });
+  type UserProfileDefault = {
+    phoneNumber: string;
+    instrumentIds: string[];
+  };
 
-  console.log('userProfile', userProfile)
+  const [userProfile, setUserProfile] = useState<UserProfileDefault>({
+    // phoneNumber: user?.phoneNumber,
+    // instrumentIds: user?.instruments
+    //   .map((inst) => inst.instrument)
+    //   .map((ins) => ins.id),
+    phoneNumber: "",
+    instrumentIds: [],
+  });
 
   const handleUpdateUser = () => {
     try {
       const { instrumentIds } = userProfile;
-      if (instrumentIds) {
-        const result = updateUser({
-          instrumentIds,
-          phoneNumber: "210-218-8720",
-      
-        });
+      if (user?.name && user?.email) {
+        const { name, email } = user;
+        if (instrumentIds) {
+          const result = updateUser({
+            name,
+            email,
+            instrumentIds,
+            phoneNumber: "210-218-8720",
+          });
 
-        return result;
+          return result;
+        }
       }
     } catch (error) {
       console.error("Error updating user", error);

@@ -11,18 +11,6 @@ export const userRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     try {
       const users = await ctx.db.user.findMany({
-        include: {
-          instruments: {
-            select: {
-              instrument: {
-                select: {
-                  name: true,
-                },
-              },
-            },
-          },
-          gigs: true,
-        },
       });
       if (!users) {
         throw new TRPCError({
@@ -38,35 +26,55 @@ export const userRouter = createTRPCRouter({
   update: protectedProcedure
     .input(
       z.object({
+        name: z.string(),
+        email: z.string().email(),
         phoneNumber: z.string().min(1),
         instrumentIds: z.string().array(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { phoneNumber, instrumentIds } = input;
+      const { phoneNumber, instrumentIds, name, email } = input;
 
       try {
+        const musician = await ctx.db.musician.create({
+          data: {
+            name,
+            email,
+            phoneNumber,
+          },
+        });
+
+        const musicianId = musician.id;
+
+        const musicianInstJoin = instrumentIds.map(async (id: string) => {
+          await ctx.db.musiciansOnInstruments.create({
+            data: {
+              musician: {
+                connect: {
+                  id: musicianId,
+                },
+              },
+              instrument: {
+                connect: {
+                  id,
+                },
+              },
+            },
+          });
+        });
+        await Promise.all(musicianInstJoin);
+
         const updatedUser = await ctx.db.user.update({
           where: {
             id: ctx.session.user.id,
           },
           data: {
-            phoneNumber,
-            instruments: {
-              upsert: instrumentIds.map((instrumentId) => ({
-                where: {
-                  userId_instrumentId: {
-                    userId: ctx.session.user.id,
-                    instrumentId: instrumentId,
-                  },
-                },
-                create: {
-                  instrumentId: instrumentId,
-                },
-                update: {
-                  instrumentId: instrumentId,
-                },
-              })),
+            name,
+            email,
+            musician: {
+              connect: {
+                id: musicianId,
+              },
             },
           },
         });
@@ -94,19 +102,6 @@ export const userRouter = createTRPCRouter({
         const user = await ctx.db.user.findUnique({
           where: {
             id,
-          },
-          include: {
-            instruments: {
-              select: {
-                instrument: {
-                  select: {
-                    name: true,
-                    id: true,
-                  },
-                },
-              },
-            },
-            gigs: true,
           },
         });
         if (!user) {

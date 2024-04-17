@@ -4,14 +4,16 @@ import { useSelector } from "react-redux";
 import type { RootState } from "~/lib/store";
 // import type { GetAllInstruments } from "~/server/types/instrumentTypes";
 
-/** @todo Incorporate GetAllInstruments type */
+/** @todo Incorporate GetAllInstruments type*/
 
 export type InstrumentState = {
   instruments: Instrument[];
 };
 
 const initialState = {
-  instruments: [{}],
+  instruments: [{
+
+  }],
 };
 
 export const instrumentSlice = createSlice({

@@ -4,7 +4,7 @@ import type { GigForm } from "~/server/types/gigTypes";
 import InstrumentSelector from "./InstrumentSelector";
 import DateSelector from "./DateSelector";
 import VenueSelector from "./VenueSelector";
-// import MusicianSelector from "./MusicianSelector";
+import MusicianSelector from "./MusicianSelector";
 import { useDispatch } from "react-redux";
 import { setGigForm, useGigForm } from "~/lib/features/gig/gigSlice";
 import { api } from "~/trpc/react";
@@ -64,7 +64,7 @@ const GigForm = () => {
         <DateSelector />
         <InstrumentSelector action={selectInstrument} nameOrId="name" />
         <VenueSelector />
-        {/* <MusicianSelector /> */}
+        <MusicianSelector />
         <button className="w-24 border border-black" type="submit">
           Submit
         </button>
