@@ -7,10 +7,10 @@ import type { GigForm } from "~/server/types/gigTypes";
 import type { AppStore } from "../lib/store";
 import { setInstruments } from "~/lib/features/instrument/instrumentSlice";
 import type { Instrument } from "@prisma/client";
-import type { VenueType } from "~/server/types/venueTypes";
 import { setVenues } from "~/lib/features/venues/venueSlice";
-import type { MusicianType } from "~/server/types/musicianTypes";
 import { setMusicians } from "~/lib/features/musicians/musicianSlice";
+import type { GetAllMusicians } from "~/server/types/musicianTypes";
+import type { GetAllVenues } from "~/server/types/venueTypes";
 
 export default function StoreProvider({
   instruments,
@@ -20,8 +20,8 @@ export default function StoreProvider({
   musicians,
 }: {
   instruments: Instrument[];
-  venues: VenueType[];
-  musicians: MusicianType[];
+  venues: GetAllVenues;
+  musicians: GetAllMusicians;
   gigForm: GigForm;
   children: React.ReactNode;
 }) {

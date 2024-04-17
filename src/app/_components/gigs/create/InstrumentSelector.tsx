@@ -1,14 +1,15 @@
 "use client";
 
-import { useDispatch } from "react-redux";
-import { setGigForm, useGigForm } from "~/lib/features/gig/gigSlice";
 import { useInstruments } from "~/lib/features/instrument/instrumentSlice";
+import type { ChangeEvent } from "react";
 
+type InstrumentSelectProps = {
+  action: (e: ChangeEvent<HTMLSelectElement>) => void;
+  nameOrId: "name" | "id";
+};
 
-const InstrumentSelector = () => {
-  const dispatch = useDispatch();
-  const gigForm = useGigForm();
-  const instruments = useInstruments()
+const InstrumentSelector = ({ action, nameOrId }: InstrumentSelectProps) => {
+  const instruments = useInstruments();
 
   return (
     <>
@@ -17,19 +18,14 @@ const InstrumentSelector = () => {
         <select
           className="border border-black"
           name="instrumentation"
-          onChange={(e) => {
-            const { instrumentation } = gigForm;
-            return dispatch(
-              setGigForm({
-                ...gigForm,
-                instrumentation: [...instrumentation, e.target.value],
-              }),
-            );
-          }}
+          onChange={(e) => action(e)}
         >
           <option value="">Select an instrument</option>
           {instruments?.map((instrument) => (
-            <option key={`${instrument.name}-select`} value={instrument.name}>
+            <option
+              key={`${instrument.name}-select`}
+              value={nameOrId === "name" ? instrument.name : instrument.id}
+            >
               {instrument.name}
             </option>
           ))}

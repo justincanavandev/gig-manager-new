@@ -1,10 +1,10 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 import type { RootState } from "~/lib/store";
-import type { GetAllVenuesOutput } from "~/server/types/venueTypes";
+import type { GetAllVenues } from "~/server/types/venueTypes";
 
 export type VenueState = {
-  venues: GetAllVenuesOutput;
+  venues: GetAllVenues;
 };
 
 const initialState: VenueState = {
@@ -15,7 +15,7 @@ export const venueSlice = createSlice({
   name: "venues",
   initialState,
   reducers: {
-    setVenues: (state, action: PayloadAction<GetAllVenuesOutput>) => {
+    setVenues: (state, action: PayloadAction<GetAllVenues>) => {
       state.venues = action.payload;
     },
   },

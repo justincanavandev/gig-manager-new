@@ -4,6 +4,7 @@ import { instrumentRouter } from "./routers/instrument";
 import { musicianRouter } from "./routers/musician";
 import { gigRouter } from "./routers/gig";
 import { venueRouter } from "./routers/venue";
+import { userRouter } from "./routers/user";
 
 /**
  * This is the primary router for your server.
@@ -12,10 +13,11 @@ import { venueRouter } from "./routers/venue";
  */
 export const appRouter = createTRPCRouter({
   musician: musicianRouter,
-  // user: userRouter,
+  user: userRouter,
   instrument: instrumentRouter,
   gig: gigRouter,
   venue: venueRouter
+
 });
 
 // export type definition of API

@@ -1,10 +1,10 @@
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import z from "zod";
 import { genericErrorHandler } from "~/server/utils/errorHandling";
 
 export const musicianRouter = createTRPCRouter({
-  getAll: protectedProcedure.query(async ({ ctx }) => {
+  getAll: publicProcedure.query(async ({ ctx }) => {
     try {
       const musicians = await ctx.db.musician.findMany({
         include: {
@@ -22,7 +22,7 @@ export const musicianRouter = createTRPCRouter({
       if (!musicians) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Unable to create musicians",
+          message: "Unable to fetch musicians",
         });
       } else {
         return musicians;

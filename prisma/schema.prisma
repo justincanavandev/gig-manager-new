@@ -47,6 +47,8 @@ model User {
     email         String?   @unique
     emailVerified DateTime?
     image         String?
+    musician      Musician? @relation(fields: [musicianId], references: [id])
+    musicianId    String?   @unique
     accounts      Account[]
     sessions      Session[]
 }
@@ -68,6 +70,7 @@ model Musician {
     phoneNumber String
     email       String                   @unique
     gigs        GigsOnMusicians[]
+    user        User?
 }
 
 model Instrument {
@@ -109,7 +112,7 @@ model Gig {
     name            String             @unique
     startTime       DateTime
     endTime         DateTime
-    venue           Venue?              @relation(fields: [venueId], references: [id])
+    venue           Venue?             @relation(fields: [venueId], references: [id])
     venueId         String
     musicians       GigsOnMusicians[]
     instrumentation GigsOnInstrument[]
