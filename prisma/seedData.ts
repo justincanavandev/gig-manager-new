@@ -413,7 +413,13 @@ export const gigs = [
     startTime: "2024-04-10T10:00:00Z",
     endTime: "2024-04-10T13:00:00Z",
     venue: "United Center",
-    musicians: ["John Smith", "Robert Garcia", "Alex Turner", "William Harris", "Sophia Lee"],
+    musicians: [
+      { name: "John Smith", inst: "Electric Guitar" },
+      { name: "Robert Garcia", inst: "Acoustic Guitar" },
+      { name: "Alex Turner", inst: "Bass" },
+      { name: "William Harris", inst: "Drums" },
+      { name: "Sophia Lee", inst: "Saxophone" },
+    ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Saxophone"],
   },
   {
@@ -421,7 +427,13 @@ export const gigs = [
     startTime: "2024-04-11T15:00:00Z",
     endTime: "2024-04-11T18:00:00Z",
     venue: "Wrigley Field",
-    musicians: ["Emma Johnson", "Laura Martinez", "Olivia White", "Isabella Taylor", "Ryan Brown"],
+    musicians: [
+      { name: "Emma Johnson", inst: "Electric Guitar" },
+      { name: "Laura Martinez", inst: "Acoustic Guitar" },
+      { name: "Olivia White", inst: "Bass" },
+      { name: "Isabella Taylor", inst: "Drums" },
+      { name: "Ryan Brown", inst: "Trumpet" },
+    ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Trumpet"],
   },
   {
@@ -429,7 +441,13 @@ export const gigs = [
     startTime: "2024-04-12T19:00:00Z",
     endTime: "2024-04-12T22:00:00Z",
     venue: "Soldier Field",
-    musicians: ["David Lee", "Chris Brown", "James Brown", "Ethan Martin", "Ella Thompson"],
+    musicians: [
+      { name: "David Lee", inst: "Electric Guitar" },
+      { name: "Chris Brown", inst: "Acoustic Guitar" },
+      { name: "James Brown", inst: "Bass" },
+      { name: "Ethan Martin", inst: "Drums" },
+      { name: "Ella Thompson", inst: "Percussion" },
+    ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Percussion"],
   },
   {
@@ -437,7 +455,13 @@ export const gigs = [
     startTime: "2024-04-13T20:00:00Z",
     endTime: "2024-04-13T23:00:00Z",
     venue: "Chicago Theatre",
-    musicians: ["Sarah Clark", "Maria Rodriguez", "Benjamin Davis", "Mia Anderson", "Noah Davis"],
+    musicians: [
+      { name: "Sarah Clark", inst: "Electric Guitar" },
+      { name: "Maria Rodriguez", inst: "Acoustic Guitar" },
+      { name: "Benjamin Davis", inst: "Bass" },
+      { name: "Mia Anderson", inst: "Drums" },
+      { name: "Noah Davis", inst: "Vocals" },
+    ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Vocals"],
   },
   {
@@ -445,7 +469,13 @@ export const gigs = [
     startTime: "2024-04-14T18:00:00Z",
     endTime: "2024-04-14T21:00:00Z",
     venue: "Hollywood Casino Amphitheatre",
-    musicians: ["Michael Thompson", "Daniel Wilson", "Sofia Martinez", "Mason Moore", "Ava Hernandez"],
+    musicians: [
+      { name: "Michael Thompson", inst: "Electric Guitar" },
+      { name: "Daniel Wilson", inst: "Acoustic Guitar" },
+      { name: "Sofia Martinez", inst: "Bass" },
+      { name: "Mason Moore", inst: "Drums" },
+      { name: "Ava Hernandez", inst: "Keyboards" },
+    ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Keyboards"],
   },
   {
@@ -453,7 +483,13 @@ export const gigs = [
     startTime: "2024-04-15T16:00:00Z",
     endTime: "2024-04-15T19:00:00Z",
     venue: "Grant Park",
-    musicians: ["Emma Johnson", "Daniel Wilson", "Lucas Rodriguez", "Sophie Martin", "Chloe Taylor"],
+    musicians: [
+      { name: "Emma Johnson", inst: "Electric Guitar" },
+      { name: "Daniel Wilson", inst: "Acoustic Guitar" },
+      { name: "Lucas Rodriguez", inst: "Bass" },
+      { name: "Sophie Martin", inst: "Drums" },
+      { name: "Chloe Taylor", inst: "Trombone" },
+    ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Trombone"],
   },
   {
@@ -461,7 +497,13 @@ export const gigs = [
     startTime: "2024-04-16T14:00:00Z",
     endTime: "2024-04-16T17:00:00Z",
     venue: "House of Blues Chicago",
-    musicians: ["Olivia White", "Chris Brown", "Chloe Martinez", "Jackson Lee", "Avery Taylor"],
+    musicians: [
+      { name: "Olivia White", inst: "Electric Guitar" },
+      { name: "Chris Brown", inst: "Acoustic Guitar" },
+      { name: "Chloe Martinez", inst: "Bass" },
+      { name: "Jackson Lee", inst: "Drums" },
+      { name: "Avery Taylor", inst: "Vocals" },
+    ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Vocals"],
   },
   {
@@ -469,7 +511,13 @@ export const gigs = [
     startTime: "2024-04-17T20:00:00Z",
     endTime: "2024-04-17T23:00:00Z",
     venue: "Chicago Symphony Center",
-    musicians: ["Sophia Garcia", "Ryan Brown", "Ella Davis", "Noah Rodriguez", "Ava Thompson"],
+    musicians: [
+      { name: "Sophia Garcia", inst: "Electric Guitar" },
+      { name: "Ryan Brown", inst: "Acoustic Guitar" },
+      { name: "Ella Davis", inst: "Bass" },
+      { name: "Noah Rodriguez", inst: "Drums" },
+      { name: "Ava Thompson", inst: "Trumpet" },
+    ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Trumpet"],
   },
   {
@@ -477,7 +525,13 @@ export const gigs = [
     startTime: "2024-04-18T19:00:00Z",
     endTime: "2024-04-18T22:00:00Z",
     venue: "The Riviera Theatre",
-    musicians: ["Lucas Hernandez", "Jackson Moore", "Avery Lee", "Sophie Martin", "Chloe Garcia"],
+    musicians: [
+      { name: "Lucas Hernandez", inst: "Electric Guitar" },
+      { name: "Jackson Moore", inst: "Acoustic Guitar" },
+      { name: "Avery Lee", inst: "Bass" },
+      { name: "Sophie Martin", inst: "Drums" },
+      { name: "Chloe Garcia", inst: "Trombone" },
+    ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Trombone"],
   },
   {
@@ -485,7 +539,13 @@ export const gigs = [
     startTime: "2024-04-19T18:00:00Z",
     endTime: "2024-04-19T21:00:00Z",
     venue: "Metro Chicago",
-    musicians: ["John Smith", "Emma Johnson", "Sophia Lee", "Ethan Turner", "Ava Wilson"],
+    musicians: [
+      { name: "John Smith", inst: "Electric Guitar" },
+      { name: "Emma Johnson", inst: "Acoustic Guitar" },
+      { name: "Sophia Lee", inst: "Bass" },
+      { name: "Ethan Turner", inst: "Drums" },
+      { name: "Ava Wilson", inst: "Keyboards" },
+    ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Keyboards"],
   },
   {
@@ -493,7 +553,13 @@ export const gigs = [
     startTime: "2024-04-20T17:00:00Z",
     endTime: "2024-04-20T20:00:00Z",
     venue: "Hollywood Casino Amphitheatre",
-    musicians: ["David Lee", "Robert Garcia", "Alex Turner", "Isabella Taylor", "Ella Thompson"],
+    musicians: [
+      { name: "David Lee", inst: "Electric Guitar" },
+      { name: "Robert Garcia", inst: "Acoustic Guitar" },
+      { name: "Alex Turner", inst: "Bass" },
+      { name: "Isabella Taylor", inst: "Drums" },
+      { name: "Ella Thompson", inst: "Vocals" },
+    ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Vocals"],
   },
   {
@@ -501,7 +567,13 @@ export const gigs = [
     startTime: "2024-04-21T20:00:00Z",
     endTime: "2024-04-21T23:00:00Z",
     venue: "Chicago Symphony Center",
-    musicians: ["Sarah Clark", "Laura Martinez", "James Brown", "Mia Anderson", "Sophia Garcia"],
+    musicians: [
+      { name: "Sarah Clark", inst: "Electric Guitar" },
+      { name: "Laura Martinez", inst: "Acoustic Guitar" },
+      { name: "James Brown", inst: "Bass" },
+      { name: "Mia Anderson", inst: "Drums" },
+      { name: "Sophia Garcia", inst: "Percussion" },
+    ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Percussion"],
   },
   {
@@ -509,7 +581,13 @@ export const gigs = [
     startTime: "2024-04-22T19:00:00Z",
     endTime: "2024-04-22T22:00:00Z",
     venue: "The Riviera Theatre",
-    musicians: ["Michael Thompson", "Maria Rodriguez", "Sofia Martinez", "Mason Moore", "Chloe Garcia"],
+    musicians: [
+      { name: "Michael Thompson", inst: "Electric Guitar" },
+      { name: "Maria Rodriguez", inst: "Acoustic Guitar" },
+      { name: "Sofia Martinez", inst: "Bass" },
+      { name: "Mason Moore", inst: "Drums" },
+      { name: "Chloe Garcia", inst: "Keyboards" },
+    ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Keyboards"],
   },
   {
@@ -517,7 +595,13 @@ export const gigs = [
     startTime: "2024-04-23T18:00:00Z",
     endTime: "2024-04-23T21:00:00Z",
     venue: "Grant Park",
-    musicians: ["William Harris", "Daniel Wilson", "Ethan Martin", "Noah Davis", "Ava Thompson"],
+    musicians: [
+      { name: "William Harris", inst: "Electric Guitar" },
+      { name: "Daniel Wilson", inst: "Acoustic Guitar" },
+      { name: "Ethan Martin", inst: "Bass" },
+      { name: "Noah Davis", inst: "Drums" },
+      { name: "Ava Thompson", inst: "Keyboards" },
+    ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Keyboards"],
   },
   {
@@ -525,7 +609,13 @@ export const gigs = [
     startTime: "2024-04-24T17:00:00Z",
     endTime: "2024-04-24T20:00:00Z",
     venue: "House of Blues Chicago",
-    musicians: ["John Smith", "Emma Johnson", "David Lee", "Laura Martinez", "Olivia White"],
+    musicians: [
+      { name: "John Smith", inst: "Electric Guitar" },
+      { name: "Emma Johnson", inst: "Acoustic Guitar" },
+      { name: "David Lee", inst: "Bass" },
+      { name: "Laura Martinez", inst: "Drums" },
+      { name: "Olivia White", inst: "Vocals" },
+    ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Vocals"],
   },
   {
@@ -533,7 +623,13 @@ export const gigs = [
     startTime: "2024-04-25T20:00:00Z",
     endTime: "2024-04-25T23:00:00Z",
     venue: "Metro Chicago",
-    musicians: ["Robert Garcia", "Chris Brown", "Sarah Clark", "Michael Thompson", "Sophia Lee"],
+    musicians: [
+      { name: "Robert Garcia", inst: "Electric Guitar" },
+      { name: "Chris Brown", inst: "Acoustic Guitar" },
+      { name: "Sarah Clark", inst: "Bass" },
+      { name: "Michael Thompson", inst: "Drums" },
+      { name: "Sophia Lee", inst: "Saxophone" },
+    ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Saxophone"],
   },
   {
@@ -541,7 +637,13 @@ export const gigs = [
     startTime: "2024-04-26T19:00:00Z",
     endTime: "2024-04-26T22:00:00Z",
     venue: "Chicago Theatre",
-    musicians: ["William Harris", "Maria Rodriguez", "James Brown", "Mia Anderson", "Ethan Turner"],
+    musicians: [
+      { name: "William Harris", inst: "Electric Guitar" },
+      { name: "Maria Rodriguez", inst: "Acoustic Guitar" },
+      { name: "James Brown", inst: "Bass" },
+      { name: "Mia Anderson", inst: "Drums" },
+      { name: "Ethan Turner", inst: "Keyboards" },
+    ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Keyboards"],
   },
   {
@@ -549,7 +651,13 @@ export const gigs = [
     startTime: "2024-04-27T18:00:00Z",
     endTime: "2024-04-27T21:00:00Z",
     venue: "House of Blues Chicago",
-    musicians: ["Alex Turner", "Laura Martinez", "Ella Thompson", "Sophie Martin", "Chloe Taylor"],
+    musicians: [
+      { name: "Alex Turner", inst: "Electric Guitar" },
+      { name: "Laura Martinez", inst: "Acoustic Guitar" },
+      { name: "Ella Thompson", inst: "Bass" },
+      { name: "Sophie Martin", inst: "Drums" },
+      { name: "Chloe Taylor", inst: "Trombone" },
+    ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Trombone"],
   },
   {
@@ -557,7 +665,13 @@ export const gigs = [
     startTime: "2024-04-28T17:00:00Z",
     endTime: "2024-04-28T20:00:00Z",
     venue: "Chicago Symphony Center",
-    musicians: ["Emma Johnson", "Chris Brown", "Ryan Brown", "Sophia Garcia", "Noah Davis"],
+    musicians: [
+      { name: "Emma Johnson", inst: "Electric Guitar" },
+      { name: "Chris Brown", inst: "Acoustic Guitar" },
+      { name: "Ryan Brown", inst: "Bass" },
+      { name: "Sophia Garcia", inst: "Drums" },
+      { name: "Noah Davis", inst: "Vocals" },
+    ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Vocals"],
   },
   {
@@ -565,10 +679,13 @@ export const gigs = [
     startTime: "2024-04-29T20:00:00Z",
     endTime: "2024-04-29T23:00:00Z",
     venue: "Metro Chicago",
-    musicians: ["John Smith", "Robert Garcia", "David Lee", "Maria Rodriguez", "Ethan Turner"],
-    instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Percussion"],
+    musicians: [
+      { name: "John Smith", inst: "Electric Guitar" },
+      { name: "Robert Garcia", inst: "Acoustic Guitar" },
+      { name: "Sarah Clark", inst: "Bass" },
+      { name: "Michael Thompson", inst: "Drums" },
+      { name: "Sophia Lee", inst: "Saxophone" },
+    ],
+    instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Saxophone"],
   },
 ];
-
-
-

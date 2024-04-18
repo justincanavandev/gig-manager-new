@@ -64,20 +64,21 @@ model VerificationToken {
 // Music models
 
 model Musician {
-    id          String                   @id @default(cuid())
+    id          String                        @id @default(cuid())
     name        String
     instruments MusiciansOnInstruments[]
     phoneNumber String
-    email       String                   @unique
-    gigs        GigsOnMusicians[]
+    email       String                        @unique
+    gigs        GigsOnMusiciansOnInstrument[]
     user        User?
 }
 
 model Instrument {
-    id        String                   @id @default(cuid())
-    name      String                   @unique
-    musicians MusiciansOnInstruments[]
-    gigs      GigsOnInstrument[]
+    id                          String                        @id @default(cuid())
+    name                        String                        @unique
+    musicians                   MusiciansOnInstruments[]
+    gigs                        GigsOnInstrument[]
+    gigsOnMusiciansOnInstrument GigsOnMusiciansOnInstrument[]
 }
 
 model MusiciansOnInstruments {
@@ -89,13 +90,15 @@ model MusiciansOnInstruments {
     @@id([musicianId, instrumentId])
 }
 
-model GigsOnMusicians {
-    musician   Musician @relation(fields: [musicianId], references: [id], onDelete: Cascade)
-    musicianId String
-    gig        Gig      @relation(fields: [gigId], references: [id], onDelete: Cascade)
-    gigId      String
+model GigsOnMusiciansOnInstrument {
+    musician     Musician   @relation(fields: [musicianId], references: [id], onDelete: Cascade)
+    musicianId   String
+    gig          Gig        @relation(fields: [gigId], references: [id], onDelete: Cascade)
+    gigId        String
+    instrument   Instrument @relation(fields: instrumentId, references: [id], onDelete: Cascade)
+    instrumentId String
 
-    @@id([musicianId, gigId])
+    @@id([musicianId, gigId, instrumentId])
 }
 
 model GigsOnInstrument {
@@ -114,7 +117,7 @@ model Gig {
     endTime         DateTime
     venue           Venue?             @relation(fields: [venueId], references: [id])
     venueId         String
-    musicians       GigsOnMusicians[]
+    musicians       GigsOnMusiciansOnInstrument[]
     instrumentation GigsOnInstrument[]
 }
 

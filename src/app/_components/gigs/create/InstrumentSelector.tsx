@@ -5,10 +5,9 @@ import type { ChangeEvent } from "react";
 
 type InstrumentSelectProps = {
   action: (e: ChangeEvent<HTMLSelectElement>) => void;
-  nameOrId: "name" | "id";
 };
 
-const InstrumentSelector = ({ action, nameOrId }: InstrumentSelectProps) => {
+const InstrumentSelector = ({ action }: InstrumentSelectProps) => {
   const instruments = useInstruments();
 
   return (
@@ -24,7 +23,10 @@ const InstrumentSelector = ({ action, nameOrId }: InstrumentSelectProps) => {
           {instruments?.map((instrument) => (
             <option
               key={`${instrument.name}-select`}
-              value={nameOrId === "name" ? instrument.name : instrument.id}
+              value={JSON.stringify({
+                id: instrument.id,
+                name: instrument.name,
+              })}
             >
               {instrument.name}
             </option>
