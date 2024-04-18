@@ -3,6 +3,7 @@
 import { useDispatch } from "react-redux";
 import { setGigForm, useGigForm } from "~/lib/features/gig/gigSlice";
 import { useMusicians } from "~/lib/features/musicians/musicianSlice";
+import type { GigFormMusician } from "~/server/types/gigTypes";
 
 const MusicianSelector = () => {
   const dispatch = useDispatch();
@@ -13,12 +14,13 @@ const MusicianSelector = () => {
 
     /** @todo Add "addMusician" functionality. This will deal with duplicate instruments being added, Confirmation Modal, etc */
 
-    const addedMusicianId = e.target.value;
-    const currentMusicianIds = [...gigForm.musicianIds];
+    const addedMusician = JSON.parse(e.target.value) as GigFormMusician;
+
+    const currentMusicians = [...gigForm.musicians];
     return dispatch(
       setGigForm({
         ...gigForm,
-        musicianIds: [...currentMusicianIds, addedMusicianId]
+        musicians: [...currentMusicians, addedMusician]
       }),
     );
   };
@@ -26,18 +28,22 @@ const MusicianSelector = () => {
   return (
     <>
       {gigForm.instrumentation.map((instrument, instIndex) => (
-        <div key={`gigForm, ${instrument}, ${instIndex}`}>
-          <label>Add {instrument}</label>
+        <div key={`gigForm, ${instrument.name}, ${instIndex}`}>
+          <label>Add {instrument.name}</label>
           <select
             className="border border-black"
             onChange={(e) => handleAddMusician(e)}
           >
             {" "}
-            <option>Select {instrument}</option>
+            <option>Select {instrument.name}</option>
             {musicians.map(
               (musician, index) =>
-                musician.instruments[0]?.instrument.name === instrument && (
-                  <option key={index} value={musician.id}>
+                musician.instruments[0]?.instrument.name === instrument.name && (
+                  <option key={index} value={JSON.stringify({
+                    name: musician.name,
+                    instrument: { name: instrument.name, id: instrument.id },
+                    id: musician.id
+                  })}>
                     {musician.name}
                   </option>
                 ),

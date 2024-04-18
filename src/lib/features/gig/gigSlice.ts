@@ -14,7 +14,7 @@ const initialState: GigFormState = {
     startTime: new Date().toISOString(),
     endTime: new Date().toISOString(),
     instrumentation: [],
-    musicianIds: [],
+    musicians: [],
   },
 };
 

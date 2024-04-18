@@ -66,13 +66,27 @@ const seedDatabase = async () => {
       select: {
         name: true,
         id: true,
+        instruments: {
+          include: {
+            instrument: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
 
-    const musicianIds = musicians.map((m)=> {
-      const match = musicianObjs.find((mus)=> m === mus.name)
-      return match
-    }).map((ms)=> ms?.id)
+    const musicianData = musicians.map((m) => {
+      const match = musicianObjs.find((mus) => m.name === mus.name);
+      if (match) {
+        return {
+          ...m,
+          id: match.id,
+        };
+      }
+    });
 
     return await prisma.gig.create({
       data: {
@@ -85,10 +99,15 @@ const seedDatabase = async () => {
           },
         },
         musicians: {
-          create: musicianIds.map((id) => ({
+          create: musicianData.map((mus) => ({
             musician: {
               connect: {
-                id,
+                id: mus?.id,
+              },
+            },
+            instrument: {
+              connect: {
+                name: mus?.inst,
               },
             },
           })),

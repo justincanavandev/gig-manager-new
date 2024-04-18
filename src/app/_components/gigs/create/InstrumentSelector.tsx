@@ -24,7 +24,10 @@ const InstrumentSelector = ({ action, nameOrId }: InstrumentSelectProps) => {
           {instruments?.map((instrument) => (
             <option
               key={`${instrument.name}-select`}
-              value={nameOrId === "name" ? instrument.name : instrument.id}
+              value={JSON.stringify({
+                id: instrument.id,
+                name: instrument.name,
+              })}
             >
               {instrument.name}
             </option>

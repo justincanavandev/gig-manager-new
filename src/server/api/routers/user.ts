@@ -89,7 +89,7 @@ export const userRouter = createTRPCRouter({
         throw genericErrorHandler(e);
       }
     }),
-  getById: protectedProcedure
+  getById: publicProcedure
     .input(
       z.object({
         id: z.string().cuid(),
