@@ -1,6 +1,7 @@
 import { parseDate } from "~/server/utils/helpers";
 import MusiciansModal from "./MusiciansModal";
 import type { SingleGig } from "~/server/types/gigTypes";
+import Link from "next/link";
 
 type GigCardProps = {
   gig: SingleGig;
@@ -21,6 +22,9 @@ const GigCard = ({ gig, index }: GigCardProps) => {
       <span>{`End Time: ${endDate}, ${endTime}`}</span>
       <span>Location: {gig.venue ? gig.venue.name : "TBD"}</span>
       <MusiciansModal musicians={musicians} index={index} />
+      <Link className="border" href={`/gigs/${gig.id}/edit`}>
+        Edit Gig
+      </Link>
     </div>
   );
 };

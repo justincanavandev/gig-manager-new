@@ -6,10 +6,10 @@ import type { MusiciansFromAllGigs } from "~/server/types/gigTypes";
 
 type MusiciansModalProps = {
   musicians: MusiciansFromAllGigs;
-  index: number
+  index: number;
 };
 
-const MusiciansModal = ({musicians, index}: MusiciansModalProps) => {
+const MusiciansModal = ({ musicians, index }: MusiciansModalProps) => {
   const [eventTargetIndexArr, setEventTargetIndexArr] = useState<number[]>([]);
   const { value: viewMusicians, setTrue: openViewMusicians } =
     useBoolean(false);
