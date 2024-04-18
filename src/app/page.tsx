@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { getServerAuthSession } from "~/server/auth";
-import { api } from "~/trpc/server";
+// import { api } from "~/trpc/server";
 
 export default async function Home() {
   const session = await getServerAuthSession();
-  const userById = await api.user.getById({
-    id: session?.user ? session.user.id : "",
-  });
+  // const userById = await api.user.getById({
+  //   id: session?.user ? session.user.id : "",
+  // });
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
@@ -14,7 +14,7 @@ export default async function Home() {
         <Link href={`/musicians`}>Musicians page</Link>
         <Link href={`/gigs`}>Gigs page</Link>
         <Link href={`/gigs/create`}>Gig Create page</Link>
-        <Link href={`/user/${userById?.id}`}>User page</Link>
+        {/* {userById && <Link href={`/user/${userById?.id}`}>User page</Link>} */}
         <div className="flex flex-col items-center gap-2">
           <div className="flex flex-col items-center justify-center gap-4">
             <p className="text-center text-2xl text-white">
