@@ -14,20 +14,22 @@ export const gigRouter = createTRPCRouter({
         include: {
           venue: {
             select: {
-              name: true
-            }
+              name: true,
+              id: true,
+            },
           },
           musicians: {
             include: {
               musician: {
                 select: {
                   name: true,
+                  id: true,
                   instruments: {
-                    select: { 
-                      instrument: true
-                    }
-                  }
-                }
+                    select: {
+                      instrument: true,
+                    },
+                  },
+                },
               },
             },
           },
@@ -35,10 +37,10 @@ export const gigRouter = createTRPCRouter({
             include: {
               instrument: {
                 select: {
-                  name: true
-                }
-              }
-            }
+                  name: true,
+                },
+              },
+            },
           },
         },
       });
@@ -52,7 +54,7 @@ export const gigRouter = createTRPCRouter({
 
       return gigs;
     } catch (e) {
-      throw genericErrorHandler(e)
+      throw genericErrorHandler(e);
     }
   }),
   create: protectedProcedure
@@ -67,8 +69,14 @@ export const gigRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { name, startTime, endTime, venueId, musicianIds, instrumentation } =
-        input;
+      const {
+        name,
+        startTime,
+        endTime,
+        venueId,
+        musicianIds,
+        instrumentation,
+      } = input;
 
       try {
         const gig = await ctx.db.gig.create({
@@ -111,6 +119,136 @@ export const gigRouter = createTRPCRouter({
         return gig;
       } catch (e) {
         console.error("Unable to create gig", e);
+      }
+    }),
+  getById: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().cuid(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { id } = input;
+      try {
+        const gig = await ctx.db.gig.findUnique({
+          where: { id },
+          include: {
+            venue: {
+              select: {
+                name: true,
+              },
+            },
+            musicians: {
+              include: {
+                musician: {
+                  select: {
+                    name: true,
+                    instruments: {
+                      select: {
+                        instrument: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            instrumentation: {
+              include: {
+                instrument: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!gig) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Gig unable to be fetched",
+          });
+        }
+        return gig;
+      } catch (e) {
+        throw genericErrorHandler(e);
+      }
+    }),
+  update: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().cuid(),
+        name: z.string().min(3),
+        startTime: z.date(),
+        endTime: z.date(),
+        venueId: z.string(),
+        musicianIds: z.string().array(),
+        instrumentation: z.string().array(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, name, startTime, endTime, venueId, musicianIds } = input;
+
+      try {
+        const gigById = await ctx.db.gig.findUnique({
+          where: {
+            id,
+          },
+          include: {
+            musicians: {
+              select: {
+                musician: true,
+              },
+            },
+            instrumentation: {
+              select: {
+                instrument: true,
+              },
+            },
+          },
+        });
+        const musicianIdsInDb = gigById?.musicians.map(
+          (mus) => mus.musician.id,
+        );
+
+        const addedMusicianIds = musicianIds.filter(
+          (id) => !musicianIdsInDb?.includes(id),
+        );
+
+        /** @todo Deal with functionality for deleting a musician */
+
+        const musicianGigJoin = addedMusicianIds.map(async (musId: string) => {
+          await ctx.db.gigsOnMusicians.create({
+            data: {
+              musician: {
+                connect: {
+                  id: musId,
+                },
+              },
+              gig: {
+                connect: {
+                  id,
+                },
+              },
+            },
+          });
+        });
+        await Promise.all(musicianGigJoin);
+
+        const updatedGig = await ctx.db.gig.update({
+          where: {
+            id,
+          },
+          data: {
+            name,
+            startTime,
+            endTime,
+            venueId,
+          },
+        });
+        return updatedGig;
+      } catch (e) {
+        throw genericErrorHandler(e);
       }
     }),
 });

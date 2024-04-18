@@ -1,6 +1,7 @@
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { genericErrorHandler } from "~/server/utils/errorHandling";
+import z from "zod";
 
 export const instrumentRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
@@ -20,4 +21,26 @@ export const instrumentRouter = createTRPCRouter({
       throw genericErrorHandler(e);
     }
   }),
+  getByName: publicProcedure
+    .input(z.object({ name: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { name } = input;
+      try {
+        const instrument = await ctx.db.instrument.findUnique({
+          where: {
+            name,
+          },
+          include: {
+            musicians: {
+              select: {
+                musicianId: true
+              }
+            }
+          },
+        });
+        return instrument;
+      } catch (e) {
+        throw genericErrorHandler(e);
+      }
+    }),
 });

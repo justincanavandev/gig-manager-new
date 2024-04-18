@@ -2,6 +2,7 @@ import type { RouterOutputs } from "~/trpc/react";
 
 export type GetAllGigsOutput = RouterOutputs['gig']['getAll']
 export type SingleGig = RouterOutputs["gig"]["getAll"][0]
+export type GigById = RouterOutputs["gig"]["getById"]
 
 
 export type MusiciansFromAllGigs = {
