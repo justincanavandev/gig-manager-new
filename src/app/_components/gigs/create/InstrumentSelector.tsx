@@ -5,10 +5,9 @@ import type { ChangeEvent } from "react";
 
 type InstrumentSelectProps = {
   action: (e: ChangeEvent<HTMLSelectElement>) => void;
-  nameOrId: "name" | "id";
 };
 
-const InstrumentSelector = ({ action, nameOrId }: InstrumentSelectProps) => {
+const InstrumentSelector = ({ action }: InstrumentSelectProps) => {
   const instruments = useInstruments();
 
   return (

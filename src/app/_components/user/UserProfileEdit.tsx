@@ -60,7 +60,7 @@ const UserProfileEdit = ({ user }: { user: GetUserById }) => {
     <div className="flex flex-col items-center">
   
 
-      <InstrumentSelector action={selectInstrument} nameOrId="id" />
+      <InstrumentSelector action={selectInstrument} />
       <button onClick={handleUpdateUser}>Update User</button>
     </div>
   );

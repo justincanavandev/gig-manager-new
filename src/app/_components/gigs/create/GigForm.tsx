@@ -64,7 +64,7 @@ const GigForm = ({ gig }: GigFormProps) => {
 
     if (gig) {
       /** @todo Set up gig update with new schema */
-      
+
       // updateGig({
       //   id: gig.id,
       //   name,
@@ -145,7 +145,7 @@ const GigForm = ({ gig }: GigFormProps) => {
           ></input>
         </label>
         <DateSelector />
-        <InstrumentSelector action={selectInstrument} nameOrId="name" />
+        <InstrumentSelector action={selectInstrument} />
         <VenueSelector />
         <ul className="flex gap-2">
           {gigForm.instrumentation.map((inst, index) => (
