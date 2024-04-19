@@ -185,87 +185,130 @@ export const gigRouter = createTRPCRouter({
         throw genericErrorHandler(e);
       }
     }),
-//   update: protectedProcedure
-//     .input(
-//       z.object({
-//         id: z.string().cuid(),
-//         name: z.string().min(3),
-//         startTime: z.date(),
-//         endTime: z.date(),
-//         venueId: z.string(),
-//         musicians: z
-//           .object({
-//             name: z.string(),
-//             instrument: z.string(),
-//             id: z.string().cuid(),
-//           })
-//           .array(),
-//         instrumentation: z.string().array(),
-//       }),
-//     )
-//     .mutation(async ({ ctx, input }) => {
-//       const { id, name, startTime, endTime, venueId, musicians } = input;
+  update: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().cuid(),
+        name: z.string().min(3),
+        startTime: z.date(),
+        endTime: z.date(),
+        venueId: z.string(),
+        musicians: z
+          .object({
+            name: z.string(),
+            instrument: z.object({
+              id: z.string().cuid(),
+              name: z.string(),
+            }),
+            id: z.string().cuid(),
+          })
+          .array(),
+        instrumentation: z
+          .object({
+            name: z.string(),
+            id: z.string().cuid(),
+          })
+          .array(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const {
+        id,
+        name,
+        startTime,
+        endTime,
+        venueId,
+        musicians,
+        instrumentation,
+      } = input;
 
-//       try {
-//         const gigById = await ctx.db.gig.findUnique({
-//           where: {
-//             id,
-//           },
-//           include: {
-//             musicians: {
-//               select: {
-//                 musician: true,
-//               },
-//             },
-//             instrumentation: {
-//               select: {
-//                 instrument: true,
-//               },
-//             },
-//           },
-//         });
-//         const musicianIdsInDb = gigById?.musicians.map(
-//           (mus) => mus.musician.id,
-//         );
+      try {
 
-//         const addedMusicianIds = musicianIds.filter(
-//           (id) => !musicianIdsInDb?.includes(id),
-//         );
+        const musicianGigJoin = musicians.map(async (mus) => {
+          await ctx.db.gigsOnMusiciansOnInstrument.upsert({
+            where: {
+              musicianId_gigId_instrumentId: {
+                musicianId: mus.id,
+                gigId: id,
+                instrumentId: mus.instrument.id,
+              },
+            },
 
-//         /** @todo Deal with functionality for deleting a musician */
+            update: {},
+            create: {
+              musician: {
+                connect: {
+                  id: mus.id,
+                },
+              },
+              gig: {
+                connect: {
+                  id,
+                },
+              },
+              instrument: {
+                connect: {
+                  name: mus.instrument.name,
+                },
+              },
+            },
+          });
+          await ctx.db.gigsOnMusiciansOnInstrument.deleteMany({
+            where: {
+              musicianId: {
+                notIn: musicians.map((mus) => mus.id),
+              },
+            },
+          });
+        });
 
-//         const musicianGigJoin = addedMusicianIds.map(async (musId: string) => {
-//           await ctx.db.gigsOnMusicians.create({
-//             data: {
-//               musician: {
-//                 connect: {
-//                   id: musId,
-//                 },
-//               },
-//               gig: {
-//                 connect: {
-//                   id,
-//                 },
-//               },
-//             },
-//           });
-//         });
-//         await Promise.all(musicianGigJoin);
+        const addInstrumentation = instrumentation.map(async (inst) => {
+          await ctx.db.gigsOnInstrument.upsert({
+            where: {
+              gigId_instrumentId: {
+                gigId: id,
+                instrumentId: inst.id,
+              },
+            },
+            update: {},
+            create: {
+              instrument: {
+                connect: {
+                  id: inst.id,
+                },
+              },
+              gig: {
+                connect: {
+                  id,
+                },
+              },
+            },
+          });
+          await ctx.db.gigsOnInstrument.deleteMany({
+            where: {
+              instrumentId: {
+                notIn: instrumentation.map((inst) => inst.id),
+              },
+            },
+          });
+        });
+        await Promise.all(addInstrumentation);
+        await Promise.all(musicianGigJoin);
 
-//         const updatedGig = await ctx.db.gig.update({
-//           where: {
-//             id,
-//           },
-//           data: {
-//             name,
-//             startTime,
-//             endTime,
-//             venueId,
-//           },
-//         });
-//         return updatedGig;
-//       } catch (e) {
-//         throw genericErrorHandler(e);
-//       }
-//     }),
+        const updatedGig = await ctx.db.gig.update({
+          where: {
+            id,
+          },
+          data: {
+            name,
+            startTime,
+            endTime,
+            venueId,
+          },
+        });
+        return updatedGig;
+      } catch (e) {
+        throw genericErrorHandler(e);
+      }
+    }),
 });

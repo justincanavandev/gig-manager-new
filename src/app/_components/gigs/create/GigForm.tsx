@@ -45,42 +45,49 @@ const GigForm = ({ gig }: GigFormProps) => {
   }, [dispatch, gig]);
 
   const { mutate: createGig } = api.gig.create.useMutation();
-  // const { mutate: updateGig } = api.gig.update.useMutation();
+  const { mutate: updateGig } = api.gig.update.useMutation();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { name, startTime, endTime, venueId, musicians, instrumentation } =
       gigForm;
 
-    const updatedMusicians = musicians.map((mus) => {
-      return {
-        name: mus.name,
-        instrument: mus.instrument.name,
-        id: mus.id,
-      };
-    });
-
     const instrumentNames = instrumentation.map((inst) => inst.name);
 
     if (gig) {
-      /** @todo Set up gig update with new schema */
+  
+      const updatedMusicians = musicians.map((mus) => {
+        return {
+          name: mus.name,
+          instrument: { name: mus.instrument.name, id: mus.instrument.id },
+          id: mus.id,
+        };
+      });
 
-      // updateGig({
-      //   id: gig.id,
-      //   name,
-      //   startTime: new Date(startTime),
-      //   endTime: new Date(endTime),
-      //   venueId,
-      //   musicians: updatedMusicians,
-      //   instrumentation: instrumentNames,
-      // });
-    } else {
-      createGig({
+      updateGig({
+        id: gig.id,
         name,
         startTime: new Date(startTime),
         endTime: new Date(endTime),
         venueId,
         musicians: updatedMusicians,
+        instrumentation,
+      });
+      
+    } else {
+      const createMusicians = musicians.map((mus) => {
+        return {
+          name: mus.name,
+          instrument: mus.instrument.name,
+          id: mus.id,
+        };
+      });
+      createGig({
+        name,
+        startTime: new Date(startTime),
+        endTime: new Date(endTime),
+        venueId,
+        musicians: createMusicians,
         instrumentation: instrumentNames,
       });
     }
@@ -98,32 +105,23 @@ const GigForm = ({ gig }: GigFormProps) => {
     );
   };
 
-  // const deleteInstrument = async (inst: GigFormInstrument) => {
-  //   // setInstName(inst);
-  //   // const instByName = await getInstByName();
+  const deleteInstrument = async (inst: GigFormInstrument) => {
+    const { instrumentation, musicians } = gigForm;
+    const filteredMusicians = musicians.filter(
+      (mus) => mus.instrument.name !== inst.name,
+    );
+    const filteredInsts = instrumentation.filter(
+      (instrument) => instrument.name !== inst.name,
+    );
 
-  //   // const musicianIdsForInst = instByName.data?.musicians.map(
-  //   //   (mus) => mus.musicianId,
-  //   // );
-
-  //   const { instrumentation, musicians } = gigForm;
-
-  //   // const filteredMusicianIds = musicianIds.filter(
-  //   //   (id) => !musicianIdsForInst?.includes(id),
-  //   // );
-
-  //   // const filteredInsts = instrumentation.filter(
-  //   //   (instrument) => instrument !== inst,
-  //   // );
-
-  //   // dispatch(
-  //   //   setGigForm({
-  //   //     ...gigForm,
-  //   //     instrumentation: filteredInsts,
-  //   //     musicianIds: filteredMusicianIds,
-  //   //   }),
-  //   // );
-  // };
+    dispatch(
+      setGigForm({
+        ...gigForm,
+        instrumentation: filteredInsts,
+        musicians: filteredMusicians,
+      }),
+    );
+  };
 
   return (
     <>
@@ -151,7 +149,7 @@ const GigForm = ({ gig }: GigFormProps) => {
           {gigForm.instrumentation.map((inst, index) => (
             <>
               <li key={`gigForm-${inst.name}-${index}`}>{inst.name}</li>
-              {/* <span onClick={() => deleteInstrument(inst)}>x</span> */}
+              <span onClick={() => deleteInstrument(inst)}>x</span>
             </>
           ))}
         </ul>
