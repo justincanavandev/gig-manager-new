@@ -55,7 +55,6 @@ const GigForm = ({ gig }: GigFormProps) => {
     const instrumentNames = instrumentation.map((inst) => inst.name);
 
     if (gig) {
-  
       const updatedMusicians = musicians.map((mus) => {
         return {
           name: mus.name,
@@ -73,7 +72,6 @@ const GigForm = ({ gig }: GigFormProps) => {
         musicians: updatedMusicians,
         instrumentation,
       });
-      
     } else {
       const createMusicians = musicians.map((mus) => {
         return {
@@ -144,13 +142,13 @@ const GigForm = ({ gig }: GigFormProps) => {
         </label>
         <DateSelector />
         <InstrumentSelector action={selectInstrument} />
-        <VenueSelector />
+        <VenueSelector venueId={gig?.venue ? gig.venueId : null } />
         <ul className="flex gap-2">
           {gigForm.instrumentation.map((inst, index) => (
-            <>
-              <li key={`gigForm-${inst.name}-${index}`}>{inst.name}</li>
+            <div key={`gigForm-${inst.name}-${index}`}>
+              <li>{inst.name}</li>
               <span onClick={() => deleteInstrument(inst)}>x</span>
-            </>
+            </div>
           ))}
         </ul>
         <MusicianSelector />

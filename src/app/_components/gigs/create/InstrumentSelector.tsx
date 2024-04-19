@@ -12,10 +12,10 @@ const InstrumentSelector = ({ action }: InstrumentSelectProps) => {
 
   return (
     <>
-      <label>
+      <label className="flex flex-col">
         Instrumentation:
         <select
-          className="border border-black"
+          className="border border-black w-48"
           name="instrumentation"
           onChange={(e) => action(e)}
         >

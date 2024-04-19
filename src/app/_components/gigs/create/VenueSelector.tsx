@@ -4,18 +4,24 @@ import { useDispatch } from "react-redux";
 import { setGigForm, useGigForm } from "~/lib/features/gig/gigSlice";
 import { useVenues } from "~/lib/features/venues/venueSlice";
 
-const VenueSelector = () => {
+
+type VenueSelectorProps = {
+  venueId?: string | null
+}
+
+const VenueSelector = ({ venueId }: VenueSelectorProps) => {
   const dispatch = useDispatch();
   const gigForm = useGigForm();
   const venues = useVenues();
 
   return (
     <>
-      <label>
+      <label className="flex flex-col">
         Venues:
         <select
-          className="border border-black"
+          className="w-48 border border-black"
           name="venues"
+          defaultValue={venueId ? venueId : ""}
           onChange={(e) => {
             const venueId = e.target.value;
             return dispatch(
