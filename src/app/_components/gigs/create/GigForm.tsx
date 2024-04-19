@@ -52,26 +52,17 @@ const GigForm = ({ gig }: GigFormProps) => {
     const { name, startTime, endTime, venueId, musicians, instrumentation } =
       gigForm;
 
-    const createMusicians = musicians.map((mus) => {
-      return {
-        name: mus.name,
-        instrument: mus.instrument.name,
-        id: mus.id,
-      };
-    });
-
-    const updatedMusicians = musicians.map((mus) => {
-      return {
-        name: mus.name,
-        instrument: {name: mus.instrument.name, id: mus.instrument.id},
-        id: mus.id,
-      };
-    });
-
     const instrumentNames = instrumentation.map((inst) => inst.name);
 
     if (gig) {
-      /** @todo Set up gig update with new schema */
+  
+      const updatedMusicians = musicians.map((mus) => {
+        return {
+          name: mus.name,
+          instrument: { name: mus.instrument.name, id: mus.instrument.id },
+          id: mus.id,
+        };
+      });
 
       updateGig({
         id: gig.id,
@@ -80,9 +71,17 @@ const GigForm = ({ gig }: GigFormProps) => {
         endTime: new Date(endTime),
         venueId,
         musicians: updatedMusicians,
-        instrumentation
+        instrumentation,
       });
+      
     } else {
+      const createMusicians = musicians.map((mus) => {
+        return {
+          name: mus.name,
+          instrument: mus.instrument.name,
+          id: mus.id,
+        };
+      });
       createGig({
         name,
         startTime: new Date(startTime),
@@ -107,11 +106,13 @@ const GigForm = ({ gig }: GigFormProps) => {
   };
 
   const deleteInstrument = async (inst: GigFormInstrument) => {
-    
-
     const { instrumentation, musicians } = gigForm;
-    const filteredMusicians = musicians.filter((mus)=> mus.instrument.name !== inst.name)
-    const filteredInsts = instrumentation.filter((instrument)=> instrument.name !== inst.name)
+    const filteredMusicians = musicians.filter(
+      (mus) => mus.instrument.name !== inst.name,
+    );
+    const filteredInsts = instrumentation.filter(
+      (instrument) => instrument.name !== inst.name,
+    );
 
     dispatch(
       setGigForm({
@@ -136,7 +137,7 @@ const GigForm = ({ gig }: GigFormProps) => {
                 }),
               )
             }
-          value={gigForm.name}
+            value={gigForm.name}
             className="border border-black"
             name="name"
           ></input>
