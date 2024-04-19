@@ -223,42 +223,6 @@ export const gigRouter = createTRPCRouter({
       } = input;
 
       try {
-        const gigById = await ctx.db.gig.findUnique({
-          where: {
-            id,
-          },
-          include: {
-            musicians: {
-              select: {
-                musician: true,
-                instrument: true,
-              },
-            },
-            instrumentation: {
-              select: {
-                instrument: true,
-              },
-            },
-          },
-        });
-        const musiciansInDb = gigById?.musicians.map((musician) => musician);
-        const musicianIds = musicians.map((mus) => mus.id);
-
-        const deletedMusicians = musiciansInDb?.filter(
-          (musInDb) => !musicianIds.includes(musInDb.musician.id),
-        );
-
-        const deleteMusicians = deletedMusicians?.map(async (mus) => {
-          await ctx.db.gigsOnMusiciansOnInstrument.deleteMany({
-            where: {
-              musicianId: mus.musician.id,
-              instrumentId: mus.instrument.id,
-              gigId: id,
-            },
-          });
-        });
-
-        /** @todo Deal with functionality for deleting a musician, adding instrumentation */
 
         const musicianGigJoin = musicians.map(async (mus) => {
           await ctx.db.gigsOnMusiciansOnInstrument.upsert({
@@ -289,15 +253,13 @@ export const gigRouter = createTRPCRouter({
               },
             },
           });
-
-          // await ctx.db.gigsOnMusiciansOnInstrument.deleteMany({
-          //   where: {
-          //     gigId: id,
-          //     NOT: {
-          //       musicianId: mus.id,
-          //     },
-          //   },
-          // });
+          await ctx.db.gigsOnMusiciansOnInstrument.deleteMany({
+            where: {
+              musicianId: {
+                notIn: musicians.map((mus) => mus.id),
+              },
+            },
+          });
         });
 
         const addInstrumentation = instrumentation.map(async (inst) => {
@@ -322,20 +284,16 @@ export const gigRouter = createTRPCRouter({
               },
             },
           });
-          // await ctx.db.gigsOnInstrument.deleteMany({
-          //   where: {
-          //     gigId: id,
-          //     NOT: {
-          //       instrumentId: inst.id
-          //     }
-          //   }
-          // })
+          await ctx.db.gigsOnInstrument.deleteMany({
+            where: {
+              instrumentId: {
+                notIn: instrumentation.map((inst) => inst.id),
+              },
+            },
+          });
         });
         await Promise.all(addInstrumentation);
         await Promise.all(musicianGigJoin);
-        if (deleteMusicians) {
-          await Promise.all(deleteMusicians);
-        }
 
         const updatedGig = await ctx.db.gig.update({
           where: {
