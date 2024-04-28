@@ -113,7 +113,45 @@ export const userRouter = createTRPCRouter({
                     instrument: true,
                   },
                 },
-                gigs: true
+                gigs: {
+                  include: {
+                    gig: {
+                      include: {
+                        venue: {
+                          select: {
+                            name: true,
+                            id: true,
+                          },
+                        },
+                        musicians: {
+                          include: {
+                            musician: {
+                              select: {
+                                name: true,
+                                id: true,
+                                instruments: {
+                                  select: {
+                                    instrument: true,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                        instrumentation: {
+                          include: {
+                            instrument: {
+                              select: {
+                                name: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                    
+                  },
+                },
               },
             },
           },

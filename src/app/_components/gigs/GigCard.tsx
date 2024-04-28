@@ -16,7 +16,7 @@ const GigCard = ({ gig, index }: GigCardProps) => {
   const { parsedDate: endDate, parsedTime: endTime } = parseDate(gig.endTime);
 
   return (
-    <div className="flex flex-col" key={gig.id}>
+    <div className="flex flex-col" key={`gigCard-gig-${gig.id}`}>
       <h2>{gig.name}</h2>
       <span>{`Start Time: ${startDate}, ${startTime}`}</span>
       <span>{`End Time: ${endDate}, ${endTime}`}</span>
