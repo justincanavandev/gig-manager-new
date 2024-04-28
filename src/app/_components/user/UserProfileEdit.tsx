@@ -5,41 +5,38 @@ import InstrumentSelector from "../gigs/create/InstrumentSelector";
 import { useState } from "react";
 import type { GetUserById } from "~/server/types/userTypes";
 import type { ChangeEvent } from "react";
+import type { OneInstrument } from "~/server/types/instrumentTypes";
 
 type DefaultUserProfile = {
+  name: string;
   phoneNumber: string;
+  email: string;
   instrumentIds: string[];
 };
 
 const UserProfileEdit = ({ user }: { user: GetUserById }) => {
   const { mutate: updateUser } = api.user.update.useMutation();
-  // const musician = user?.musician ? user.musician : null
-
 
   const [userProfile, setUserProfile] = useState<DefaultUserProfile>({
-    // phoneNumber: user?.phoneNumber,
-    // instrumentIds: user?.instruments
-    //   .map((inst) => inst.instrument)
-    //   .map((ins) => ins.id),
+    name: user?.name ? user.name : "",
     phoneNumber: "",
+    email: user?.email ? user.email : "",
     instrumentIds: [],
   });
 
   const handleUpdateUser = () => {
     try {
-      const { instrumentIds } = userProfile;
+      const { instrumentIds, name, email, phoneNumber } = userProfile;
       if (user?.name && user?.email) {
-        const { name, email } = user;
-        if (instrumentIds) {
+
           const result = updateUser({
             name,
             email,
             instrumentIds,
-            phoneNumber: "210-218-8720",
+            phoneNumber
           });
 
           return result;
-        }
       }
     } catch (error) {
       console.error("Error updating user", error);
@@ -48,20 +45,57 @@ const UserProfileEdit = ({ user }: { user: GetUserById }) => {
   };
 
   const selectInstrument = (e: ChangeEvent<HTMLSelectElement>) => {
-    if (userProfile.instrumentIds) {
-      setUserProfile({
-        ...userProfile,
-        instrumentIds: [...userProfile.instrumentIds, e.target.value],
-      });
-    }
+    const instrument = JSON.parse(e.target.value) as OneInstrument;
+
+    setUserProfile({
+      ...userProfile,
+      instrumentIds: [...userProfile.instrumentIds, instrument.id],
+    });
   };
 
   return (
-    <div className="flex flex-col items-center">
-  
-
+    <div className="flex flex-col items-center gap-4">
+      <input
+        className="border"
+        onChange={(e) =>
+          setUserProfile({
+            ...userProfile,
+            name: e.target.value,
+          })
+        }
+        value={userProfile.name}
+      ></input>
       <InstrumentSelector action={selectInstrument} />
-      <button onClick={handleUpdateUser}>Update User</button>
+      <label className="flex flex-col">
+        Phone Number
+        <input
+          className="border"
+          onChange={(e) =>
+            setUserProfile({
+              ...userProfile,
+              phoneNumber: e.target.value,
+            })
+          }
+          value={userProfile.phoneNumber}
+        ></input>
+      </label>
+      <label className="flex flex-col">
+        Email
+        <input
+          className="border"
+          onChange={(e) =>
+            setUserProfile({
+              ...userProfile,
+              email: e.target.value,
+            })
+          }
+          value={userProfile.email}
+        ></input>
+      </label>
+
+      <button className="border" onClick={handleUpdateUser}>
+        Update User
+      </button>
     </div>
   );
 };
