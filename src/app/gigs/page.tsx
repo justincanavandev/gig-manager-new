@@ -7,7 +7,7 @@ const Gigs = async () => {
   return (
     <div className="flex flex-col gap-8">
       {gigData?.map((gig, index) => (
-        <GigCard key={gig.id} gig={gig} index={index} />
+        <GigCard key={`gigList-gig-${gig.id}`} gig={gig} index={index} />
       ))}
     </div>
   );
