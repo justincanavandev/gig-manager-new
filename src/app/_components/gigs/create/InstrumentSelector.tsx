@@ -2,12 +2,22 @@
 
 import { useInstruments } from "~/lib/features/instrument/instrumentSlice";
 import type { ChangeEvent } from "react";
+import type { GigFormInstrument } from "~/server/types/gigTypes";
 
 type InstrumentSelectProps = {
-  action: (e: ChangeEvent<HTMLSelectElement>) => void;
+  addInst: (e: ChangeEvent<HTMLSelectElement>) => void;
+  deleteInst: (inst: GigFormInstrument) => void
+  currentInsts: {
+    id: string;
+    name: string;
+  }[];
 };
 
-const InstrumentSelector = ({ action }: InstrumentSelectProps) => {
+const InstrumentSelector = ({
+  addInst,
+  deleteInst,
+  currentInsts,
+}: InstrumentSelectProps) => {
   const instruments = useInstruments();
 
   return (
@@ -15,9 +25,9 @@ const InstrumentSelector = ({ action }: InstrumentSelectProps) => {
       <label className="flex flex-col">
         Instrumentation:
         <select
-          className="border border-black w-48"
-          name="instrumentation"
-          onChange={(e) => action(e)}
+          className="w-48 border border-black"
+          name="instrumentIds"
+          onChange={(e) => addInst(e)}
         >
           <option value="">Select an instrument</option>
           {instruments?.map((instrument) => (
@@ -33,6 +43,12 @@ const InstrumentSelector = ({ action }: InstrumentSelectProps) => {
           ))}
         </select>
       </label>
+      {currentInsts.map((inst) => (
+        <div className="flex gap-6" key={`inst-selector-${inst.name}`}>
+          <span>{inst.name}</span>
+          <span onClick={() => deleteInst(inst)}>x</span>
+        </div>
+      ))}
     </>
   );
 };
