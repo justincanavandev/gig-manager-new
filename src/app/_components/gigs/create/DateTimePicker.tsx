@@ -1,35 +1,29 @@
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useGigForm } from "~/lib/features/gig/gigSlice";
-import { setGigForm } from "~/lib/features/gig/gigSlice";
 import { compareTimes } from "~/server/utils/helpers";
-import { useDispatch } from "react-redux";
+import type { GigForm } from "~/server/types/gigTypes";
 
 type DateTimeProps = {
   index?: number;
+  setForm: (state: GigForm) => void;
+  form: GigForm
 };
 
-const DateTimePicker: React.FC<DateTimeProps> = ({ index }) => {
-  const gigForm = useGigForm();
-  const dispatch = useDispatch();
+const DateTimePicker: React.FC<DateTimeProps> = ({ index, setForm, form}) => {
 
-  console.log("gigForm", gigForm);
 
   const handleDateChange = (date: Date) => {
     if (index === 0) {
-      dispatch(
-        setGigForm({
-          ...gigForm,
-          startTime: date.toISOString(),
-        }),
-      );
+      setForm({
+        ...form,
+        startTime: date.toISOString(),
+      });
     } else {
-      dispatch(
-        setGigForm({
-          ...gigForm,
-          endTime: date.toISOString(),
-        }),
-      );
+      setForm({
+        ...form,
+        endTime: date.toISOString(),
+      });
+
     }
   };
 
@@ -37,17 +31,17 @@ const DateTimePicker: React.FC<DateTimeProps> = ({ index }) => {
     <div>
       <ReactDatePicker
         className={
-          compareTimes(new Date(gigForm.startTime), new Date(gigForm.endTime))
+          compareTimes(new Date(form.startTime), new Date(form.endTime))
             ? "border border-green-500"
             : "border border-red-500"
         }
-        minDate={index === 0 ? new Date() : new Date(gigForm.startTime)}
+        minDate={index === 0 ? new Date() : new Date(form.startTime)}
         showIcon
         showTimeSelect
         timeIntervals={15}
         dateFormat="MM/dd/yyyy h:mm aa"
         selected={
-          index === 0 ? new Date(gigForm.startTime) : new Date(gigForm.endTime)
+          index === 0 ? new Date(form.startTime) : new Date(form.endTime)
         }
         onChange={(date) => {
           date instanceof Date && handleDateChange(date);

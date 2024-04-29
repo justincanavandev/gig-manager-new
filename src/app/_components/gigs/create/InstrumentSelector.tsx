@@ -20,6 +20,9 @@ const InstrumentSelector = ({
 }: InstrumentSelectProps) => {
   const instruments = useInstruments();
 
+  const currentInstNames = currentInsts.map((current)=> current.name)
+  const filteredInsts = instruments.filter((inst)=> !currentInstNames.includes(inst.name))
+
   return (
     <>
       <label className="flex flex-col">
@@ -30,7 +33,7 @@ const InstrumentSelector = ({
           onChange={(e) => addInst(e)}
         >
           <option value="">Select an instrument</option>
-          {instruments?.map((instrument) => (
+          {filteredInsts?.map((instrument) => (
             <option
               key={`${instrument.name}-select`}
               value={JSON.stringify({
