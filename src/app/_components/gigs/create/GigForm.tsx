@@ -17,7 +17,8 @@ type GigFormProps = {
 };
 
 const GigForm = ({ gig }: GigFormProps) => {
-  const { form, setForm, handleChange, updateValue } = useForm<GigForm>(defaultGigForm);
+  const { form, setForm, handleChange, updateValue, changeValue } =
+    useForm<GigForm>(defaultGigForm);
 
   useEffect(() => {
     if (gig) {
@@ -89,7 +90,6 @@ const GigForm = ({ gig }: GigFormProps) => {
     }
   };
 
-
   const deleteInstrument = async (inst: GigFormInstrument) => {
     const { instrumentation, musicians } = form;
     const filteredMusicians = musicians.filter(
@@ -98,7 +98,7 @@ const GigForm = ({ gig }: GigFormProps) => {
     const filteredInsts = instrumentation.filter(
       (instrument) => instrument.name !== inst.name,
     );
-    
+
     setForm({
       ...form,
       instrumentation: filteredInsts,
@@ -106,7 +106,6 @@ const GigForm = ({ gig }: GigFormProps) => {
     });
   };
 
-  console.log('form', form)
 
   return (
     <>
@@ -119,7 +118,11 @@ const GigForm = ({ gig }: GigFormProps) => {
             action={(e) => handleChange(e)}
             name="name"
           />
-          <DateSelector setForm={setForm} form={form} />
+          <DateSelector
+            startTime={form.startTime}
+            endTime={form.endTime}
+            changeDate={changeValue}
+          />
           <InstrumentSelector
             updateInstruments={updateValue}
             musicians={form.musicians}
@@ -127,7 +130,11 @@ const GigForm = ({ gig }: GigFormProps) => {
             currentInsts={form.instrumentation}
           />
 
-          <MusicianSelector updateMusicians={updateValue} currentMusicians={form.musicians} instrumentation={form.instrumentation} />
+          <MusicianSelector
+            updateMusicians={updateValue}
+            currentMusicians={form.musicians}
+            instrumentation={form.instrumentation}
+          />
           <VenueSelector
             setVenue={handleChange}
             venueId={gig?.venue ? gig.venueId : null}

@@ -5,25 +5,24 @@ import type { GigForm } from "~/server/types/gigTypes";
 
 type DateTimeProps = {
   index?: number;
-  setForm: (state: GigForm) => void;
-  form: GigForm
+  startTime: string;
+  endTime: string;
+  changeDate: <Value>(key: keyof GigForm, value: Value) => void;
 };
 
-const DateTimePicker: React.FC<DateTimeProps> = ({ index, setForm, form}) => {
+const DateTimePicker: React.FC<DateTimeProps> = ({
+  index,
 
+  changeDate,
+  startTime,
+  endTime,
+}) => {
 
   const handleDateChange = (date: Date) => {
     if (index === 0) {
-      setForm({
-        ...form,
-        startTime: date.toISOString(),
-      });
+      changeDate("startTime", date);
     } else {
-      setForm({
-        ...form,
-        endTime: date.toISOString(),
-      });
-
+      changeDate("endTime", date);
     }
   };
 
@@ -31,18 +30,16 @@ const DateTimePicker: React.FC<DateTimeProps> = ({ index, setForm, form}) => {
     <div>
       <ReactDatePicker
         className={
-          compareTimes(new Date(form.startTime), new Date(form.endTime))
+          compareTimes(new Date(startTime), new Date(endTime))
             ? "border border-green-500"
             : "border border-red-500"
         }
-        minDate={index === 0 ? new Date() : new Date(form.startTime)}
+        minDate={index === 0 ? new Date() : new Date(startTime)}
         showIcon
         showTimeSelect
         timeIntervals={15}
         dateFormat="MM/dd/yyyy h:mm aa"
-        selected={
-          index === 0 ? new Date(form.startTime) : new Date(form.endTime)
-        }
+        selected={index === 0 ? new Date(startTime) : new Date(endTime)}
         onChange={(date) => {
           date instanceof Date && handleDateChange(date);
         }}
