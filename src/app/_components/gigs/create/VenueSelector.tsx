@@ -1,17 +1,16 @@
 "use client";
 
-import { useDispatch } from "react-redux";
-import { setGigForm, useGigForm } from "~/lib/features/gig/gigSlice";
 import { useVenues } from "~/lib/features/venues/venueSlice";
-
+import type { ChangeEvent } from "react";
 
 type VenueSelectorProps = {
-  venueId?: string | null
-}
+  venueId?: string | null;
+  setVenue: (
+    e: ChangeEvent<HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement>,
+  ) => void;
+};
 
-const VenueSelector = ({ venueId }: VenueSelectorProps) => {
-  const dispatch = useDispatch();
-  const gigForm = useGigForm();
+const VenueSelector = ({ venueId, setVenue }: VenueSelectorProps) => {
   const venues = useVenues();
 
   return (
@@ -20,17 +19,11 @@ const VenueSelector = ({ venueId }: VenueSelectorProps) => {
         Venues:
         <select
           className="w-48 border border-black"
-          name="venues"
+          name="venueId"
           defaultValue={venueId ? venueId : ""}
-          onChange={(e) => {
-            const venueId = e.target.value;
-            return dispatch(
-              setGigForm({
-                ...gigForm,
-                venueId,
-              }),
-            );
-          }}
+          onChange={(e) =>
+            setVenue(e)
+          }
         >
           <option value="">Select a Venue</option>
           {venues?.map((venue) => (

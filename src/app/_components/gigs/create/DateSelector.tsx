@@ -1,17 +1,27 @@
-'use client'
+"use client";
 
 import DateTimePicker from "./DateTimePicker";
+import type { GigForm } from "~/server/types/gigTypes";
 
 const startOrEnd = ["Start Date", "End Date"];
 
-const DateSelector = () => {
+type DateSelectorProps = {
+  startTime: string
+  endTime: string
+  changeDate: <Value>(
+    key: keyof GigForm,
+    value: Value
+  ) => void
+};
+
+const DateSelector = ({ changeDate, startTime, endTime }: DateSelectorProps) => {
   return (
     <div className="mt-8">
       {startOrEnd.map((selection, index) => (
         <label key={`${selection}, ${index} `}>
           {selection}
 
-          <DateTimePicker index={index} />
+          <DateTimePicker startTime={startTime} endTime={endTime} changeDate={changeDate} index={index} />
         </label>
       ))}
 

@@ -1,13 +1,23 @@
 "use client";
 
-import { useDispatch } from "react-redux";
-import { setGigForm, useGigForm } from "~/lib/features/gig/gigSlice";
 import { useMusicians } from "~/lib/features/musicians/musicianSlice";
-import type { GigFormMusician } from "~/server/types/gigTypes";
+import type { GigForm, GigFormInstrument, GigFormMusician } from "~/server/types/gigTypes";
 
-const MusicianSelector = () => {
-  const dispatch = useDispatch();
-  const gigForm = useGigForm();
+type MusicianSelectorProps = {
+  currentMusicians: GigFormMusician[]
+  instrumentation: GigFormInstrument[]
+  updateMusicians: <Value>(
+    key: keyof GigForm,
+    addedValue: Value,
+    action: "add" | "delete",
+  ) => void;
+};
+
+const MusicianSelector = ({
+  currentMusicians,
+  instrumentation,
+  updateMusicians,
+}: MusicianSelectorProps) => {
   const musicians = useMusicians();
 
   const handleAddMusician = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -15,31 +25,32 @@ const MusicianSelector = () => {
 
     const addedMusician = JSON.parse(e.target.value) as GigFormMusician;
 
-    const currentMusicians = [...gigForm.musicians];
-    return dispatch(
-      setGigForm({
-        ...gigForm,
-        musicians: [...currentMusicians, addedMusician],
-      }),
-    );
+    updateMusicians("musicians", addedMusician, "add");
+  };
+
+  const deleteMusician = (musician: GigFormMusician) => {
+    updateMusicians("musicians", musician, "delete");
+
   };
 
   const doesInstrumentHaveMusician = (inst: string) => {
-    const musicians = gigForm.musicians.map((mus) => mus);
-    const result = musicians.find((mus) => mus.instrument.name === inst);
+    const musicians = currentMusicians.map((mus) => mus);
+    const result = musicians.find((mus) => mus?.instrument?.name === inst);
     return !!result;
   };
 
+
   return (
-    <>
-      {gigForm.instrumentation.map((instrument, instIndex) => (
+    <div>
+      {instrumentation.map((instrument, instIndex) => (
         <div key={`gigForm, ${instrument.id}, ${instIndex}`}>
           {!doesInstrumentHaveMusician(instrument.name) && (
-           <>
+            <>
               <label>Add {instrument.name}</label>
               <select
                 className="border border-black"
                 onChange={(e) => handleAddMusician(e)}
+                name="musicians"
               >
                 {" "}
                 <option>Select {instrument.name}</option>
@@ -63,11 +74,19 @@ const MusicianSelector = () => {
                     ),
                 )}
               </select>
-           </>
+            </>
           )}
-       </div>
+        </div>
       ))}
-    </>
+      <>
+        {currentMusicians.map((mus) => (
+          <div className="flex gap-4" key={`currentMusicians-${mus.id}`}>
+            <span>{`${mus.name} - ${mus.instrument.name}`}</span>
+            <span onClick={() => deleteMusician(mus)}>x</span>
+          </div>
+        ))}
+      </>
+    </div>
   );
 };
 

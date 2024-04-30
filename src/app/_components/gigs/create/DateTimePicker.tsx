@@ -1,35 +1,28 @@
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useGigForm } from "~/lib/features/gig/gigSlice";
-import { setGigForm } from "~/lib/features/gig/gigSlice";
 import { compareTimes } from "~/server/utils/helpers";
-import { useDispatch } from "react-redux";
+import type { GigForm } from "~/server/types/gigTypes";
 
 type DateTimeProps = {
   index?: number;
+  startTime: string;
+  endTime: string;
+  changeDate: <Value>(key: keyof GigForm, value: Value) => void;
 };
 
-const DateTimePicker: React.FC<DateTimeProps> = ({ index }) => {
-  const gigForm = useGigForm();
-  const dispatch = useDispatch();
+const DateTimePicker: React.FC<DateTimeProps> = ({
+  index,
 
-  console.log("gigForm", gigForm);
+  changeDate,
+  startTime,
+  endTime,
+}) => {
 
   const handleDateChange = (date: Date) => {
     if (index === 0) {
-      dispatch(
-        setGigForm({
-          ...gigForm,
-          startTime: date.toISOString(),
-        }),
-      );
+      changeDate("startTime", date);
     } else {
-      dispatch(
-        setGigForm({
-          ...gigForm,
-          endTime: date.toISOString(),
-        }),
-      );
+      changeDate("endTime", date);
     }
   };
 
@@ -37,18 +30,16 @@ const DateTimePicker: React.FC<DateTimeProps> = ({ index }) => {
     <div>
       <ReactDatePicker
         className={
-          compareTimes(new Date(gigForm.startTime), new Date(gigForm.endTime))
+          compareTimes(new Date(startTime), new Date(endTime))
             ? "border border-green-500"
             : "border border-red-500"
         }
-        minDate={index === 0 ? new Date() : new Date(gigForm.startTime)}
+        minDate={index === 0 ? new Date() : new Date(startTime)}
         showIcon
         showTimeSelect
         timeIntervals={15}
         dateFormat="MM/dd/yyyy h:mm aa"
-        selected={
-          index === 0 ? new Date(gigForm.startTime) : new Date(gigForm.endTime)
-        }
+        selected={index === 0 ? new Date(startTime) : new Date(endTime)}
         onChange={(date) => {
           date instanceof Date && handleDateChange(date);
         }}

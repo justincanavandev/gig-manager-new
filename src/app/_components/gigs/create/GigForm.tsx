@@ -5,44 +5,43 @@ import InstrumentSelector from "./InstrumentSelector";
 import DateSelector from "./DateSelector";
 import VenueSelector from "./VenueSelector";
 import MusicianSelector from "./MusicianSelector";
-import { useDispatch } from "react-redux";
-import { setGigForm, useGigForm } from "~/lib/features/gig/gigSlice";
 import { api } from "~/trpc/react";
-import { useEffect, type ChangeEvent } from "react";
+import { useEffect } from "react";
 import type { GigById } from "~/server/types/gigTypes";
+import FormInput from "../../base/FormInput";
+import { defaultGigForm } from "~/default/defaultGigForm";
+import useForm from "~/app/hooks/useForm";
 
 type GigFormProps = {
   gig?: GigById;
 };
 
 const GigForm = ({ gig }: GigFormProps) => {
-  const dispatch = useDispatch();
-  const gigForm = useGigForm();
+  const { form, setForm, handleChange, updateValue, changeValue } =
+    useForm<GigForm>(defaultGigForm);
 
   useEffect(() => {
     if (gig) {
       const { name, startTime, endTime, instrumentation, musicians, venueId } =
         gig;
-      dispatch(
-        setGigForm({
-          name,
-          venueId: venueId,
-          startTime: startTime.toISOString(),
-          endTime: endTime.toISOString(),
-          instrumentation: instrumentation.map((inst) => {
-            return { name: inst.instrument.name, id: inst.instrumentId };
-          }),
-          musicians: musicians.map((mus) => {
-            return {
-              instrument: mus.instrument,
-              id: mus.musicianId,
-              name: mus.musician.name,
-            };
-          }),
+      setForm({
+        name,
+        venueId,
+        startTime: startTime.toISOString(),
+        endTime: endTime.toISOString(),
+        instrumentation: instrumentation.map((inst) => {
+          return { name: inst.instrument.name, id: inst.instrumentId };
         }),
-      );
+        musicians: musicians.map((mus) => {
+          return {
+            instrument: mus.instrument,
+            id: mus.musicianId,
+            name: mus.musician.name,
+          };
+        }),
+      });
     }
-  }, [dispatch, gig]);
+  }, [gig, setForm]);
 
   const { mutate: createGig } = api.gig.create.useMutation();
   const { mutate: updateGig } = api.gig.update.useMutation();
@@ -50,7 +49,7 @@ const GigForm = ({ gig }: GigFormProps) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { name, startTime, endTime, venueId, musicians, instrumentation } =
-      gigForm;
+      form;
 
     const instrumentNames = instrumentation.map((inst) => inst.name);
 
@@ -91,20 +90,8 @@ const GigForm = ({ gig }: GigFormProps) => {
     }
   };
 
-  const selectInstrument = (e: ChangeEvent<HTMLSelectElement>) => {
-    const { instrumentation } = gigForm;
-    const parsedObj = JSON.parse(e.target.value) as GigFormInstrument;
-
-    return dispatch(
-      setGigForm({
-        ...gigForm,
-        instrumentation: [...instrumentation, parsedObj],
-      }),
-    );
-  };
-
   const deleteInstrument = async (inst: GigFormInstrument) => {
-    const { instrumentation, musicians } = gigForm;
+    const { instrumentation, musicians } = form;
     const filteredMusicians = musicians.filter(
       (mus) => mus.instrument.name !== inst.name,
     );
@@ -112,50 +99,51 @@ const GigForm = ({ gig }: GigFormProps) => {
       (instrument) => instrument.name !== inst.name,
     );
 
-    dispatch(
-      setGigForm({
-        ...gigForm,
-        instrumentation: filteredInsts,
-        musicians: filteredMusicians,
-      }),
-    );
+    setForm({
+      ...form,
+      instrumentation: filteredInsts,
+      musicians: filteredMusicians,
+    });
   };
+
 
   return (
     <>
       <form onSubmit={(e) => handleSubmit(e)}>
-        <label>
-          Name
-          <input
-            onChange={(e) =>
-              dispatch(
-                setGigForm({
-                  ...gigForm,
-                  name: e.target.value,
-                }),
-              )
-            }
-            value={gigForm.name}
-            className="border border-black"
+        <div className="flex flex-col gap-4">
+          <FormInput
+            label="Name"
+            value={form.name}
+            placeholder="John Smith"
+            action={(e) => handleChange(e)}
             name="name"
-          ></input>
-        </label>
-        <DateSelector />
-        <InstrumentSelector action={selectInstrument} />
-        <VenueSelector venueId={gig?.venue ? gig.venueId : null } />
-        <ul className="flex gap-2">
-          {gigForm.instrumentation.map((inst, index) => (
-            <div key={`gigForm-${inst.name}-${index}`}>
-              <li>{inst.name}</li>
-              <span onClick={() => deleteInstrument(inst)}>x</span>
-            </div>
-          ))}
-        </ul>
-        <MusicianSelector />
+          />
+          <DateSelector
+            startTime={form.startTime}
+            endTime={form.endTime}
+            changeDate={changeValue}
+          />
+          <InstrumentSelector
+            updateInstruments={updateValue}
+            musicians={form.musicians}
+            deleteInst={deleteInstrument}
+            currentInsts={form.instrumentation}
+          />
 
-        <button className="w-24 border border-black" type="submit">
-          Submit
-        </button>
+          <MusicianSelector
+            updateMusicians={updateValue}
+            currentMusicians={form.musicians}
+            instrumentation={form.instrumentation}
+          />
+          <VenueSelector
+            setVenue={handleChange}
+            venueId={gig?.venue ? gig.venueId : null}
+          />
+
+          <button className="w-24 border border-black" type="submit">
+            Submit
+          </button>
+        </div>
       </form>
     </>
   );
