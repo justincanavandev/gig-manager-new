@@ -1,44 +1,49 @@
 import { useState, type ChangeEvent } from "react";
 
-type UseFormProps<T> = {
-  form: T;
+type UseFormProps<Form> = {
+  form: Form;
   handleChange: (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => void;
-  setForm: (state: T) => void;
-  updateValue: (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-    value: string | number | null,
-    arr: (string | number)[],
-  ) => void;
+  setForm: (state: Form) => void;
+  updateValue: <Value>(key: keyof Form, value: Value, action: "add" | "delete") => void;
 };
-
-const useForm = <T extends object>(defaultValues: T): UseFormProps<T> => {
-  const [form, setForm] = useState<T>(defaultValues);
+ 
+const useForm = <Form extends object>(defaultValues: Form): UseFormProps<Form> => {
+  const [form, setForm] = useState<Form>(defaultValues);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
-    setForm((formData) => ({
+    setForm((formData) => ({ 
       ...formData,
       [name]: value,
     }));
   };
 
-  const updateValue = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-    value: string | number | null,
-    arr: (string | number)[],
-  ) => {
-    const { name } = e.target;
+  const updateValue = <Value>(key: keyof Form, value: Value, action: "add" | "delete") => {
+    setForm((formData) => {
+      const arr = form[key];
+      if (Array.isArray(arr)) {
+        if (action === "add") {
+          return {
+            ...formData,
+            [key]: [...arr, value],
+          };
+        }
 
-    setForm((formData) => ({
-      ...formData,
-      [name]: value ? [...arr, value] : [...arr],
-    }));
+       if (action === "delete") {
+          const filteredData = arr.filter((d) => d !== value);
+          return {
+            ...formData,
+            [key]: filteredData,
+          };
+        } 
+      }
+      return formData
+    });
   };
-
 
   return {
     form,

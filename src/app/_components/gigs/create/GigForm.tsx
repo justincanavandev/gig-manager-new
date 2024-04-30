@@ -6,7 +6,7 @@ import DateSelector from "./DateSelector";
 import VenueSelector from "./VenueSelector";
 import MusicianSelector from "./MusicianSelector";
 import { api } from "~/trpc/react";
-import { useEffect, type ChangeEvent } from "react";
+import { useEffect } from "react";
 import type { GigById } from "~/server/types/gigTypes";
 import FormInput from "../../base/FormInput";
 import { defaultGigForm } from "~/default/defaultGigForm";
@@ -17,9 +17,7 @@ type GigFormProps = {
 };
 
 const GigForm = ({ gig }: GigFormProps) => {
-
-  const { form, setForm, handleChange } = useForm<GigForm>(defaultGigForm);
-
+  const { form, setForm, handleChange, updateValue } = useForm<GigForm>(defaultGigForm);
 
   useEffect(() => {
     if (gig) {
@@ -27,7 +25,7 @@ const GigForm = ({ gig }: GigFormProps) => {
         gig;
       setForm({
         name,
-        venueId: venueId,
+        venueId,
         startTime: startTime.toISOString(),
         endTime: endTime.toISOString(),
         instrumentation: instrumentation.map((inst) => {
@@ -42,7 +40,6 @@ const GigForm = ({ gig }: GigFormProps) => {
         }),
       });
     }
-
   }, [gig, setForm]);
 
   const { mutate: createGig } = api.gig.create.useMutation();
@@ -92,18 +89,8 @@ const GigForm = ({ gig }: GigFormProps) => {
     }
   };
 
-  const selectInstrument = (e: ChangeEvent<HTMLSelectElement>) => {
-    const { instrumentation } = form;
-    const parsedInst = JSON.parse(e.target.value) as GigFormInstrument;
-    setForm({
-      ...form,
-      instrumentation: [...instrumentation, parsedInst],
-    });
-
-  };
 
   const deleteInstrument = async (inst: GigFormInstrument) => {
-
     const { instrumentation, musicians } = form;
     const filteredMusicians = musicians.filter(
       (mus) => mus.instrument.name !== inst.name,
@@ -111,40 +98,44 @@ const GigForm = ({ gig }: GigFormProps) => {
     const filteredInsts = instrumentation.filter(
       (instrument) => instrument.name !== inst.name,
     );
+    
     setForm({
       ...form,
       instrumentation: filteredInsts,
       musicians: filteredMusicians,
     });
-
   };
+
+  console.log('form', form)
 
   return (
     <>
       <form onSubmit={(e) => handleSubmit(e)}>
         <div className="flex flex-col gap-4">
-        <FormInput
-          label="Name"
-          value={form.name}
-          placeholder="John Smith"
-          action={(e) =>
-            handleChange(e)
-          }
-          name="name"
-        />
-        <DateSelector setForm={setForm} form={form} />
-        <InstrumentSelector
-          addInst={selectInstrument}
-          deleteInst={deleteInstrument}
-          currentInsts={form.instrumentation}
-        />
-        <VenueSelector setVenue={handleChange} venueId={gig?.venue ? gig.venueId : null} />
+          <FormInput
+            label="Name"
+            value={form.name}
+            placeholder="John Smith"
+            action={(e) => handleChange(e)}
+            name="name"
+          />
+          <DateSelector setForm={setForm} form={form} />
+          <InstrumentSelector
+            updateInstruments={updateValue}
+            musicians={form.musicians}
+            deleteInst={deleteInstrument}
+            currentInsts={form.instrumentation}
+          />
 
-        <MusicianSelector form={form} setForm={setForm}/>
+          <MusicianSelector updateMusicians={updateValue} currentMusicians={form.musicians} instrumentation={form.instrumentation} />
+          <VenueSelector
+            setVenue={handleChange}
+            venueId={gig?.venue ? gig.venueId : null}
+          />
 
-        <button className="w-24 border border-black" type="submit">
-          Submit
-        </button>
+          <button className="w-24 border border-black" type="submit">
+            Submit
+          </button>
         </div>
       </form>
     </>
