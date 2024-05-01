@@ -90,7 +90,8 @@ const GigForm = ({ gig }: GigFormProps) => {
     }
   };
 
-  const deleteInstrument = async (inst: GigFormInstrument) => {
+  const deleteInstrument = (inst: GigFormInstrument) => {
+
     const { instrumentation, musicians } = form;
     const filteredMusicians = musicians.filter(
       (mus) => mus.instrument.name !== inst.name,
