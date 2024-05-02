@@ -34,23 +34,20 @@ const InstrumentSelector = ({
   const instToString = (inst: GigFormInstrument) => inst.name;
 
   const addInstrument = (inst: GigFormInstrument) => {
-    if (inst) { 
+    if (inst) {
       updateInstruments("instrumentation", inst, "add");
     }
   };
 
   return (
-    <>
-
-      <BaseCombobox
-        data={instruments}
-        disabledData={filteredInsts}
-        dataToString={instToString}
-        label="Instrumentation"
-        action={addInstrument}
-        action2={deleteInst}
-      />
-    </>
+    <BaseCombobox
+      data={instruments}
+      disabledData={filteredInsts}
+      dataToString={instToString}
+      label="Instrumentation"
+      action={addInstrument}
+      action2={deleteInst}
+    />
   );
 };
 

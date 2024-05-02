@@ -2,7 +2,7 @@ import type { GigForm } from "~/server/types/gigTypes";
 
 export const defaultGigForm: GigForm = {
   name: "",
-  venueId: "",
+  venue: null,
   startTime: new Date().toISOString(),
   endTime: new Date().toISOString(),
   instrumentation: [],

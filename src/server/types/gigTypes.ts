@@ -29,9 +29,14 @@ export type GigFormMusician = {
   name: string
 };
 
+export type GigFormVenue = {
+  name: string
+  id: string
+} | null
+
 export type GigForm = {
   name: string;
-  venueId: string;
+  venue: GigFormVenue
   startTime: string;
   endTime: string;
   instrumentation: GigFormInstrument[]

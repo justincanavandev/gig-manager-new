@@ -8,3 +8,4 @@ export type VenueType = {
   name: string;
   location: Location | null
 }
+

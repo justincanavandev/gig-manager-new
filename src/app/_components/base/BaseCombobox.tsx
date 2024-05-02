@@ -65,7 +65,7 @@ const BaseCombobox = <T,>({
               key={`combobox-${index}`}
               value={datum}
               disabled={disabledData.includes(datum)}
-              className="ui-active:bg-blue-500 ui-active:text-white ui-disabled:bg-slate-200 flex list-none justify-between gap-2"
+              className="ui-active:bg-blue-500 ui-active:text-white ui-disabled:text-black ui-disabled:bg-slate-200 flex list-none justify-between gap-2"
             >
               {dataToString(datum)}
               {disabledData.includes(datum) && (
