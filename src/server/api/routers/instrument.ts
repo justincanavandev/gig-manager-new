@@ -6,7 +6,23 @@ import z from "zod";
 export const instrumentRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     try {
-      const allInstruments = await ctx.db.instrument.findMany();
+      const allInstruments = await ctx.db.instrument.findMany({
+        select: {
+          name: true,
+          id: true,
+
+          musicians: {
+            select: {
+              musician: {
+                select: {
+                  name: true,
+                  id: true,
+                },
+              },
+            },
+          },
+        },
+      });
 
       if (!allInstruments) {
         throw new TRPCError({
@@ -33,9 +49,9 @@ export const instrumentRouter = createTRPCRouter({
           include: {
             musicians: {
               select: {
-                musicianId: true
-              }
-            }
+                musicianId: true,
+              },
+            },
           },
         });
         return instrument;

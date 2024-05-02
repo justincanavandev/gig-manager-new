@@ -22,14 +22,23 @@ type InstrumentSelectProps = {
 const InstrumentSelector = ({
   updateInstruments,
   deleteInst,
-  currentInsts,
+  // currentInsts,
 }: InstrumentSelectProps) => {
   const instruments = useInstruments();
 
-  const currentInstNames = currentInsts.map((current) => current.name);
-  const filteredInsts = instruments.filter((inst) =>
-    currentInstNames.includes(inst.name),
-  );
+  const instrumentsToPass = instruments.map((inst)=> { return  {
+    name: inst.name,
+    id: inst.id,
+    musicians: inst.musicians.map((mus)=> { return {
+      id: mus.musician.id,
+      name: mus.musician.name }
+    })
+  }})
+
+  // const currentInstNames = currentInsts.map((current) => current.name);
+  // const filteredInsts = instrumentsToPass.filter((inst) =>
+  //   currentInstNames.includes(inst.name),
+  // );
 
   const instToString = (inst: GigFormInstrument) => inst.name;
 
@@ -41,8 +50,9 @@ const InstrumentSelector = ({
 
   return (
     <BaseCombobox
-      data={instruments}
-      disabledData={filteredInsts}
+      data={instrumentsToPass}
+      // disabledData={filteredInsts}
+      disabledData={[]}
       dataToString={instToString}
       label="Instrumentation"
       action={addInstrument}

@@ -141,7 +141,7 @@ export const gigRouter = createTRPCRouter({
             venue: {
               select: {
                 name: true,
-                id: true
+                id: true,
               },
             },
             musicians: {
@@ -167,9 +167,25 @@ export const gigRouter = createTRPCRouter({
             instrumentation: {
               include: {
                 instrument: {
-                  select: {
-                    name: true,
+                  // select: {
+                  //   name: true,
+                  //   id: true,
+                  // },
+                  include: {
+                    musicians: {
+                      include: {
+                        musician: {
+                          select: {
+                            name: true,
+                            id: true,
+                          },
+                        },
+                      },
+                    },
                   },
+                  //    select: {
+                  //   name: true,
+                  // },
                 },
               },
             },
@@ -224,7 +240,6 @@ export const gigRouter = createTRPCRouter({
       } = input;
 
       try {
-
         const musicianGigJoin = musicians.map(async (mus) => {
           await ctx.db.gigsOnMusiciansOnInstrument.upsert({
             where: {

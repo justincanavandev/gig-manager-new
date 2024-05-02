@@ -30,11 +30,26 @@ const GigForm = ({ gig }: GigFormProps) => {
         startTime: startTime.toISOString(),
         endTime: endTime.toISOString(),
         instrumentation: instrumentation.map((inst) => {
-          return { name: inst.instrument.name, id: inst.instrumentId };
+          return {
+            name: inst.instrument.name,
+            id: inst.instrumentId,
+            musicians: inst.instrument.musicians.map((mus) => {
+              return {
+                name: mus.musician.name,
+                id: mus.musician.id,
+
+              };
+            }),
+          };
         }),
         musicians: musicians.map((mus) => {
           return {
-            instrument: mus.instrument,
+            instrument: {
+              name: mus.instrument.name,
+              id: mus.instrument.id,
+             
+             
+            },
             id: mus.musicianId,
             name: mus.musician.name,
           };
@@ -91,7 +106,6 @@ const GigForm = ({ gig }: GigFormProps) => {
   };
 
   const deleteInstrument = (inst: GigFormInstrument) => {
-
     const { instrumentation, musicians } = form;
     const filteredMusicians = musicians.filter(
       (mus) => mus.instrument.name !== inst.name,

@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import type { RootState } from "~/lib/store";
 import type { GetAllInstruments } from "~/server/types/instrumentTypes";
 
-/** @todo Incorporate GetAllInstruments type*/
 
 export type InstrumentState = {
   instruments: GetAllInstruments;
