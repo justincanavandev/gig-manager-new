@@ -22,19 +22,34 @@ const GigForm = ({ gig }: GigFormProps) => {
 
   useEffect(() => {
     if (gig) {
-      const { name, startTime, endTime, instrumentation, musicians, venueId } =
+      const { name, startTime, endTime, instrumentation, musicians, venue } =
         gig;
       setForm({
         name,
-        venueId,
+        venue,
         startTime: startTime.toISOString(),
         endTime: endTime.toISOString(),
         instrumentation: instrumentation.map((inst) => {
-          return { name: inst.instrument.name, id: inst.instrumentId };
+          return {
+            name: inst.instrument.name,
+            id: inst.instrumentId,
+            musicians: inst.instrument.musicians.map((mus) => {
+              return {
+                name: mus.musician.name,
+                id: mus.musician.id,
+
+              };
+            }),
+          };
         }),
         musicians: musicians.map((mus) => {
           return {
-            instrument: mus.instrument,
+            instrument: {
+              name: mus.instrument.name,
+              id: mus.instrument.id,
+             
+             
+            },
             id: mus.musicianId,
             name: mus.musician.name,
           };
@@ -48,7 +63,7 @@ const GigForm = ({ gig }: GigFormProps) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { name, startTime, endTime, venueId, musicians, instrumentation } =
+    const { name, startTime, endTime, venue, musicians, instrumentation } =
       form;
 
     const instrumentNames = instrumentation.map((inst) => inst.name);
@@ -67,7 +82,7 @@ const GigForm = ({ gig }: GigFormProps) => {
         name,
         startTime: new Date(startTime),
         endTime: new Date(endTime),
-        venueId,
+        venueId: venue?.id ?? "",
         musicians: updatedMusicians,
         instrumentation,
       });
@@ -83,14 +98,14 @@ const GigForm = ({ gig }: GigFormProps) => {
         name,
         startTime: new Date(startTime),
         endTime: new Date(endTime),
-        venueId,
+        venueId: venue?.id ?? "",
         musicians: createMusicians,
         instrumentation: instrumentNames,
       });
     }
   };
 
-  const deleteInstrument = async (inst: GigFormInstrument) => {
+  const deleteInstrument = (inst: GigFormInstrument) => {
     const { instrumentation, musicians } = form;
     const filteredMusicians = musicians.filter(
       (mus) => mus.instrument.name !== inst.name,
@@ -125,7 +140,7 @@ const GigForm = ({ gig }: GigFormProps) => {
           />
           <InstrumentSelector
             updateInstruments={updateValue}
-            musicians={form.musicians}
+            // musicians={form.musicians}
             deleteInst={deleteInstrument}
             currentInsts={form.instrumentation}
           />
@@ -136,8 +151,8 @@ const GigForm = ({ gig }: GigFormProps) => {
             instrumentation={form.instrumentation}
           />
           <VenueSelector
-            setVenue={handleChange}
-            venueId={gig?.venue ? gig.venueId : null}
+            setVenue={changeValue}
+            venue={form?.venue ? form.venue : null}
           />
 
           <button className="w-24 border border-black" type="submit">

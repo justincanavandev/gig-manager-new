@@ -21,6 +21,7 @@ export type MusiciansFromAllGigs = {
 export type GigFormInstrument = {
   name: string;
   id: string;
+  musicians?: InstrumentationMusician[]
 };
 
 export type GigFormMusician = {
@@ -29,9 +30,20 @@ export type GigFormMusician = {
   name: string
 };
 
+export type InstrumentationMusician = {
+  id: string;
+  name: string
+}
+
+export type GigFormVenue = {
+  name: string
+  id: string
+} | null
+
 export type GigForm = {
   name: string;
-  venueId: string;
+  // venueId: string;
+  venue: GigFormVenue
   startTime: string;
   endTime: string;
   instrumentation: GigFormInstrument[]

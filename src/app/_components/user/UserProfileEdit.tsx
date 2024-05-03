@@ -3,30 +3,32 @@
 import { api } from "~/trpc/react";
 import InstrumentSelector from "../gigs/create/InstrumentSelector";
 import type { GetUserById } from "~/server/types/userTypes";
-import type { ChangeEvent } from "react";
-import type { OneInstrument } from "~/server/types/instrumentTypes";
+// import type { ChangeEvent } from "react";
+// import type { OneInstrument } from "~/server/types/instrumentTypes";
 import FormInput from "../base/FormInput";
 import useForm from "~/app/hooks/useForm";
 import type { GigFormInstrument } from "~/server/types/gigTypes";
+// import type { GigForm } from "~/server/types/gigTypes";
 
-type DefaultUserProfile = {
+export type DefaultUserProfile = {
   name: string;
   phoneNumber: string;
   email: string;
-  instruments: {
-    id: string;
-    name: string;
-  }[];
+  instrumentation: GigFormInstrument[]
+  // instruments: {
+  //   id: string;
+  //   name: string;
+  // }[];
 };
 
 const UserProfileEdit = ({ user }: { user: GetUserById }) => {
   const { mutate: updateUser } = api.user.update.useMutation();
 
-  const { form, handleChange, setForm } = useForm<DefaultUserProfile>({
+  const { form, handleChange, setForm, updateValue} = useForm<DefaultUserProfile>({
     name: user?.name ? user.name : "",
     phoneNumber: "",
     email: user?.email ? user.email : "",
-    instruments: user?.musician?.instruments
+    instrumentation: user?.musician?.instruments
       ? user.musician.instruments.map((inst) => {
           return {
             id: inst.instrument.id,
@@ -40,12 +42,12 @@ const UserProfileEdit = ({ user }: { user: GetUserById }) => {
 
   const handleUpdateUser = () => {
     try {
-      const { instruments, name, email, phoneNumber } = form;
+      const { instrumentation, name, email, phoneNumber } = form;
       if (user?.name && user?.email) {
         const result = updateUser({
           name,
           email,
-          instrumentIds: instruments.map((inst) => inst.id),
+          instrumentIds: instrumentation.map((inst) => inst.id),
           phoneNumber,
         });
 
@@ -57,23 +59,23 @@ const UserProfileEdit = ({ user }: { user: GetUserById }) => {
     }
   };
 
-  const addInstrument = (e: ChangeEvent<HTMLSelectElement>) => {
-    const instrument = JSON.parse(e.target.value) as OneInstrument;
-    setForm({
-      ...form,
-      instruments: [...form.instruments, instrument],
-    });
-  };
+  // const addInstrument = (e: ChangeEvent<HTMLSelectElement>) => {
+  //   const instrument = JSON.parse(e.target.value) as OneInstrument;
+  //   setForm({
+  //     ...form,
+  //     instrumentation: [...form.instrumentation, instrument],
+  //   });
+  // };
 
   const deleteInst = (inst: GigFormInstrument) => {
-    const { instruments } = form;
-    const filteredInsts = instruments.filter(
+    const { instrumentation } = form;
+    const filteredInsts = instrumentation.filter(
       (instrument) => instrument.name !== inst.name,
     );
 
     setForm({
       ...form,
-      instruments: filteredInsts,
+      instrumentation: filteredInsts,
     });
   };
 
@@ -87,9 +89,10 @@ const UserProfileEdit = ({ user }: { user: GetUserById }) => {
         placeholder="John Smith"
       ></FormInput>
       <InstrumentSelector
-        addInst={addInstrument}
+        // addInst={addInstrument}
+        updateInstruments={updateValue}
         deleteInst={deleteInst}
-        currentInsts={form.instruments}
+        currentInsts={form.instrumentation}
       />
 
       <FormInput

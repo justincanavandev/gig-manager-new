@@ -1,38 +1,42 @@
 "use client";
 
 import { useVenues } from "~/lib/features/venues/venueSlice";
-import type { ChangeEvent } from "react";
+import BaseCombobox from "../../base/BaseCombobox";
+import type { GigForm, GigFormVenue } from "~/server/types/gigTypes";
 
 type VenueSelectorProps = {
-  venueId?: string | null;
-  setVenue: (
-    e: ChangeEvent<HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement>,
-  ) => void;
+  setVenue: <Value>(key: keyof GigForm, value: Value) => void;
+  venue: GigFormVenue;
 };
 
-const VenueSelector = ({ venueId, setVenue }: VenueSelectorProps) => {
+const VenueSelector = ({ setVenue, venue }: VenueSelectorProps) => {
   const venues = useVenues();
+
+  const venueToString = (venue: GigFormVenue) => venue?.name ?? "";
+
+  const changeVenue = (venue: GigFormVenue) => {
+    if (venue) {
+      setVenue("venue", venue);
+    }
+  };
+
+  const deleteVenue = (venue: GigFormVenue) => {
+    if (venue) {
+      setVenue("venue", null);
+    }
+  };
+
 
   return (
     <>
-      <label className="flex flex-col">
-        Venues:
-        <select
-          className="w-48 border border-black"
-          name="venueId"
-          defaultValue={venueId ? venueId : ""}
-          onChange={(e) =>
-            setVenue(e)
-          }
-        >
-          <option value="">Select a Venue</option>
-          {venues?.map((venue) => (
-            <option key={`${venue.name}-select`} value={venue.id}>
-              {venue.name}
-            </option>
-          ))}
-        </select>
-      </label>
+      <BaseCombobox
+        data={venues}
+        disabledData={venue ? [venue] : []}
+        dataToString={venueToString}
+        label="Venues"
+        action={changeVenue}
+        action2={deleteVenue}
+      />
     </>
   );
 };
