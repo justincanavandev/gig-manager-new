@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import { api } from "~/trpc/server";
 import { TRPCReactProvider } from "~/trpc/react";
 import StoreProvider from "./StoreProvider";
-import { defaultGigForm } from "~/default/defaultGigForm";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,7 +31,6 @@ export default async function RootLayout({
           venues={allVenues ? allVenues : []}
           instruments={allInstruments ? allInstruments : []}
           musicians={allMusicians ? allMusicians : []}
-          gigForm={defaultGigForm}
         >
           <TRPCReactProvider>{children}</TRPCReactProvider>
         </StoreProvider>
