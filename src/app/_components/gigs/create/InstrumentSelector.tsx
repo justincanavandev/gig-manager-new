@@ -4,16 +4,18 @@ import { useInstruments } from "~/lib/features/instrument/instrumentSlice";
 import type {
   GigFormInstrument,
   GigForm,
-  GigFormMusician,
+  // GigFormMusician,
 } from "~/server/types/gigTypes";
 import BaseCombobox from "../../base/BaseCombobox";
+import {type DefaultUserProfile } from "../../user/UserProfileEdit";
+// import type { DefaultUserProfile } from "../../user/UserProfileEdit";
 
 type InstrumentSelectProps = {
-  musicians: GigFormMusician[];
+  // musicians?: GigFormMusician[];
   deleteInst: (inst: GigFormInstrument) => void;
   currentInsts: GigFormInstrument[];
   updateInstruments: <Value>(
-    key: keyof GigForm,
+    key: keyof (GigForm | DefaultUserProfile),
     value: Value,
     action: "add" | "delete",
   ) => void;
@@ -22,7 +24,7 @@ type InstrumentSelectProps = {
 const InstrumentSelector = ({
   updateInstruments,
   deleteInst,
-  // currentInsts,
+
 }: InstrumentSelectProps) => {
   const instruments = useInstruments();
 
@@ -35,11 +37,6 @@ const InstrumentSelector = ({
     })
   }})
 
-  // const currentInstNames = currentInsts.map((current) => current.name);
-  // const filteredInsts = instrumentsToPass.filter((inst) =>
-  //   currentInstNames.includes(inst.name),
-  // );
-
   const instToString = (inst: GigFormInstrument) => inst.name;
 
   const addInstrument = (inst: GigFormInstrument) => {
@@ -49,16 +46,36 @@ const InstrumentSelector = ({
   };
 
   return (
+    // <>
     <BaseCombobox
       data={instrumentsToPass}
-      // disabledData={filteredInsts}
       disabledData={[]}
       dataToString={instToString}
       label="Instrumentation"
       action={addInstrument}
       action2={deleteInst}
     />
-  );
-};
+    /* <div>
+    {instrumentation.map((instrument) => (
+      <>
+        <MusicianSelect
+          currentMusicians={currentMusicians}
+          instrument={instrument}
+          updateMusicians={updateMusicians}
+        />
+      </>
+    ))}
+    <>
+      {currentMusicians.map((mus) => (
+        <div className="flex gap-4" key={`currentMusicians-${mus.id}`}>
+          <span>{`${mus.name} - ${mus.instrument.name}`}</span>
+          <span onClick={() => deleteMusician(mus)}>x</span>
+        </div>
+      ))}
+    </>
+  </div>
+  </> */
+  )
+}
 
 export default InstrumentSelector;

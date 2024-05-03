@@ -140,7 +140,7 @@ const GigForm = ({ gig }: GigFormProps) => {
           />
           <InstrumentSelector
             updateInstruments={updateValue}
-            musicians={form.musicians}
+            // musicians={form.musicians}
             deleteInst={deleteInstrument}
             currentInsts={form.instrumentation}
           />
