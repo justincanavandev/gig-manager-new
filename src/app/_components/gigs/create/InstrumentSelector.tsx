@@ -7,7 +7,7 @@ import type {
   // GigFormMusician,
 } from "~/server/types/gigTypes";
 import BaseCombobox from "../../base/BaseCombobox";
-import {type DefaultUserProfile } from "../../user/UserProfileEdit";
+import type { DefaultUserProfile } from "../../user/UserProfileEdit";
 // import type { DefaultUserProfile } from "../../user/UserProfileEdit";
 
 type InstrumentSelectProps = {
