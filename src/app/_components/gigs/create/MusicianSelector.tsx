@@ -1,13 +1,10 @@
 "use client";
 
-// import { useMusicians } from "~/lib/features/musicians/musicianSlice";
 import type {
   GigForm,
   GigFormInstrument,
   GigFormMusician,
 } from "~/server/types/gigTypes";
-
-// import BaseCombobox from "../../base/BaseCombobox";
 import MusicianSelect from "./MusicianSelect";
 
 type MusicianSelectorProps = {
@@ -24,35 +21,30 @@ const MusicianSelector = ({
   currentMusicians,
   instrumentation,
   updateMusicians,
-  
 }: MusicianSelectorProps) => {
-
-
   const deleteMusician = (musician: GigFormMusician) => {
     updateMusicians("musicians", musician, "delete");
   };
 
   return (
-    <div>
+    <>
       {instrumentation.map((instrument) => (
-        <>
+        <div key={`musicianSelector-${instrument.name}`}>
           <MusicianSelect
             currentMusicians={currentMusicians}
             instrument={instrument}
             updateMusicians={updateMusicians}
             instrumentation={instrumentation}
           />
-        </>
+        </div>
       ))}
-      <>
-        {currentMusicians.map((mus) => (
-          <div className="flex gap-4" key={`currentMusicians-${mus.id}`}>
-            <span>{`${mus.name} - ${mus.instrument.name}`}</span>
-            <span onClick={() => deleteMusician(mus)}>x</span>
-          </div>
-        ))}
-      </>
-    </div>
+      {currentMusicians.map((mus) => (
+        <div className="flex gap-4" key={`currentMusicians-${mus.id}`}>
+          <span>{`${mus.name} - ${mus.instrument.name}`}</span>
+          <span onClick={() => deleteMusician(mus)}>x</span>
+        </div>
+      ))}
+    </>
   );
 };
 

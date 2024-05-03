@@ -1,7 +1,7 @@
 "use client";
 
 import type { GigForm, GigFormInstrument } from "~/server/types/gigTypes";
-import InstrumentSelector from "./InstrumentSelector";
+// import InstrumentSelector from "./InstrumentSelector";
 import DateSelector from "./DateSelector";
 import VenueSelector from "./VenueSelector";
 import MusicianSelector from "./MusicianSelector";
@@ -11,6 +11,8 @@ import type { GigById } from "~/server/types/gigTypes";
 import FormInput from "../../base/FormInput";
 import { defaultGigForm } from "~/default/defaultGigForm";
 import useForm from "~/app/hooks/useForm";
+import { useInstruments } from "~/lib/features/instrument/instrumentSlice";
+import BaseCombobox from "../../base/BaseCombobox";
 
 type GigFormProps = {
   gig?: GigById;
@@ -19,6 +21,29 @@ type GigFormProps = {
 const GigForm = ({ gig }: GigFormProps) => {
   const { form, setForm, handleChange, updateValue, changeValue } =
     useForm<GigForm>(defaultGigForm);
+
+  const instruments = useInstruments();
+
+  const instrumentsToPass = instruments.map((inst) => {
+    return {
+      name: inst.name,
+      id: inst.id,
+      musicians: inst.musicians.map((mus) => {
+        return {
+          id: mus.musician.id,
+          name: mus.musician.name,
+        };
+      }),
+    };
+  });
+
+  const instToString = (inst: GigFormInstrument) => inst.name;
+
+  const addInstrument = (inst: GigFormInstrument) => {
+    if (inst) {
+      updateValue("instrumentation", inst, "add");
+    }
+  };
 
   useEffect(() => {
     if (gig) {
@@ -37,7 +62,6 @@ const GigForm = ({ gig }: GigFormProps) => {
               return {
                 name: mus.musician.name,
                 id: mus.musician.id,
-
               };
             }),
           };
@@ -47,8 +71,6 @@ const GigForm = ({ gig }: GigFormProps) => {
             instrument: {
               name: mus.instrument.name,
               id: mus.instrument.id,
-             
-             
             },
             id: mus.musicianId,
             name: mus.musician.name,
@@ -105,7 +127,7 @@ const GigForm = ({ gig }: GigFormProps) => {
     }
   };
 
-  const deleteInstrument = (inst: GigFormInstrument) => {
+  const deleteInst = (inst: GigFormInstrument) => {
     const { instrumentation, musicians } = form;
     const filteredMusicians = musicians.filter(
       (mus) => mus.instrument.name !== inst.name,
@@ -120,7 +142,6 @@ const GigForm = ({ gig }: GigFormProps) => {
       musicians: filteredMusicians,
     });
   };
-
 
   return (
     <>
@@ -138,11 +159,14 @@ const GigForm = ({ gig }: GigFormProps) => {
             endTime={form.endTime}
             changeDate={changeValue}
           />
-          <InstrumentSelector
-            updateInstruments={updateValue}
-            // musicians={form.musicians}
-            deleteInst={deleteInstrument}
-            currentInsts={form.instrumentation}
+   
+          <BaseCombobox
+            data={instrumentsToPass}
+            disabledData={[]}
+            dataToString={instToString}
+            label="Instrumentation"
+            action={addInstrument}
+            action2={deleteInst}
           />
 
           <MusicianSelector

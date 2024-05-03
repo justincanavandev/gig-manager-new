@@ -1,4 +1,4 @@
-import UserProfileEdit from "~/app/_components/user/UserProfileEdit";
+import UserProfileEdit from "~/app/_components/user/edit/UserProfileEdit";
 import { api } from "~/trpc/server";
 import GigCard from "~/app/_components/gigs/GigCard";
 

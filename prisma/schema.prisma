@@ -47,7 +47,7 @@ model User {
     email         String?   @unique
     emailVerified DateTime?
     image         String?
-    musician      Musician? @relation(fields: [musicianId], references: [id])
+    musician      Musician? @relation(fields: [musicianId], references: [id], onDelete: Cascade)
     musicianId    String?   @unique
     accounts      Account[]
     sessions      Session[]

@@ -27,8 +27,7 @@ const BaseCombobox = <T,>({
 }: BaseComboboxProps<T>) => {
   const [query, setQuery] = useState<string>("");
 
-  const enabledData = data.filter((datum) => !disabledData.includes(datum));
-  const sortedData = [...enabledData, ...disabledData];
+  const sortedData = [...data, ...disabledData];
 
   const filteredData = sortedData.filter((datum) => {
     const datumString = dataToString(datum);

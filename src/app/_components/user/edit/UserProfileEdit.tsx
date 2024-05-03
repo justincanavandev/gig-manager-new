@@ -1,49 +1,56 @@
 "use client";
 
 import { api } from "~/trpc/react";
-import InstrumentSelector from "../gigs/create/InstrumentSelector";
 import type { GetUserById } from "~/server/types/userTypes";
-// import type { ChangeEvent } from "react";
-// import type { OneInstrument } from "~/server/types/instrumentTypes";
-import FormInput from "../base/FormInput";
+import FormInput from "../../base/FormInput";
 import useForm from "~/app/hooks/useForm";
 import type { GigFormInstrument } from "~/server/types/gigTypes";
-// import type { GigForm } from "~/server/types/gigTypes";
+import { useInstruments } from "~/lib/features/instrument/instrumentSlice";
+import BaseCombobox from "../../base/BaseCombobox";
 
 export type DefaultUserProfile = {
   name: string;
   phoneNumber: string;
   email: string;
-  instrumentation: GigFormInstrument[]
-  // instruments: {
-  //   id: string;
-  //   name: string;
-  // }[];
+  instrumentation: GigFormInstrument[];
 };
 
 const UserProfileEdit = ({ user }: { user: GetUserById }) => {
-  const { mutate: updateUser } = api.user.update.useMutation();
-
-  const { form, handleChange, setForm, updateValue} = useForm<DefaultUserProfile>({
-    name: user?.name ? user.name : "",
-    phoneNumber: "",
-    email: user?.email ? user.email : "",
-    instrumentation: user?.musician?.instruments
-      ? user.musician.instruments.map((inst) => {
-          return {
-            id: inst.instrument.id,
-            name: inst.instrument.name,
-          };
-        })
-      : [],
+  const instruments = useInstruments();
+  const utils = api.useUtils();
+  const { mutate: updateUser } = api.user.update.useMutation({
+    onSuccess: async () => {
+      await utils.user.getById.invalidate();
+    },
   });
 
-  console.log("form", form);
+  const { form, handleChange, setForm, updateValue } =
+    useForm<DefaultUserProfile>({
+      name: user?.name ? user.name : "",
+      phoneNumber: "",
+      email: user?.email ? user.email : "",
+      instrumentation: user?.musician?.instruments
+        ? user.musician.instruments.map((inst) => {
+            return {
+              id: inst.instrument.id,
+              name: inst.instrument.name,
+            };
+          })
+        : [],
+    });
+
+  const addInstrument = (inst: GigFormInstrument) => {
+    if (inst) {
+      updateValue("instrumentation", inst, "add");
+    }
+  };
+
+  const instToString = (inst: GigFormInstrument) => inst.name;
 
   const handleUpdateUser = () => {
     try {
       const { instrumentation, name, email, phoneNumber } = form;
-      if (user?.name && user?.email) {
+      
         const result = updateUser({
           name,
           email,
@@ -52,20 +59,12 @@ const UserProfileEdit = ({ user }: { user: GetUserById }) => {
         });
 
         return result;
-      }
+
     } catch (error) {
       console.error("Error updating user", error);
       throw error;
     }
   };
-
-  // const addInstrument = (e: ChangeEvent<HTMLSelectElement>) => {
-  //   const instrument = JSON.parse(e.target.value) as OneInstrument;
-  //   setForm({
-  //     ...form,
-  //     instrumentation: [...form.instrumentation, instrument],
-  //   });
-  // };
 
   const deleteInst = (inst: GigFormInstrument) => {
     const { instrumentation } = form;
@@ -79,6 +78,16 @@ const UserProfileEdit = ({ user }: { user: GetUserById }) => {
     });
   };
 
+  const currentInstNames = form.instrumentation.map((inst) => inst.name);
+  const filteredInstruments = instruments
+    .filter((inst) => !currentInstNames.includes(inst.name))
+    .map((inst) => {
+      return {
+        name: inst.name,
+        id: inst.id,
+      };
+    });
+
   return (
     <div className="flex flex-col items-center gap-4">
       <FormInput
@@ -88,11 +97,14 @@ const UserProfileEdit = ({ user }: { user: GetUserById }) => {
         name="name"
         placeholder="John Smith"
       ></FormInput>
-      <InstrumentSelector
-        // addInst={addInstrument}
-        updateInstruments={updateValue}
-        deleteInst={deleteInst}
-        currentInsts={form.instrumentation}
+
+      <BaseCombobox
+        data={filteredInstruments}
+        disabledData={form.instrumentation}
+        dataToString={instToString}
+        label="Instrumentation"
+        action={addInstrument}
+        action2={deleteInst}
       />
 
       <FormInput
