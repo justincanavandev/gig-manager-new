@@ -11,8 +11,13 @@ import type { GigById } from "~/server/types/gigTypes";
 import FormInput from "../../base/FormInput";
 import { defaultGigForm } from "~/default/defaultGigForm";
 import useForm from "~/app/hooks/useForm";
-import { useInstruments } from "~/lib/features/instrument/instrumentSlice";
+import {
+  confineInstData,
+  useInstruments,
+  instToString
+} from "~/lib/features/instrument/instrumentSlice";
 import BaseCombobox from "../../base/BaseCombobox";
+
 
 type GigFormProps = {
   gig?: GigById;
@@ -24,20 +29,10 @@ const GigForm = ({ gig }: GigFormProps) => {
 
   const instruments = useInstruments();
 
-  const instrumentsToPass = instruments.map((inst) => {
-    return {
-      name: inst.name,
-      id: inst.id,
-      musicians: inst.musicians.map((mus) => {
-        return {
-          id: mus.musician.id,
-          name: mus.musician.name,
-        };
-      }),
-    };
-  });
+  const instrumentsToPass = instruments.map(
+    (inst) => confineInstData(inst),
 
-  const instToString = (inst: GigFormInstrument) => inst.name;
+  );
 
   const addInstrument = (inst: GigFormInstrument) => {
     if (inst) {
@@ -159,7 +154,7 @@ const GigForm = ({ gig }: GigFormProps) => {
             endTime={form.endTime}
             changeDate={changeValue}
           />
-   
+
           <BaseCombobox
             data={instrumentsToPass}
             disabledData={[]}

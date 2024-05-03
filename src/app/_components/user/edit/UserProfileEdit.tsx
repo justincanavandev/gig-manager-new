@@ -7,6 +7,8 @@ import useForm from "~/app/hooks/useForm";
 import type { GigFormInstrument } from "~/server/types/gigTypes";
 import { useInstruments } from "~/lib/features/instrument/instrumentSlice";
 import BaseCombobox from "../../base/BaseCombobox";
+import { instToString } from "~/lib/features/instrument/instrumentSlice";
+import { filterInstruments } from "~/lib/features/instrument/instrumentSlice";
 
 export type DefaultUserProfile = {
   name: string;
@@ -45,21 +47,18 @@ const UserProfileEdit = ({ user }: { user: GetUserById }) => {
     }
   };
 
-  const instToString = (inst: GigFormInstrument) => inst.name;
-
   const handleUpdateUser = () => {
     try {
       const { instrumentation, name, email, phoneNumber } = form;
-      
-        const result = updateUser({
-          name,
-          email,
-          instrumentIds: instrumentation.map((inst) => inst.id),
-          phoneNumber,
-        });
 
-        return result;
+      const result = updateUser({
+        name,
+        email,
+        instrumentIds: instrumentation.map((inst) => inst.id),
+        phoneNumber,
+      });
 
+      return result;
     } catch (error) {
       console.error("Error updating user", error);
       throw error;
@@ -79,14 +78,7 @@ const UserProfileEdit = ({ user }: { user: GetUserById }) => {
   };
 
   const currentInstNames = form.instrumentation.map((inst) => inst.name);
-  const filteredInstruments = instruments
-    .filter((inst) => !currentInstNames.includes(inst.name))
-    .map((inst) => {
-      return {
-        name: inst.name,
-        id: inst.id,
-      };
-    });
+  const filteredInstruments = filterInstruments(instruments, currentInstNames);
 
   return (
     <div className="flex flex-col items-center gap-4">
