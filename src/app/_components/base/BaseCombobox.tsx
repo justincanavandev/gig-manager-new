@@ -10,6 +10,7 @@ import {
 
 type BaseComboboxProps<T> = {
   data: Array<T>;
+  value?: T | null
   dataToString: (data: T) => string;
   disabledData: Array<T>;
   action: (data: T) => void;
@@ -24,6 +25,7 @@ const BaseCombobox = <T,>({
   action2,
   disabledData,
   label,
+  value
 }: BaseComboboxProps<T>) => {
   const [query, setQuery] = useState<string>("");
 
@@ -38,6 +40,7 @@ const BaseCombobox = <T,>({
     <Combobox
       as="div"
       className="relative flex w-fit flex-col "
+      value={value ? value : null}
       onChange={action}
       nullable
     >
@@ -45,6 +48,7 @@ const BaseCombobox = <T,>({
       <Combobox.Input
         className="border border-black"
         onChange={(e) => setQuery(e.target.value)}
+        displayValue={(val: T)=> val ? dataToString(val) : ""}
       />
       <Combobox.Button className="absolute right-[2px] top-[1.72rem]">
         <ChevronUpDownIcon className="h-5 w-5" aria-hidden="true" />

@@ -6,7 +6,10 @@ import type {
   GigFormMusician,
 } from "~/server/types/gigTypes";
 import { type Dispatch, type SetStateAction } from "react";
-import type { InstrumentName } from "~/server/types/instrumentTypes";
+import type {
+  InstrumentName,
+  MusicianSelect,
+} from "~/server/types/instrumentTypes";
 import BaseCombobox from "../../base/BaseCombobox";
 
 type MusicianSelectorProps = {
@@ -17,9 +20,8 @@ type MusicianSelectorProps = {
     addedValue: Value,
     action: "add" | "delete",
   ) => void;
-  isSelectorOpen: Partial<Record<InstrumentName, boolean>>;
-  toggleInstSelect: Dispatch<SetStateAction<Partial<Record<InstrumentName, boolean>>>>
-
+  isSelectorOpen: Partial<MusicianSelect>;
+  toggleInstSelect: Dispatch<SetStateAction<Partial<MusicianSelect>>>;
 };
 
 const MusicianSelector = ({
@@ -27,9 +29,8 @@ const MusicianSelector = ({
   instrumentation,
   updateMusicians,
   isSelectorOpen,
-  toggleInstSelect
+  toggleInstSelect,
 }: MusicianSelectorProps) => {
-
   const isInstOpen = (inst: GigFormInstrument) => {
     const isInstValid = isSelectorOpen[`${inst.name}` as InstrumentName];
     return isInstValid;
@@ -37,15 +38,16 @@ const MusicianSelector = ({
 
   const handleAddMusician = (musician: GigFormMusician) => {
     /** @todo Add "addMusician" functionality. This will deal with duplicate instruments being added, Confirmation Modal, etc */
+    if (musician?.instrument) {
+      updateMusicians("musicians", musician, "add");
 
-    updateMusicians("musicians", musician, "add");
-    toggleInstSelect((prev) => {
-      return {
-        ...prev,
-        [`${musician.instrument.name}`]: false,
-      };
-    });
-
+      toggleInstSelect((prev) => {
+        return {
+          ...prev,
+          [`${musician.instrument.name}`]: false,
+        };
+      });
+    }
   };
 
   const deleteMusician = (musician: GigFormMusician) => {
@@ -53,14 +55,12 @@ const MusicianSelector = ({
   };
   const musicianToString = (musician: GigFormMusician) => musician.name;
 
-
   return (
     <>
       {instrumentation.map(
         (instrument) =>
           isInstOpen(instrument) && (
             <div key={`musicianSelector-${instrument.name}`}>
-
               <BaseCombobox
                 data={
                   instrument.musicians
