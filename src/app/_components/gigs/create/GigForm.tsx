@@ -6,7 +6,7 @@ import DateSelector from "./DateSelector";
 import VenueSelector from "./VenueSelector";
 import MusicianSelector from "./MusicianSelector";
 import { api } from "~/trpc/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { GigById } from "~/server/types/gigTypes";
 import FormInput from "../../base/FormInput";
 import { defaultGigForm } from "~/default/defaultGigForm";
@@ -14,10 +14,14 @@ import useForm from "~/app/hooks/useForm";
 import {
   confineInstData,
   useInstruments,
-  instToString
+  instToString,
 } from "~/lib/features/instrument/instrumentSlice";
 import BaseCombobox from "../../base/BaseCombobox";
-
+import type {
+  InstrumentName,
+  OneInstrument,
+} from "~/server/types/instrumentTypes";
+import type { MusicianSelect } from "~/server/types/instrumentTypes";
 
 type GigFormProps = {
   gig?: GigById;
@@ -29,51 +33,76 @@ const GigForm = ({ gig }: GigFormProps) => {
 
   const instruments = useInstruments();
 
-  const instrumentsToPass = instruments.map(
-    (inst) => confineInstData(inst),
+  const confinedInsts = instruments.map((inst) => confineInstData(inst));
 
-  );
+  const [isMusSelectOpen, setIsMusSelectOpen] = useState<
+  Partial<MusicianSelect>>({});
 
   const addInstrument = (inst: GigFormInstrument) => {
-    if (inst) {
+    const formInsts = form.instrumentation.map((inst) => inst.name);
+
+    if (!formInsts.includes(inst?.name)) {
       updateValue("instrumentation", inst, "add");
     }
+    if (!isMusSelectOpen[`${inst.name}` as InstrumentName])
+      setIsMusSelectOpen((prev) => {
+        return {
+          ...prev,
+          [`${inst.name}`]: true,
+        };
+      });
   };
 
   useEffect(() => {
     if (gig) {
       const { name, startTime, endTime, instrumentation, musicians, venue } =
         gig;
+
+      const confinedMusicians = musicians.map((mus) => {
+        return {
+          instrument: {
+            name: mus.instrument.name,
+            id: mus.instrument.id,
+          },
+          id: mus.musicianId,
+          name: mus.musician.name,
+        };
+      });
+
+      const confinedInstrumentation = instrumentation.map((inst) => {
+        return {
+          name: inst.instrument.name,
+          id: inst.instrumentId,
+          musicians: inst.instrument.musicians.map((mus) => {
+            return {
+              name: mus.musician.name,
+              id: mus.musician.id,
+            };
+          }),
+        };
+      });
+
       setForm({
         name,
         venue,
         startTime: startTime.toISOString(),
         endTime: endTime.toISOString(),
-        instrumentation: instrumentation.map((inst) => {
-          return {
-            name: inst.instrument.name,
-            id: inst.instrumentId,
-            musicians: inst.instrument.musicians.map((mus) => {
-              return {
-                name: mus.musician.name,
-                id: mus.musician.id,
-              };
-            }),
-          };
-        }),
-        musicians: musicians.map((mus) => {
-          return {
-            instrument: {
-              name: mus.instrument.name,
-              id: mus.instrument.id,
-            },
-            id: mus.musicianId,
-            name: mus.musician.name,
-          };
-        }),
+        instrumentation: confinedInstrumentation,
+        musicians: confinedMusicians,
+      });
+
+      setIsMusSelectOpen(() => {
+
+        const obj: Partial<MusicianSelect> = {};
+
+        instruments.map((inst: OneInstrument) => {
+          const { name } = inst;
+          obj[name as InstrumentName] = false;
+        });
+        return obj;
       });
     }
-  }, [gig, setForm]);
+  }, [gig, setForm, instruments]);
 
   const { mutate: createGig } = api.gig.create.useMutation();
   const { mutate: updateGig } = api.gig.update.useMutation();
@@ -156,7 +185,7 @@ const GigForm = ({ gig }: GigFormProps) => {
           />
 
           <BaseCombobox
-            data={instrumentsToPass}
+            data={confinedInsts}
             disabledData={[]}
             dataToString={instToString}
             label="Instrumentation"
@@ -165,7 +194,9 @@ const GigForm = ({ gig }: GigFormProps) => {
           />
 
           <MusicianSelector
-            updateMusicians={updateValue}
+            toggleInstSelect={setIsMusSelectOpen}
+            isSelectorOpen={isMusSelectOpen}
+            updateMusicians={updateValue} 
             currentMusicians={form.musicians}
             instrumentation={form.instrumentation}
           />
