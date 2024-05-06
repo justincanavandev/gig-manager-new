@@ -6,11 +6,9 @@ import type {
   GigFormMusician,
 } from "~/server/types/gigTypes";
 import { type Dispatch, type SetStateAction } from "react";
-import type {
-  InstrumentName,
-  MusicianSelect,
-} from "~/server/types/instrumentTypes";
+import type { MusicianSelect } from "~/server/types/instrumentTypes";
 import BaseCombobox from "../../base/BaseCombobox";
+import { isInstrumentValid } from "~/server/utils/typeGuards";
 
 type MusicianSelectorProps = {
   currentMusicians: GigFormMusician[];
@@ -32,8 +30,10 @@ const MusicianSelector = ({
   toggleInstSelect,
 }: MusicianSelectorProps) => {
   const isInstOpen = (inst: GigFormInstrument) => {
-    const isInstValid = isSelectorOpen[`${inst.name}` as InstrumentName];
-    return isInstValid;
+    if (isInstrumentValid(inst.name)) {
+      const isInstValid = isSelectorOpen[`${inst.name}`];
+      return isInstValid;
+    }
   };
 
   const handleAddMusician = (musician: GigFormMusician) => {
@@ -41,12 +41,13 @@ const MusicianSelector = ({
     if (musician?.instrument) {
       updateMusicians("musicians", musician, "add");
 
-      toggleInstSelect((prev) => {
-        return {
-          ...prev,
-          [`${musician.instrument.name}`]: false,
-        };
-      });
+      if (isInstrumentValid(musician?.instrument?.name))
+        toggleInstSelect((prev) => {
+          return {
+            ...prev,
+            [`${musician.instrument.name}`]: false,
+          };
+        });
     }
   };
 

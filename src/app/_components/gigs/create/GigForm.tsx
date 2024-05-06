@@ -22,6 +22,7 @@ import type {
   OneInstrument,
 } from "~/server/types/instrumentTypes";
 import type { MusicianSelect } from "~/server/types/instrumentTypes";
+import { isInstrumentValid } from "~/server/utils/typeGuards";
 
 type GigFormProps = {
   gig?: GigById;
@@ -36,7 +37,8 @@ const GigForm = ({ gig }: GigFormProps) => {
   const confinedInsts = instruments.map((inst) => confineInstData(inst));
 
   const [isMusSelectOpen, setIsMusSelectOpen] = useState<
-  Partial<MusicianSelect>>({});
+    Partial<MusicianSelect>
+  >({});
 
   const addInstrument = (inst: GigFormInstrument) => {
     const formInsts = form.instrumentation.map((inst) => inst.name);
@@ -44,7 +46,7 @@ const GigForm = ({ gig }: GigFormProps) => {
     if (!formInsts.includes(inst?.name)) {
       updateValue("instrumentation", inst, "add");
     }
-    if (!isMusSelectOpen[`${inst.name}` as InstrumentName])
+    if (isInstrumentValid(inst.name))
       setIsMusSelectOpen((prev) => {
         return {
           ...prev,
@@ -92,7 +94,6 @@ const GigForm = ({ gig }: GigFormProps) => {
       });
 
       setIsMusSelectOpen(() => {
-
         const obj: Partial<MusicianSelect> = {};
 
         instruments.map((inst: OneInstrument) => {
@@ -196,7 +197,7 @@ const GigForm = ({ gig }: GigFormProps) => {
           <MusicianSelector
             toggleInstSelect={setIsMusSelectOpen}
             isSelectorOpen={isMusSelectOpen}
-            updateMusicians={updateValue} 
+            updateMusicians={updateValue}
             currentMusicians={form.musicians}
             instrumentation={form.instrumentation}
           />
