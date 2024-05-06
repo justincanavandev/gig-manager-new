@@ -42,7 +42,6 @@ export type GigFormVenue = {
 
 export type GigForm = {
   name: string;
-  // venueId: string;
   venue: GigFormVenue
   startTime: string;
   endTime: string;

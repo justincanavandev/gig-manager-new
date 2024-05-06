@@ -167,10 +167,6 @@ export const gigRouter = createTRPCRouter({
             instrumentation: {
               include: {
                 instrument: {
-                  // select: {
-                  //   name: true,
-                  //   id: true,
-                  // },
                   include: {
                     musicians: {
                       include: {
@@ -183,9 +179,6 @@ export const gigRouter = createTRPCRouter({
                       },
                     },
                   },
-                  //    select: {
-                  //   name: true,
-                  // },
                 },
               },
             },
