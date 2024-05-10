@@ -9,6 +9,7 @@ import { useInstruments } from "~/lib/features/instrument/instrumentSlice";
 import BaseCombobox from "../../base/BaseCombobox";
 import { instToString } from "~/lib/features/instrument/instrumentSlice";
 import { filterInstruments } from "~/lib/features/instrument/instrumentSlice";
+import BaseButton from "../../base/BaseButton";
 
 export type DefaultUserProfile = {
   name: string;
@@ -115,9 +116,9 @@ const UserProfileEdit = ({ user }: { user: GetUserById }) => {
         value={form.email}
       ></FormInput>
 
-      <button className="border" onClick={handleUpdateUser}>
+      <BaseButton as="button" className="border" onClick={handleUpdateUser}>
         Update User
-      </button>
+      </BaseButton>
     </div>
   );
 };

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useBoolean } from "usehooks-ts";
 import type { MusiciansFromAllGigs } from "~/server/types/gigTypes";
+import BaseButton from "../base/BaseButton";
 
 type MusiciansModalProps = {
   musicians: MusiciansFromAllGigs;
@@ -36,20 +37,21 @@ const MusiciansModal = ({ musicians, index }: MusiciansModalProps) => {
 
   return (
     <>
-      <button
+      <BaseButton
+        as="button"
         onClick={() => showHideMusicians(index)}
         className="w-[8rem] border"
       >
         {viewMusicians && eventTargetIndexArr?.includes(index)
           ? "Hide Musician List"
           : "View Musician List"}
-      </button>
+      </BaseButton>
       {viewMusicians && eventTargetIndexArr?.includes(index) && (
         <div className="">
-          {musicians.map((musician) => (
-            <div key={musician.musicianId} className="flex">
-              <p>{musician.musician.name}</p>
-              <p>{musician.musician.instruments[0]?.instrument.name}</p>
+          {musicians.map((m) => (
+            <div key={m.musicianId} className="flex">
+              <p>{m.musician.name}</p>
+              <p>{m.musician.instruments[0]?.instrument.name}</p>
             </div>
           ))}
         </div>

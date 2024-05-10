@@ -30,7 +30,7 @@ const MusicianSelector = ({
   toggleInstSelect,
 }: MusicianSelectorProps) => {
   const isInstOpen = (inst: GigFormInstrument) => {
-    if (isInstrumentValid(inst.name)) {
+    if (isInstrumentValid(inst?.name)) {
       const isInstValid = isSelectorOpen[`${inst.name}`];
       return isInstValid;
     }

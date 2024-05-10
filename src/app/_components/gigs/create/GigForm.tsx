@@ -23,6 +23,7 @@ import type {
 } from "~/server/types/instrumentTypes";
 import type { MusicianSelect } from "~/server/types/instrumentTypes";
 import { isInstrumentValid } from "~/server/utils/typeGuards";
+import BaseButton from "../../base/BaseButton";
 
 type GigFormProps = {
   gig?: GigById;
@@ -41,18 +42,20 @@ const GigForm = ({ gig }: GigFormProps) => {
   >({});
 
   const addInstrument = (inst: GigFormInstrument) => {
-    const formInsts = form.instrumentation.map((inst) => inst.name);
+    if (inst?.name) {
+      const formInsts = form.instrumentation.map((inst) => inst.name);
 
-    if (!formInsts.includes(inst?.name)) {
-      updateValue("instrumentation", inst, "add");
+      if (!formInsts.includes(inst?.name)) {
+        updateValue("instrumentation", inst, "add");
+      }
+      if (isInstrumentValid(inst?.name))
+        setIsMusSelectOpen((prev) => {
+          return {
+            ...prev,
+            [`${inst.name}`]: true,
+          };
+        });
     }
-    if (isInstrumentValid(inst.name))
-      setIsMusSelectOpen((prev) => {
-        return {
-          ...prev,
-          [`${inst.name}`]: true,
-        };
-      });
   };
 
   useEffect(() => {
@@ -187,7 +190,6 @@ const GigForm = ({ gig }: GigFormProps) => {
 
           <BaseCombobox
             data={confinedInsts}
-            disabledData={[]}
             dataToString={instToString}
             label="Instrumentation"
             action={addInstrument}
@@ -206,9 +208,8 @@ const GigForm = ({ gig }: GigFormProps) => {
             venue={form?.venue ? form.venue : null}
           />
 
-          <button className="w-24 border border-black" type="submit">
-            Submit
-          </button>
+    
+          <BaseButton as="button" type="submit">Submit</BaseButton>
         </div>
       </form>
     </>

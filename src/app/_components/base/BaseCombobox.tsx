@@ -12,13 +12,13 @@ type BaseComboboxProps<T> = {
   data: Array<T>;
   value?: T | null
   dataToString: (data: T) => string;
-  disabledData: Array<T>;
+  disabledData?: Array<T>
   action: (data: T) => void;
   action2:(data: T) => void;
   label: string;
 };
 
-const BaseCombobox = <T,>({
+const BaseCombobox = <T extends object>({
   data,
   dataToString,
   action,
@@ -29,7 +29,7 @@ const BaseCombobox = <T,>({
 }: BaseComboboxProps<T>) => {
   const [query, setQuery] = useState<string>("");
 
-  const sortedData = [...data, ...disabledData];
+  const sortedData = disabledData ? [...data, ...disabledData] : [...data]
 
   const filteredData = sortedData.filter((datum) => {
     const datumString = dataToString(datum);
@@ -67,11 +67,11 @@ const BaseCombobox = <T,>({
             <Combobox.Option
               key={`combobox-${index}`}
               value={datum}
-              disabled={disabledData.includes(datum)}
+              disabled={disabledData ? disabledData.includes(datum) : false}
               className="ui-active:bg-blue-500 ui-active:text-white ui-disabled:text-black ui-disabled:bg-slate-200 flex list-none justify-between gap-2"
             >
               {dataToString(datum)}
-              {disabledData.includes(datum) && (
+              {disabledData?.includes(datum) && (
                 <div className="flex gap-1.5 pr-1">
                   <CheckIcon className="h-5 w-5" />
                   <XCircleIcon onClick={()=> action2(datum)} className="h-5 w-5" />

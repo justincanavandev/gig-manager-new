@@ -26,11 +26,13 @@ const VenueSelector = ({ setVenue, venue }: VenueSelectorProps) => {
     }
   };
 
+  const enabledVenues = venues.filter((v)=> v.name !== venue?.name)
+
 
   return (
     <>
       <BaseCombobox
-        data={venues}
+        data={enabledVenues}
         value={venue ?? null}
         disabledData={venue ? [venue] : []}
         dataToString={venueToString}

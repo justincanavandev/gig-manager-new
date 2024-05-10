@@ -15,6 +15,7 @@ const UserProfile = async ({ params }: { params: { userId: string } }) => {
         <span>{user?.name}</span>
         <span>{user?.email}</span>
       </div>
+      <h3>Instruments:</h3>
       {musician?.instruments.map((inst) => (
         <span key={`profile-edit-${inst.instrument.name}`}>
           {inst.instrument.name}
