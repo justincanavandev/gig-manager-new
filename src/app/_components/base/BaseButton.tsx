@@ -1,25 +1,45 @@
-import type { ComponentPropsWithRef } from "react";
-import Link from "next/link";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import Link, { type LinkProps as NextLinkProps } from "next/link";
 
-interface ButtonProps extends ComponentPropsWithRef<"button"> {
+type ButtonCompProps = ComponentPropsWithoutRef<"button">;
+
+interface ButtonProps extends ButtonCompProps {
   as: "button";
 }
 
-interface LinkProps extends ComponentPropsWithRef<"a"> {
+interface LinkProps extends NextLinkProps {
   as: "link";
-  href: string;
+  children: ReactNode;
 }
 
 type BaseButtonProps = LinkProps | ButtonProps;
 
 const BaseButton = ({ ...props }: BaseButtonProps) => {
-  const { children, as } = props;
+
+  type RestProps = ButtonCompProps | NextLinkProps;
+
+  const { children, as, ...rest } = props;
+  const restProps = { ...rest };
+
+  const isButtonProps = (rest: RestProps): rest is ButtonCompProps =>
+    as === "button";
+
+  const isLinkProps = (rest: RestProps): rest is NextLinkProps => as === "link";
 
   return as === "link" ? (
-    <Link href={props.href}>{children}</Link>
+    <Link {...(isLinkProps(restProps) && restProps)} href={props.href}>
+      {children}
+    </Link>
   ) : (
-    <button type={props.type}>{children}</button>
+    <button
+      {...(isButtonProps(restProps) && restProps)}
+      className="w-24 border border-black"
+      type={props.type}
+    >
+      {children}
+    </button>
   );
+
 };
 
 export default BaseButton;
