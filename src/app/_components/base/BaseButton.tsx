@@ -15,16 +15,16 @@ interface LinkProps extends NextLinkProps {
 type BaseButtonProps = LinkProps | ButtonProps;
 
 const BaseButton = ({ ...props }: BaseButtonProps) => {
-
   type RestProps = ButtonCompProps | NextLinkProps;
 
   const { children, as, ...rest } = props;
   const restProps = { ...rest };
 
   const isButtonProps = (rest: RestProps): rest is ButtonCompProps =>
-    as === "button";
+    !rest.hasOwnProperty("href") && as === "button";
 
-  const isLinkProps = (rest: RestProps): rest is NextLinkProps => as === "link";
+  const isLinkProps = (rest: RestProps): rest is NextLinkProps =>
+    rest.hasOwnProperty("href") && as === "link";
 
   return as === "link" ? (
     <Link {...(isLinkProps(restProps) && restProps)} href={props.href}>
@@ -39,7 +39,6 @@ const BaseButton = ({ ...props }: BaseButtonProps) => {
       {children}
     </button>
   );
-
 };
 
 export default BaseButton;
