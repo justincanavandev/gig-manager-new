@@ -27,114 +27,92 @@ export const userRouter = createTRPCRouter({
       z.object({
         name: z.string(),
         email: z.string().email(),
-        phoneNumber: z.string().min(1),
-        instrumentIds: z.string().array(),
-        musicianId: z.string(),
+        musician: z
+          .object({
+            instrumentIds: z.string().array(),
+            phoneNumber: z.string().min(10),
+            musicianId: z.string(),
+          })
+          .nullable(),
       }),
     )
-    .mutation(
-      async ({ ctx, input }) => {
-        const { phoneNumber, instrumentIds, name, email, musicianId } = input;
+    .mutation(async ({ ctx, input }) => {
+      const { name, email, musician } = input;
 
-        try {
-          const instrumentMusicianJoin = instrumentIds.map(async (id) => {
-            await ctx.db.musiciansOnInstruments.upsert({
+      try {
+        if (musician) {
+          const { instrumentIds, phoneNumber, musicianId } = musician;
+            const instrumentMusicianJoin = instrumentIds.map(async (id) => {
+              await ctx.db.musiciansOnInstruments.upsert({
+                where: {
+                  musicianId_instrumentId: {
+                    musicianId,
+                    instrumentId: id,
+                  },
+                },
+                update: {},
+                create: {
+                  instrument: {
+                    connect: {
+                      id,
+                    },
+                  },
+                  musician: {
+                    connect: {
+                      id: musicianId,
+                      phoneNumber,
+                      name,
+                      email
+                    },
+                
+                  },
+                },
+              });
+            });
+            await ctx.db.musiciansOnInstruments.deleteMany({
               where: {
-                musicianId_instrumentId: {
-                  musicianId,
-                  instrumentId: id,
-                },
-              },
-              update: {},
-              create: {
-                instrument: {
-                  connect: {
-                    id,
-                  },
-                },
-                musician: {
-                  connect: {
-                    id: musicianId,
-                  },
+                instrumentId: {
+                  notIn: instrumentIds.map((id) => id),
                 },
               },
             });
-          });
-          await ctx.db.musiciansOnInstruments.deleteMany({
-            where: {
-              instrumentId: {
-                notIn: instrumentIds.map((id)=> id)
-              }
-            }
-          })
-          await Promise.all(instrumentMusicianJoin)
+            await Promise.all(instrumentMusicianJoin);
 
-          const updatedUser = await ctx.db.user.update({
-            where: {
-              id: ctx.session.user.id,
-            },
-            data: {
-              name,
-              email,
-              musician: {
-                update: {
-                  data: {
-                    name,
-                    phoneNumber,
-                    email,
-                  },
-                },
-              },
-            },
-          });
-
-          if (!updatedUser) {
-            throw new TRPCError({
-              code: "BAD_REQUEST",
-              message: "User unable to be updated",
-            });
-          }
-
-          return updatedUser
-        } catch (e) {
-          throw genericErrorHandler(e);
         }
-      },
 
-      //   name,
-      //   email,
-      //   musician: {
-      //     update: {
-      //       name,
-      //       instruments: instrumentIds.map(async (id) => {
-      //         await ctx.db.musiciansOnInstruments.upsert({
-      //           where: {
-      //             musicianId_instrumentId: {
-      //               musicianId: musician.id,
-      //               instrumentId: id,
-      //             },
-      //             update: {
+        const updatedUser = await ctx.db.user.update({
+          where: {
+            id: ctx.session.user.id,
+          },
+          data: {
+            name,
+            email,
+            musician: musician
+              ? {
+                  update: {
+                    data: {
+                      name,
+                      phoneNumber: musician.phoneNumber,
+                      email,
+                    },
+                  },
+                }
+              : undefined,
+          },
+        });
 
-      //             },
-      //             create: {
-      //               instrument: {
-      //                 connect: {
-      //                   id
-      //                 },
-      //               musician: {
-      //                 connect: {
-      //                   id: musicianId
-      //                 }
-      //               }
-      //               }
-      //             }
-      //           },
-      //         });
-      //       }),
-      //     },
-      //   },
-      // },
-    ),
+        if (!updatedUser) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "User unable to be updated",
+          });
+        }
+
+        return updatedUser;
+      } catch (e) {
+        throw genericErrorHandler(e);
+      }
+    }),
   connectMusician: protectedProcedure
     .input(
       z.object({

@@ -38,7 +38,7 @@ const UserProfile = async ({ params }: { params: { userId: string } }) => {
         <div>
           {" "}
           Are you a musician? Enter your details here to join our database!
-          <UserProfileEdit user={user} />
+          <UserProfileEdit user={user} musicianAdd={true} />
         </div>
       )}
     </div>

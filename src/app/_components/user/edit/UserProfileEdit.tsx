@@ -18,7 +18,12 @@ export type DefaultUserProfile = {
   instrumentation: GigFormInstrument[];
 };
 
-const UserProfileEdit = ({ user }: { user: GetUserById }) => {
+type EditProfileProps = {
+  user: GetUserById;
+  musicianAdd?: boolean;
+};
+
+const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
   const instruments = useInstruments();
   const utils = api.useUtils();
   const { mutate: connectMusician } = api.user.connectMusician.useMutation({
@@ -58,22 +63,30 @@ const UserProfileEdit = ({ user }: { user: GetUserById }) => {
     try {
       const { instrumentation, name, email, phoneNumber } = form;
 
-      if (!user?.musicianId) {
+      const instrumentIds = instrumentation.map((inst) => inst.id);
+
+      if (!user?.musicianId && musicianAdd) {
+        // Adds Musician to db and connects Musician to User
         const result = connectMusician({
           name,
           email,
-          instrumentIds: instrumentation.map((inst) => inst.id),
+          instrumentIds,
           phoneNumber,
         });
 
         return result;
       } else {
+        // Updates Musician who is already connected to user or updates User who is NOT connected to a musician
         const updatedUser = updateUser({
           name,
           email,
-          instrumentIds: instrumentation.map((inst) => inst.id),
-          phoneNumber,
-          musicianId: user?.musicianId,
+          musician: user?.musicianId
+            ? {
+                instrumentIds,
+                phoneNumber,
+                musicianId: user.musicianId
+              }
+            : null,
         });
         return updatedUser;
       }
@@ -95,8 +108,6 @@ const UserProfileEdit = ({ user }: { user: GetUserById }) => {
     });
   };
 
-  // console.log('user', user)
-
   const currentInstNames = form.instrumentation.map((inst) => inst.name);
   const filteredInstruments = filterInstruments(instruments, currentInstNames);
 
@@ -110,22 +121,25 @@ const UserProfileEdit = ({ user }: { user: GetUserById }) => {
         placeholder="John Smith"
       ></FormInput>
 
-      <BaseCombobox
-        data={filteredInstruments}
-        disabledData={form.instrumentation}
-        dataToString={instToString}
-        label="Instrumentation"
-        action={addInstrument}
-        action2={deleteInst}
-      />
-
-      <FormInput
-        action={(e) => handleChange(e)}
-        name="phoneNumber"
-        label="Phone Number"
-        value={form.phoneNumber}
-        placeholder="123-456-7890"
-      ></FormInput>
+      {(user?.musician ?? musicianAdd) && (
+        <BaseCombobox
+          data={filteredInstruments}
+          disabledData={form.instrumentation}
+          dataToString={instToString}
+          label="Instrumentation"
+          action={addInstrument}
+          action2={deleteInst}
+        />
+      )}
+      {(user?.musician ?? musicianAdd) && (
+        <FormInput
+          action={(e) => handleChange(e)}
+          name="phoneNumber"
+          label="Phone Number"
+          value={form.phoneNumber}
+          placeholder="123-456-7890"
+        ></FormInput>
+      )}
 
       <FormInput
         action={(e) => handleChange(e)}
