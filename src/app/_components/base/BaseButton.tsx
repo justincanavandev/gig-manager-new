@@ -10,6 +10,7 @@ interface ButtonProps extends ButtonCompProps {
 interface LinkProps extends NextLinkProps {
   as: "link";
   children: ReactNode;
+  className?: string;
 }
 
 type BaseButtonProps = LinkProps | ButtonProps;
@@ -17,7 +18,7 @@ type BaseButtonProps = LinkProps | ButtonProps;
 const BaseButton = ({ ...props }: BaseButtonProps) => {
   type RestProps = ButtonCompProps | NextLinkProps;
 
-  const { children, as, ...rest } = props;
+  const { children, as, className, ...rest } = props;
   const restProps = { ...rest };
 
   const isButtonProps = (rest: RestProps): rest is ButtonCompProps =>
@@ -25,10 +26,13 @@ const BaseButton = ({ ...props }: BaseButtonProps) => {
 
   const isLinkProps = (rest: RestProps): rest is NextLinkProps =>
     (rest as NextLinkProps).href !== undefined && as === "link";
-  
 
   return as === "link" ? (
-    <Link className="w-24 text-center border border-black" {...(isLinkProps(restProps) && restProps)} href={props.href}>
+    <Link
+      className={`${className ?? ""} w-24 border border-black text-center`}
+      {...(isLinkProps(restProps) && restProps)}
+      href={props.href}
+    >
       {children}
     </Link>
   ) : (
