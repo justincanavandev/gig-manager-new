@@ -1,7 +1,6 @@
 "use client";
 
 import type { GigForm, GigFormInstrument } from "~/server/types/gigTypes";
-// import InstrumentSelector from "./InstrumentSelector";
 import DateSelector from "./DateSelector";
 import VenueSelector from "./VenueSelector";
 import MusicianSelector from "./MusicianSelector";
