@@ -1,6 +1,7 @@
 import UserProfileEdit from "~/app/_components/user/edit/UserProfileEdit";
 import { api } from "~/trpc/server";
 import GigCard from "~/app/_components/gigs/GigCard";
+import BaseButton from "~/app/_components/base/BaseButton";
 
 const UserProfile = async ({ params }: { params: { userId: string } }) => {
   const user = await api.user.getById({
@@ -29,6 +30,9 @@ const UserProfile = async ({ params }: { params: { userId: string } }) => {
           index={index}
         />
       ))}
+      <BaseButton as="link" href={`/user/${user?.id}/edit`}>
+        Edit Profile
+      </BaseButton>
 
       {musician === null && (
         <div>

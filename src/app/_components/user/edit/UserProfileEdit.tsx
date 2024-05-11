@@ -21,7 +21,13 @@ export type DefaultUserProfile = {
 const UserProfileEdit = ({ user }: { user: GetUserById }) => {
   const instruments = useInstruments();
   const utils = api.useUtils();
-  const { mutate: updateUser } = api.user.update.useMutation({
+  const { mutate: connectMusician } = api.user.connectMusician.useMutation({
+    onSuccess: async () => {
+      await utils.user.getById.invalidate();
+    },
+  });
+
+  const { mutate: updateUser } = api.user.updateUser.useMutation({
     onSuccess: async () => {
       await utils.user.getById.invalidate();
     },
@@ -30,7 +36,7 @@ const UserProfileEdit = ({ user }: { user: GetUserById }) => {
   const { form, handleChange, setForm, updateValue } =
     useForm<DefaultUserProfile>({
       name: user?.name ? user.name : "",
-      phoneNumber: "",
+      phoneNumber: user?.musician ? user.musician?.phoneNumber : "",
       email: user?.email ? user.email : "",
       instrumentation: user?.musician?.instruments
         ? user.musician.instruments.map((inst) => {
@@ -52,14 +58,25 @@ const UserProfileEdit = ({ user }: { user: GetUserById }) => {
     try {
       const { instrumentation, name, email, phoneNumber } = form;
 
-      const result = updateUser({
-        name,
-        email,
-        instrumentIds: instrumentation.map((inst) => inst.id),
-        phoneNumber,
-      });
+      if (!user?.musicianId) {
+        const result = connectMusician({
+          name,
+          email,
+          instrumentIds: instrumentation.map((inst) => inst.id),
+          phoneNumber,
+        });
 
-      return result;
+        return result;
+      } else {
+        const updatedUser = updateUser({
+          name,
+          email,
+          instrumentIds: instrumentation.map((inst) => inst.id),
+          phoneNumber,
+          musicianId: user?.musicianId,
+        });
+        return updatedUser;
+      }
     } catch (error) {
       console.error("Error updating user", error);
       throw error;
@@ -77,6 +94,8 @@ const UserProfileEdit = ({ user }: { user: GetUserById }) => {
       instrumentation: filteredInsts,
     });
   };
+
+  // console.log('user', user)
 
   const currentInstNames = form.instrumentation.map((inst) => inst.name);
   const filteredInstruments = filterInstruments(instruments, currentInstNames);

@@ -28,7 +28,7 @@ const BaseButton = ({ ...props }: BaseButtonProps) => {
   
 
   return as === "link" ? (
-    <Link {...(isLinkProps(restProps) && restProps)} href={props.href}>
+    <Link className="w-24 text-center border border-black" {...(isLinkProps(restProps) && restProps)} href={props.href}>
       {children}
     </Link>
   ) : (
