@@ -24,7 +24,8 @@ const BaseButton = ({ ...props }: BaseButtonProps) => {
     !rest.hasOwnProperty("href") && as === "button";
 
   const isLinkProps = (rest: RestProps): rest is NextLinkProps =>
-    rest.hasOwnProperty("href") && as === "link";
+    (rest as NextLinkProps).href !== undefined && as === "link";
+  
 
   return as === "link" ? (
     <Link {...(isLinkProps(restProps) && restProps)} href={props.href}>
