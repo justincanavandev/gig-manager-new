@@ -36,18 +36,22 @@ const MusicianSelector = ({
     }
   };
 
+  const closeInstSelector = (instName: string) => {
+    if (isInstrumentValid(instName))
+      toggleInstSelect((prev) => {
+        return {
+          ...prev,
+          [`${instName}`]: false,
+        };
+      });
+  };
+
   const handleAddMusician = (musician: GigFormMusician) => {
     /** @todo Add "addMusician" functionality. This will deal with duplicate instruments being added, Confirmation Modal, etc */
     if (musician?.instrument) {
       updateMusicians("musicians", musician, "add");
 
-      if (isInstrumentValid(musician?.instrument?.name))
-        toggleInstSelect((prev) => {
-          return {
-            ...prev,
-            [`${musician.instrument.name}`]: false,
-          };
-        });
+      closeInstSelector(musician.instrument.name);
     }
   };
 
@@ -61,35 +65,48 @@ const MusicianSelector = ({
       {instrumentation.map(
         (instrument) =>
           isInstOpen(instrument) && (
-            <div key={`musicianSelector-${instrument.name}`}>
-              <BaseCombobox
-                data={
-                  instrument.musicians
-                    ? instrument.musicians
-                        .filter(
-                          (mus) =>
-                            !currentMusicians.map((m) => m.id).includes(mus.id),
-                        )
-                        .map((mus) => {
-                          return {
-                            ...mus,
-                            instrument: {
-                              name: instrument.name,
-                              id: instrument.id,
-                            },
-                          };
-                        })
-                    : []
-                }
-                disabledData={currentMusicians.filter(
-                  (mus) => mus.instrument.name === instrument.name,
-                )}
-                dataToString={musicianToString}
-                label={`Add ${instrument.name}`}
-                action={handleAddMusician}
-                action2={deleteMusician}
-              />
-            </div>
+            <>
+              <div
+                className="flex items-end gap-4"
+                key={`musicianSelector-${instrument.name}`}
+              >
+                <BaseCombobox
+                  data={
+                    instrument.musicians
+                      ? instrument.musicians
+                          .filter(
+                            (mus) =>
+                              !currentMusicians
+                                .map((m) => m.id)
+                                .includes(mus.id),
+                          )
+                          .map((mus) => {
+                            return {
+                              ...mus,
+                              instrument: {
+                                name: instrument.name,
+                                id: instrument.id,
+                              },
+                            };
+                          })
+                      : []
+                  }
+                  disabledData={currentMusicians.filter(
+                    (mus) => mus.instrument.name === instrument.name,
+                  )}
+                  dataToString={musicianToString}
+                  label={`Add ${instrument.name}`}
+                  action={handleAddMusician}
+                  action2={deleteMusician}
+                />
+                <span
+                  onClick={() => closeInstSelector(instrument.name)}
+                  className="mb-[5px]"
+                >
+                  X
+                </span>
+              </div>
+            </>
           ),
       )}
       {currentMusicians.map((mus) => (

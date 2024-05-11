@@ -1,16 +1,6 @@
 import type { ChangeEvent } from "react";
 import type { ComponentPropsWithRef } from "react";
 
-// type FormInputProps = {
-//   action: (e: ChangeEvent<HTMLInputElement>) => void;
-//   name: string;
-//   value: string;
-//   label: string
-//   placeholder: string
-//   innerClass?: string
-//   outerClass?: string
-// };
-
 interface FormInputProps extends ComponentPropsWithRef<"input"> {
   action: (e: ChangeEvent<HTMLInputElement>) => void;
   innerClass?: string;
@@ -19,15 +9,18 @@ interface FormInputProps extends ComponentPropsWithRef<"input"> {
 }
 
 const FormInput = ({ ...props }: FormInputProps) => {
+  const { outerClass, innerClass, name, value, placeholder, action, label } =
+    props;
+
   return (
-    <label className={`${props.outerClass} flex flex-col`}>
-      {props.label}
+    <label className={`${outerClass ?? ""} flex flex-col`}>
+      {label}
       <input
-        className={`w-56 border border-black ${props.innerClass}`}
-        onChange={props.action}
-        name={props.name}
-        value={props.value}
-        placeholder={props.placeholder}
+        className={`w-56 border border-black ${innerClass ?? ""}`}
+        onChange={action}
+        name={name}
+        value={value}
+        placeholder={placeholder}
       ></input>
     </label>
   );
