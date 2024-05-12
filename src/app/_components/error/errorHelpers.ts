@@ -9,21 +9,21 @@ type FieldErrors = {
 
 export type TypeOrNullable<T> = T | null | undefined;
 
-export interface TRPCClientErrorZod extends DefaultErrorData {
-  zodError: typeToFlattenedError<unknown, string> | null;
+export interface TRPCClientErrorZod<T> extends DefaultErrorData {
+  zodError: typeToFlattenedError<T, string> | null;
 }
 
-export const displayTRPCError = (
-  e: TypeOrNullable<TRPCClientErrorZod>,
+export const displayTRPCError = <T> (
+  e: TypeOrNullable<TRPCClientErrorZod<T>>,
   message: string,
 ) => {
   if (e) {
     const zodError = e.zodError;
+    console.log('message', message)
 
     if (zodError) {
       const errMessage = displayZodError(
-        zodError.fieldErrors,
-        "There was an error editing gig!",
+        zodError.fieldErrors
       );
       return errMessage;
     } else {
@@ -32,12 +32,12 @@ export const displayTRPCError = (
       return displayMsg;
     }
   } else {
-    return "There was an error with your action"
+    return message
   }
 };
 
-export const displayZodError = (fieldErrors: FieldErrors, message: string) => {
-  if (fieldErrors) {
+export const displayZodError = (fieldErrors: FieldErrors) => {
+
     const errorArr = Object.entries(fieldErrors);
 
     const errMessageArr = errorArr.map(
@@ -46,7 +46,5 @@ export const displayZodError = (fieldErrors: FieldErrors, message: string) => {
 
     const errMessages = errMessageArr.join("\n\n");
     return errMessages;
-  } else {
-    return message;
-  }
+
 };
