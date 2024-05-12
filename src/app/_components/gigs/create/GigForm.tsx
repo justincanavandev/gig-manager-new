@@ -23,6 +23,8 @@ import type {
 import type { MusicianSelect } from "~/server/types/instrumentTypes";
 import { isInstrumentValid } from "~/server/utils/typeGuards";
 import BaseButton from "../../base/BaseButton";
+import toast from "react-hot-toast";
+import { displayTRPCError } from "../../error/errorHelpers";
 
 type GigFormProps = {
   gig?: GigById;
@@ -33,6 +35,25 @@ const GigForm = ({ gig }: GigFormProps) => {
     useForm<GigForm>(defaultGigForm);
 
   const instruments = useInstruments();
+
+  const { mutate: createGig } = api.gig.create.useMutation({
+    // onSuccess: ()=> {
+    //   toast.success("Gig was created!")
+    // },
+    // onError: ()=> {
+    //   toast.error("There was an error")
+    // }
+  });
+
+  const { mutate: updateGig } = api.gig.update.useMutation({
+    onSuccess: (gig) => {
+      toast.success(`${gig.name} was successfully edited!`);
+    },
+    onError: (e) => {
+      const message = displayTRPCError(e.data, e.message);
+      toast.error(message);
+    },
+  });
 
   const confinedInsts = instruments.map((inst) => confineInstData(inst));
 
@@ -107,9 +128,6 @@ const GigForm = ({ gig }: GigFormProps) => {
     }
   }, [gig, setForm, instruments]);
 
-  const { mutate: createGig } = api.gig.create.useMutation();
-  const { mutate: updateGig } = api.gig.update.useMutation();
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { name, startTime, endTime, venue, musicians, instrumentation } =
@@ -177,7 +195,7 @@ const GigForm = ({ gig }: GigFormProps) => {
           <FormInput
             label="Name"
             value={form.name}
-            placeholder="John Smith"
+            placeholder="Gig 1"
             action={(e) => handleChange(e)}
             name="name"
           />
@@ -207,8 +225,9 @@ const GigForm = ({ gig }: GigFormProps) => {
             venue={form?.venue ? form.venue : null}
           />
 
-    
-          <BaseButton as="button" type="submit">Submit</BaseButton>
+          <BaseButton as="button" type="submit">
+            Submit
+          </BaseButton>
         </div>
       </form>
     </>

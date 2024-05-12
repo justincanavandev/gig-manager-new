@@ -315,6 +315,13 @@ export const gigRouter = createTRPCRouter({
             venueId,
           },
         });
+
+        if (!updatedGig) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Gig unable to be updated",
+          });
+        }
         return updatedGig;
       } catch (e) {
         throw genericErrorHandler(e);
