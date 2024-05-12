@@ -10,6 +10,8 @@ import BaseCombobox from "../../base/BaseCombobox";
 import { instToString } from "~/lib/features/instrument/instrumentSlice";
 import { filterInstruments } from "~/lib/features/instrument/instrumentSlice";
 import BaseButton from "../../base/BaseButton";
+import toast from "react-hot-toast";
+import { displayTRPCError } from "../../error/errorHelpers";
 
 export type DefaultUserProfile = {
   name: string;
@@ -27,14 +29,36 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
   const instruments = useInstruments();
   const utils = api.useUtils();
   const { mutate: connectMusician } = api.user.connectMusician.useMutation({
-    onSuccess: async () => {
+    onMutate: (musician) => {
+      toast.loading(`Connecting ${musician.name}`);
+    },
+    onSuccess: async (musician) => {
       await utils.user.getById.invalidate();
+      toast.dismiss()
+      toast.success(
+        `${musician?.name ?? "Musician"} was added to the database!`,
+      );
+    },
+    onError: (e) => {
+      const message = displayTRPCError(e.data, e.message);
+      toast.dismiss()
+      toast.error(message);
     },
   });
 
   const { mutate: updateUser } = api.user.updateUser.useMutation({
-    onSuccess: async () => {
+    onMutate: (user) => {
+      toast.loading(`Updating ${user.name}'s profile!`);
+    },
+    onSuccess: async (user) => {
       await utils.user.getById.invalidate();
+      toast.dismiss()
+      toast.success(`${user.name}'s profile was updated!`);
+    },
+    onError: (e) => {
+      const message = displayTRPCError(e.data, e.message);
+      toast.dismiss()
+      toast.error(message);
     },
   });
 
@@ -84,7 +108,7 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
             ? {
                 instrumentIds,
                 phoneNumber,
-                musicianId: user.musicianId
+                musicianId: user.musicianId,
               }
             : null,
         });

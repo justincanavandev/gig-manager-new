@@ -35,18 +35,32 @@ const GigForm = ({ gig }: GigFormProps) => {
     useForm<GigForm>(defaultGigForm);
 
   const instruments = useInstruments();
+  const utils = api.useUtils()
 
   const { mutate: createGig } = api.gig.create.useMutation({
-    // onSuccess: ()=> {
-    //   toast.success("Gig was created!")
-    // },
-    // onError: ()=> {
-    //   toast.error("There was an error")
-    // }
+    onMutate: (gig) => {
+      toast.loading(`${gig.name} is being created!`)
+    },
+    onSuccess: async (gig)=> {
+      await utils.gig.getAll.invalidate()
+      await utils.gig.getById.invalidate()
+      toast.dismiss()
+      toast.success(`${gig?.name ?? "Gig"} was successfully created!`);
+    },
+    onError: (e)=> {
+      const message = displayTRPCError(e.data, e.message);
+      toast.dismiss()
+      toast.error(message);
+    }
   });
 
   const { mutate: updateGig } = api.gig.update.useMutation({
-    onSuccess: (gig) => {
+    onMutate: (gig) => {
+      toast.loading(`${gig.name} is being updated!`)
+    },
+    onSuccess: async (gig) => {
+      await utils.gig.getAll.invalidate()
+      await utils.gig.getById.invalidate()
       toast.success(`${gig.name} was successfully edited!`);
     },
     onError: (e) => {
