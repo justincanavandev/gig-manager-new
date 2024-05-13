@@ -69,13 +69,13 @@ export const userRouter = createTRPCRouter({
                 },
               });
             });
-            await ctx.db.musiciansOnInstruments.deleteMany({
-              where: {
-                instrumentId: {
-                  notIn: instrumentIds.map((id) => id),
-                },
-              },
-            });
+            // await ctx.db.musiciansOnInstruments.deleteMany({
+            //   where: {
+            //     instrumentId: {
+            //       notIn: instrumentIds.map((id) => id),
+            //     },
+            //   },
+            // });
             await Promise.all(instrumentMusicianJoin);
 
         }

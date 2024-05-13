@@ -61,10 +61,12 @@ const GigForm = ({ gig }: GigFormProps) => {
     onSuccess: async (gig) => {
       await utils.gig.getAll.invalidate()
       await utils.gig.getById.invalidate()
+      toast.dismiss()
       toast.success(`${gig.name} was successfully edited!`);
     },
     onError: (e) => {
       const message = displayTRPCError(e.data, e.message);
+      toast.dismiss()
       toast.error(message);
     },
   });

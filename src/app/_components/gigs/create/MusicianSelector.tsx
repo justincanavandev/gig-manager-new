@@ -60,14 +60,12 @@ const MusicianSelector = ({
   };
   const musicianToString = (musician: GigFormMusician) => musician.name;
 
-console.log('instrumentation', instrumentation)
 
   return (
     <>
       {instrumentation.map(
         (instrument) =>
           isInstOpen(instrument) && (
-            // <>
               <div
                 className="flex items-end gap-4"
                 key={isInstOpen(instrument) ? `musicianSelector-${instrument.name}` : `selectorHidden-${instrument.name}`}
@@ -108,7 +106,6 @@ console.log('instrumentation', instrumentation)
                   X
                 </span>
               </div>
-            // </>
           ),
       )}
       {currentMusicians.map((mus) => (
