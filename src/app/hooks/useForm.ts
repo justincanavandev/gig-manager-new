@@ -1,4 +1,6 @@
 import { useState, type ChangeEvent } from "react";
+import { type ZodType, z } from "zod";
+import type { FieldErrors } from "../error/errorHelpers";
 
 type UseFormProps<Form> = {
   form: Form;
@@ -11,16 +13,31 @@ type UseFormProps<Form> = {
     value: Value,
     action: "add" | "delete",
   ) => void;
-  changeValue: <Value>(
-    key: keyof Form,
-    value: Value
-  ) => void
-}
+  changeValue: <Value>(key: keyof Form, value: Value) => void;
+  validate: (inputs: unknown) => Form | undefined;
+  errorMessages: FieldErrors;
+};
+
 
 const useForm = <Form extends object>(
   defaultValues: Form,
+  validationSchema: ZodType<Form>,
 ): UseFormProps<Form> => {
   const [form, setForm] = useState<Form>(defaultValues);
+  const [errorMessages, setErrorMessages] = useState<FieldErrors>({});
+
+  const validate = (inputs: unknown) => {
+    try {
+      const isValidData = validationSchema.parse(inputs);
+
+      return isValidData;
+    } catch (e) {
+      if (e instanceof z.ZodError) {
+        const errors = e.flatten();
+        setErrorMessages(errors.fieldErrors);
+      }
+    }
+  };
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
@@ -73,7 +90,9 @@ const useForm = <Form extends object>(
     setForm,
     handleChange,
     updateValue,
-    changeValue
+    changeValue,
+    validate,
+    errorMessages,
   };
 };
 

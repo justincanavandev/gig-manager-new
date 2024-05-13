@@ -2,7 +2,7 @@ import type { typeToFlattenedError } from "zod";
 // import type { DefaultErrorData } from "@trpc/server/unstable-core-do-not-import";
 /** @todo Check why you cannot import these types */
 
-type FieldErrors = {
+export type FieldErrors = {
   [x: string]: string[] | undefined;
   [x: number]: string[] | undefined;
   [x: symbol]: string[] | undefined;
