@@ -60,15 +60,15 @@ const MusicianSelector = ({
   };
   const musicianToString = (musician: GigFormMusician) => musician.name;
 
+
   return (
     <>
       {instrumentation.map(
         (instrument) =>
           isInstOpen(instrument) && (
-            <>
               <div
                 className="flex items-end gap-4"
-                key={`musicianSelector-${instrument.name}`}
+                key={isInstOpen(instrument) ? `musicianSelector-${instrument.name}` : `selectorHidden-${instrument.name}`}
               >
                 <BaseCombobox
                   data={
@@ -106,7 +106,6 @@ const MusicianSelector = ({
                   X
                 </span>
               </div>
-            </>
           ),
       )}
       {currentMusicians.map((mus) => (

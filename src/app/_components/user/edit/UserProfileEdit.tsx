@@ -10,6 +10,12 @@ import BaseCombobox from "../../base/BaseCombobox";
 import { instToString } from "~/lib/features/instrument/instrumentSlice";
 import { filterInstruments } from "~/lib/features/instrument/instrumentSlice";
 import BaseButton from "../../base/BaseButton";
+import toast from "react-hot-toast";
+import { displayTRPCError } from "../../../error/errorHelpers";
+import { UserProfileSchema } from "~/app/validation/userProfileSchema";
+import { isEmailValid, isPhoneValid } from "~/app/validation/validationHelpers";
+import z from "zod";
+import { getZodErrMsg } from "../../../error/errorHelpers";
 
 export type DefaultUserProfile = {
   name: string;
@@ -27,31 +33,56 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
   const instruments = useInstruments();
   const utils = api.useUtils();
   const { mutate: connectMusician } = api.user.connectMusician.useMutation({
-    onSuccess: async () => {
+    onMutate: (musician) => {
+      toast.loading(`Adding ${musician.name}`);
+    },
+    onSuccess: async (musician) => {
       await utils.user.getById.invalidate();
+      toast.dismiss();
+      toast.success(
+        `${musician?.name ?? "Musician"} was added to the database!`,
+      );
+    },
+    onError: (e) => {
+      const message = displayTRPCError(e.data, e.message);
+      toast.dismiss();
+      toast.error(message);
     },
   });
 
   const { mutate: updateUser } = api.user.updateUser.useMutation({
-    onSuccess: async () => {
+    onMutate: (user) => {
+      toast.loading(`Updating ${user.name}'s profile!`);
+    },
+    onSuccess: async (user) => {
       await utils.user.getById.invalidate();
+      toast.dismiss();
+      toast.success(`${user.name}'s profile was updated!`);
+    },
+    onError: (e) => {
+      const message = displayTRPCError(e.data, e.message);
+      toast.dismiss();
+      toast.error(message);
     },
   });
 
-  const { form, handleChange, setForm, updateValue } =
-    useForm<DefaultUserProfile>({
-      name: user?.name ? user.name : "",
-      phoneNumber: user?.musician ? user.musician?.phoneNumber : "",
-      email: user?.email ? user.email : "",
-      instrumentation: user?.musician?.instruments
-        ? user.musician.instruments.map((inst) => {
-            return {
-              id: inst.instrument.id,
-              name: inst.instrument.name,
-            };
-          })
-        : [],
-    });
+  const { form, handleChange, setForm, updateValue, validate, errorMessages } =
+    useForm<DefaultUserProfile>(
+      {
+        name: user?.name ? user.name : "",
+        phoneNumber: user?.musician ? user.musician?.phoneNumber : "",
+        email: user?.email ? user.email : "",
+        instrumentation: user?.musician?.instruments
+          ? user.musician.instruments.map((inst) => {
+              return {
+                id: inst.instrument.id,
+                name: inst.instrument.name,
+              };
+            })
+          : [],
+      },
+      UserProfileSchema,
+    );
 
   const addInstrument = (inst: GigFormInstrument) => {
     if (inst) {
@@ -63,32 +94,41 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
     try {
       const { instrumentation, name, email, phoneNumber } = form;
 
-      const instrumentIds = instrumentation.map((inst) => inst.id);
+      const validateOrError = validate(form);
 
-      if (!user?.musicianId && musicianAdd) {
-        // Adds Musician to db and connects Musician to User
-        const result = connectMusician({
-          name,
-          email,
-          instrumentIds,
-          phoneNumber,
-        });
+      if (validateOrError instanceof z.ZodError) {
+        const message = getZodErrMsg(validateOrError);
 
-        return result;
+        toast.error(message);
+        
       } else {
-        // Updates Musician who is already connected to user or updates User who is NOT connected to a musician
-        const updatedUser = updateUser({
-          name,
-          email,
-          musician: user?.musicianId
-            ? {
-                instrumentIds,
-                phoneNumber,
-                musicianId: user.musicianId
-              }
-            : null,
-        });
-        return updatedUser;
+        const instrumentIds = instrumentation.map((inst) => inst.id);
+
+        if (!user?.musicianId && musicianAdd) {
+          // Adds Musician to db and connects Musician to User
+          const result = connectMusician({
+            name,
+            email,
+            instrumentIds,
+            phoneNumber,
+          });
+
+          return result;
+        } else {
+          // Updates Musician who is already connected to user or updates User who is NOT connected to a musician
+          const updatedUser = updateUser({
+            name,
+            email,
+            musician: user?.musicianId
+              ? {
+                  instrumentIds,
+                  phoneNumber,
+                  musicianId: user.musicianId,
+                }
+              : null,
+          });
+          return updatedUser;
+        }
       }
     } catch (error) {
       console.error("Error updating user", error);
@@ -119,6 +159,8 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
         label="Name"
         name="name"
         placeholder="John Smith"
+        condition={form.name.length >= 3}
+        errors={errorMessages?.name ?? []}
       ></FormInput>
 
       {(user?.musician ?? musicianAdd) && (
@@ -137,7 +179,10 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
           name="phoneNumber"
           label="Phone Number"
           value={form.phoneNumber}
+          type="number"
           placeholder="123-456-7890"
+          condition={isPhoneValid(form.phoneNumber)}
+          errors={errorMessages?.phoneNumber ?? []}
         ></FormInput>
       )}
 
@@ -145,8 +190,11 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
         action={(e) => handleChange(e)}
         label="Email"
         name="email"
+        type="text"
         placeholder="johnsmith@gmail.com"
         value={form.email}
+        condition={isEmailValid(form.email)}
+        errors={errorMessages?.email ?? []}
       ></FormInput>
 
       <BaseButton as="button" className="border" onClick={handleUpdateUser}>

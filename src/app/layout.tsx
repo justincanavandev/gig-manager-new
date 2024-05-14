@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { api } from "~/trpc/server";
 import { TRPCReactProvider } from "~/trpc/react";
 import StoreProvider from "./StoreProvider";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -34,6 +35,7 @@ export default async function RootLayout({
         >
           <TRPCReactProvider>{children}</TRPCReactProvider>
         </StoreProvider>
+        <Toaster position="top-right" />
       </body>
     </html>
   );

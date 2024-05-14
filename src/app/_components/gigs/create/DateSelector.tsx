@@ -6,8 +6,8 @@ import type { GigForm } from "~/server/types/gigTypes";
 const startOrEnd = ["Start Date", "End Date"];
 
 type DateSelectorProps = {
-  startTime: string
-  endTime: string
+  startTime: Date
+  endTime: Date
   changeDate: <Value>(
     key: keyof GigForm,
     value: Value

@@ -43,8 +43,8 @@ export type GigFormVenue = {
 export type GigForm = {
   name: string;
   venue: GigFormVenue
-  startTime: string;
-  endTime: string;
+  startTime: Date
+  endTime: Date
   instrumentation: GigFormInstrument[]
   musicians: GigFormMusician[]
 };

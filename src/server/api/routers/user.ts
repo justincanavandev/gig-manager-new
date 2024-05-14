@@ -25,7 +25,7 @@ export const userRouter = createTRPCRouter({
   updateUser: protectedProcedure
     .input(
       z.object({
-        name: z.string(),
+        name: z.string().min(3),
         email: z.string().email(),
         musician: z
           .object({
@@ -69,13 +69,13 @@ export const userRouter = createTRPCRouter({
                 },
               });
             });
-            await ctx.db.musiciansOnInstruments.deleteMany({
-              where: {
-                instrumentId: {
-                  notIn: instrumentIds.map((id) => id),
-                },
-              },
-            });
+            // await ctx.db.musiciansOnInstruments.deleteMany({
+            //   where: {
+            //     instrumentId: {
+            //       notIn: instrumentIds.map((id) => id),
+            //     },
+            //   },
+            // });
             await Promise.all(instrumentMusicianJoin);
 
         }

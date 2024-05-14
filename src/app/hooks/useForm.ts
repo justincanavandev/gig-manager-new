@@ -1,4 +1,7 @@
-import { useState, type ChangeEvent } from "react";
+import { useState, type ChangeEvent, type Dispatch, type SetStateAction } from "react";
+import { type ZodType, z } from "zod";
+import type { FieldErrors } from "../error/errorHelpers";
+
 
 type UseFormProps<Form> = {
   form: Form;
@@ -11,16 +14,36 @@ type UseFormProps<Form> = {
     value: Value,
     action: "add" | "delete",
   ) => void;
-  changeValue: <Value>(
-    key: keyof Form,
-    value: Value
-  ) => void
-}
+  changeValue: <Value>(key: keyof Form, value: Value) => void;
+  validate: (inputs: unknown) => Form | z.ZodError | undefined;
+  errorMessages: FieldErrors | Partial<Record<keyof Form, string[]>>
+  setErrorMessages: Dispatch<SetStateAction<FieldErrors | Partial<Record<keyof Form, string[]>>>>;
+};
+
 
 const useForm = <Form extends object>(
   defaultValues: Form,
+  validationSchema: ZodType<Form>,
 ): UseFormProps<Form> => {
+  
   const [form, setForm] = useState<Form>(defaultValues);
+  const [errorMessages, setErrorMessages] = useState<FieldErrors | Partial<Record<keyof Form, string[]>>>({});
+
+  const validate = (inputs: unknown) => {
+    try {
+      const isValidData = validationSchema.parse(inputs);
+
+      return isValidData;
+    } catch (e) {
+      if (e instanceof z.ZodError) {
+        const zodErrs = e.flatten();
+        console.log("errors", zodErrs);
+
+        setErrorMessages(zodErrs.fieldErrors);
+        return e;
+      }
+    }
+  };
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
@@ -73,7 +96,10 @@ const useForm = <Form extends object>(
     setForm,
     handleChange,
     updateValue,
-    changeValue
+    changeValue,
+    validate,
+    errorMessages,
+    setErrorMessages,
   };
 };
 
