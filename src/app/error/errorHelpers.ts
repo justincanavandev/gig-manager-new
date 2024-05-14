@@ -1,16 +1,8 @@
-import type { typeToFlattenedError } from "zod";
+import type { typeToFlattenedError, z } from "zod";
 // import type { DefaultErrorData } from "@trpc/server/unstable-core-do-not-import";
 /** @todo Check why you cannot import these types */
 
-export type FieldErrors = {
-  [x: string]: string[] | undefined;
-  [x: number]: string[] | undefined;
-  [x: symbol]: string[] | undefined;
-};
 
-export type TypeOrNullable<T> = T | null | undefined;
-
-// Using this custom type since I'm unsure about importing DefaultErrorData type
 type DefaultEData<Data> = {
   code:
     | "PARSE_ERROR"
@@ -35,9 +27,13 @@ type DefaultEData<Data> = {
   stack?: string;
 };
 
-// export interface TRPCClientErrorZod<T> extends DefaultErrorData {
-//   zodError: typeToFlattenedError<T, string> | null;
-// }
+export type FieldErrors = {
+  [x: string]: string[] | undefined;
+  [x: number]: string[] | undefined;
+  [x: symbol]: string[] | undefined;
+};
+
+export type TypeOrNullable<T> = T | null | undefined;
 
 export const displayTRPCError = <Data>(
   e: TypeOrNullable<DefaultEData<Data>>,
@@ -69,3 +65,16 @@ export const displayZodError = (fieldErrors: FieldErrors) => {
   const errMessages = errMessageArr.join("\n\n");
   return errMessages;
 };
+
+export const getZodErrMsg = (err: z.ZodError) => {
+  const flattenedErrs = err.flatten();
+  const errorFields = Object.keys(flattenedErrs.fieldErrors);
+  const errString = errorFields.join(", ")
+
+  const message =
+  errorFields.length > 0
+    ? `Errors in ${errString} ${errorFields.length === 1 ? "field" : "fields"}`
+    : "There was an error with your form submission!";
+  
+    return message
+}

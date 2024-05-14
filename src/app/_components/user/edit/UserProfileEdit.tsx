@@ -12,8 +12,10 @@ import { filterInstruments } from "~/lib/features/instrument/instrumentSlice";
 import BaseButton from "../../base/BaseButton";
 import toast from "react-hot-toast";
 import { displayTRPCError } from "../../../error/errorHelpers";
-import { UserProfileSchema } from "~/app/validation/userProfileValidator";
+import { UserProfileSchema } from "~/app/validation/userProfileSchema";
 import { isEmailValid, isPhoneValid } from "~/app/validation/validationHelpers";
+import z from "zod";
+import { getZodErrMsg } from "../../../error/errorHelpers";
 
 export type DefaultUserProfile = {
   name: string;
@@ -32,7 +34,7 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
   const utils = api.useUtils();
   const { mutate: connectMusician } = api.user.connectMusician.useMutation({
     onMutate: (musician) => {
-      toast.loading(`Connecting ${musician.name}`);
+      toast.loading(`Adding ${musician.name}`);
     },
     onSuccess: async (musician) => {
       await utils.user.getById.invalidate();
@@ -92,9 +94,14 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
     try {
       const { instrumentation, name, email, phoneNumber } = form;
 
-      const result = validate(form);
+      const validateOrError = validate(form);
 
-      if (result) {
+      if (validateOrError instanceof z.ZodError) {
+        const message = getZodErrMsg(validateOrError);
+
+        toast.error(message);
+        
+      } else {
         const instrumentIds = instrumentation.map((inst) => inst.id);
 
         if (!user?.musicianId && musicianAdd) {
@@ -152,8 +159,8 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
         label="Name"
         name="name"
         placeholder="John Smith"
-        condition={form.name.length > 3}
-        errors={errorMessages.name ?? []}
+        condition={form.name.length >= 3}
+        errors={errorMessages?.name ?? []}
       ></FormInput>
 
       {(user?.musician ?? musicianAdd) && (
@@ -175,7 +182,7 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
           type="number"
           placeholder="123-456-7890"
           condition={isPhoneValid(form.phoneNumber)}
-          errors={errorMessages.phoneNumber ?? []}
+          errors={errorMessages?.phoneNumber ?? []}
         ></FormInput>
       )}
 
@@ -187,7 +194,7 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
         placeholder="johnsmith@gmail.com"
         value={form.email}
         condition={isEmailValid(form.email)}
-        errors={errorMessages.email ?? []}
+        errors={errorMessages?.email ?? []}
       ></FormInput>
 
       <BaseButton as="button" className="border" onClick={handleUpdateUser}>

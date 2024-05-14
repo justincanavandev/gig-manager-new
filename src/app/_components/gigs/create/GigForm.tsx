@@ -24,49 +24,60 @@ import type { MusicianSelect } from "~/server/types/instrumentTypes";
 import { isInstrumentValid } from "~/server/utils/typeGuards";
 import BaseButton from "../../base/BaseButton";
 import toast from "react-hot-toast";
-import { displayTRPCError } from "../../error/errorHelpers";
+import { displayTRPCError, getZodErrMsg } from "../../../error/errorHelpers";
+import { GigFormSchema } from "~/app/validation/gigFormSchema";
+import { z } from "zod";
+import { gigFormErrors } from "~/app/validation/validationHelpers";
 
 type GigFormProps = {
   gig?: GigById;
 };
 
 const GigForm = ({ gig }: GigFormProps) => {
-  const { form, setForm, handleChange, updateValue, changeValue } =
-    useForm<GigForm>(defaultGigForm);
+  const {
+    form,
+    setForm,
+    handleChange,
+    updateValue,
+    changeValue,
+    validate,
+    errorMessages,
+    setErrorMessages,
+  } = useForm<GigForm>(defaultGigForm, GigFormSchema);
 
   const instruments = useInstruments();
-  const utils = api.useUtils()
+  const utils = api.useUtils();
 
   const { mutate: createGig } = api.gig.create.useMutation({
     onMutate: (gig) => {
-      toast.loading(`${gig.name} is being created!`)
+      toast.loading(`${gig.name} is being created!`);
     },
-    onSuccess: async (gig)=> {
-      await utils.gig.getAll.invalidate()
-      await utils.gig.getById.invalidate()
-      toast.dismiss()
+    onSuccess: async (gig) => {
+      await utils.gig.getAll.invalidate();
+      await utils.gig.getById.invalidate();
+      toast.dismiss();
       toast.success(`${gig?.name ?? "Gig"} was successfully created!`);
     },
-    onError: (e)=> {
+    onError: (e) => {
       const message = displayTRPCError(e.data, e.message);
-      toast.dismiss()
+      toast.dismiss();
       toast.error(message);
-    }
+    },
   });
 
   const { mutate: updateGig } = api.gig.update.useMutation({
     onMutate: (gig) => {
-      toast.loading(`${gig.name} is being updated!`)
+      toast.loading(`${gig.name} is being updated!`);
     },
     onSuccess: async (gig) => {
-      await utils.gig.getAll.invalidate()
-      await utils.gig.getById.invalidate()
-      toast.dismiss()
+      await utils.gig.getAll.invalidate();
+      await utils.gig.getById.invalidate();
+      toast.dismiss();
       toast.success(`${gig.name} was successfully edited!`);
     },
     onError: (e) => {
       const message = displayTRPCError(e.data, e.message);
-      toast.dismiss()
+      toast.dismiss();
       toast.error(message);
     },
   });
@@ -126,8 +137,8 @@ const GigForm = ({ gig }: GigFormProps) => {
       setForm({
         name,
         venue,
-        startTime: startTime.toISOString(),
-        endTime: endTime.toISOString(),
+        startTime,
+        endTime,
         instrumentation: confinedInstrumentation,
         musicians: confinedMusicians,
       });
@@ -149,42 +160,50 @@ const GigForm = ({ gig }: GigFormProps) => {
     const { name, startTime, endTime, venue, musicians, instrumentation } =
       form;
 
-    const instrumentNames = instrumentation.map((inst) => inst.name);
+    const validateOrError = validate(form);
 
-    if (gig) {
-      const updatedMusicians = musicians.map((mus) => {
-        return {
-          name: mus.name,
-          instrument: { name: mus.instrument.name, id: mus.instrument.id },
-          id: mus.id,
-        };
-      });
+    if (validateOrError instanceof z.ZodError) {
+      const message = getZodErrMsg(validateOrError);
 
-      updateGig({
-        id: gig.id,
-        name,
-        startTime: new Date(startTime),
-        endTime: new Date(endTime),
-        venueId: venue?.id ?? "",
-        musicians: updatedMusicians,
-        instrumentation,
-      });
+      toast.error(message);
     } else {
-      const createMusicians = musicians.map((mus) => {
-        return {
-          name: mus.name,
-          instrument: mus.instrument.name,
-          id: mus.id,
-        };
-      });
-      createGig({
-        name,
-        startTime: new Date(startTime),
-        endTime: new Date(endTime),
-        venueId: venue?.id ?? "",
-        musicians: createMusicians,
-        instrumentation: instrumentNames,
-      });
+      const instrumentNames = instrumentation.map((inst) => inst.name);
+
+      if (gig) {
+        const updatedMusicians = musicians.map((mus) => {
+          return {
+            name: mus.name,
+            instrument: { name: mus.instrument.name, id: mus.instrument.id },
+            id: mus.id,
+          };
+        });
+
+        updateGig({
+          id: gig.id,
+          name,
+          startTime,
+          endTime,
+          venueId: venue?.id ?? "",
+          musicians: updatedMusicians,
+          instrumentation,
+        });
+      } else {
+        const createMusicians = musicians.map((mus) => {
+          return {
+            name: mus.name,
+            instrument: mus.instrument.name,
+            id: mus.id,
+          };
+        });
+        createGig({
+          name,
+          startTime,
+          endTime,
+          venueId: venue?.id ?? "",
+          musicians: createMusicians,
+          instrumentation: instrumentNames,
+        });
+      }
     }
   };
 
@@ -204,6 +223,32 @@ const GigForm = ({ gig }: GigFormProps) => {
     });
   };
 
+  const displayNameErr = (name: string) => {
+    const nameSchema = z.string().min(3);
+
+    const parsedName = nameSchema.safeParse(name);
+    const doesPropertyExist = errorMessages.hasOwnProperty("name");
+
+    if (parsedName.success) {
+      if (doesPropertyExist) {
+        setErrorMessages((err) => {
+          const filteredErrs = err;
+          delete filteredErrs.name;
+          return {
+            ...filteredErrs,
+          };
+        });
+      }
+    } else {
+      if (!doesPropertyExist) {
+        setErrorMessages((err) => {
+          return { ...err, name: [gigFormErrors.name] };
+        });
+      }
+    }
+    return parsedName.success;
+  };
+
   return (
     <>
       <form onSubmit={(e) => handleSubmit(e)}>
@@ -214,6 +259,10 @@ const GigForm = ({ gig }: GigFormProps) => {
             placeholder="Gig 1"
             action={(e) => handleChange(e)}
             name="name"
+            condition={displayNameErr(form.name)}
+            // condition={form.name.length >= 3}
+            type="text"
+            errors={errorMessages.name ?? []}
           />
           <DateSelector
             startTime={form.startTime}

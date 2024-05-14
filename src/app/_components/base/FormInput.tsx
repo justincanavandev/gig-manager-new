@@ -21,19 +21,16 @@ const FormInput = ({ ...props }: FormInputProps) => {
     label,
     condition,
     errors,
-    type
+    type,
   } = props;
 
   const styling = () => {
     if (typeof value === "string") {
       if (value.length > 0) {
-        // console.log("hello");
         if (condition) {
-          // console.log('b-green')
           return "border-green-500";
         } else {
-          console.log('b-red')
-         return "border-red-500";
+          return "border-red-500";
         }
       }
     } else {

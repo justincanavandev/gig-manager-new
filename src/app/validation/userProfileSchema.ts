@@ -4,7 +4,7 @@ import { instruments } from "prisma/seedData";
 
 
 export const UserProfileSchema: ZodType<DefaultUserProfile> = z.object({
-  name: z.string().min(3),
+  name: z.string().min(3).max(20),
   phoneNumber: z.string().min(10),
   email: z.string().email(),
   instrumentation: z

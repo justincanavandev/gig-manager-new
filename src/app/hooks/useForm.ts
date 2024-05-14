@@ -1,6 +1,7 @@
-import { useState, type ChangeEvent } from "react";
+import { useState, type ChangeEvent, type Dispatch, type SetStateAction } from "react";
 import { type ZodType, z } from "zod";
 import type { FieldErrors } from "../error/errorHelpers";
+
 
 type UseFormProps<Form> = {
   form: Form;
@@ -14,8 +15,9 @@ type UseFormProps<Form> = {
     action: "add" | "delete",
   ) => void;
   changeValue: <Value>(key: keyof Form, value: Value) => void;
-  validate: (inputs: unknown) => Form | undefined;
-  errorMessages: FieldErrors;
+  validate: (inputs: unknown) => Form | z.ZodError | undefined;
+  errorMessages: FieldErrors | Partial<Record<keyof Form, string[]>>
+  setErrorMessages: Dispatch<SetStateAction<FieldErrors | Partial<Record<keyof Form, string[]>>>>;
 };
 
 
@@ -23,8 +25,9 @@ const useForm = <Form extends object>(
   defaultValues: Form,
   validationSchema: ZodType<Form>,
 ): UseFormProps<Form> => {
+  
   const [form, setForm] = useState<Form>(defaultValues);
-  const [errorMessages, setErrorMessages] = useState<FieldErrors>({});
+  const [errorMessages, setErrorMessages] = useState<FieldErrors | Partial<Record<keyof Form, string[]>>>({});
 
   const validate = (inputs: unknown) => {
     try {
@@ -33,8 +36,11 @@ const useForm = <Form extends object>(
       return isValidData;
     } catch (e) {
       if (e instanceof z.ZodError) {
-        const errors = e.flatten();
-        setErrorMessages(errors.fieldErrors);
+        const zodErrs = e.flatten();
+        console.log("errors", zodErrs);
+
+        setErrorMessages(zodErrs.fieldErrors);
+        return e;
       }
     }
   };
@@ -93,6 +99,7 @@ const useForm = <Form extends object>(
     changeValue,
     validate,
     errorMessages,
+    setErrorMessages,
   };
 };
 

@@ -5,14 +5,13 @@ import type { GigForm } from "~/server/types/gigTypes";
 
 type DateTimeProps = {
   index?: number;
-  startTime: string;
-  endTime: string;
+  startTime: Date;
+  endTime: Date;
   changeDate: <Value>(key: keyof GigForm, value: Value) => void;
 };
 
 const DateTimePicker: React.FC<DateTimeProps> = ({
   index,
-
   changeDate,
   startTime,
   endTime,
