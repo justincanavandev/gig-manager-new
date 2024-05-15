@@ -8,10 +8,11 @@ export const isEmailValid = (email: string) => {
   return parsedEmail.success;
 };
 
+export const phoneValidation = z.string().refine(value => /^1?\d{10}$/.test(value));
+
 export const isPhoneValid = (number: string) => {
-  const phoneSchema = z.string().refine(value => /^1?\d{10}$/.test(value));
-  
-  const parsedNum = phoneSchema.safeParse(number)
+
+  const parsedNum = phoneValidation.safeParse(number)
   return parsedNum.success
 }
 

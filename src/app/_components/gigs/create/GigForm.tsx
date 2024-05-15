@@ -42,7 +42,8 @@ const GigForm = ({ gig }: GigFormProps) => {
     changeValue,
     validate,
     errorMessages,
-    setErrorMessages,
+    // setErrorMessages,
+    displayFormError,
   } = useForm<GigForm>(defaultGigForm, GigFormSchema);
 
   const instruments = useInstruments();
@@ -223,32 +224,6 @@ const GigForm = ({ gig }: GigFormProps) => {
     });
   };
 
-  const displayNameErr = (name: string) => {
-    const nameSchema = z.string().min(3);
-
-    const parsedName = nameSchema.safeParse(name);
-    const doesPropertyExist = errorMessages.hasOwnProperty("name");
-
-    if (parsedName.success) {
-      if (doesPropertyExist) {
-        setErrorMessages((err) => {
-          const filteredErrs = err;
-          delete filteredErrs.name;
-          return {
-            ...filteredErrs,
-          };
-        });
-      }
-    } else {
-      if (!doesPropertyExist) {
-        setErrorMessages((err) => {
-          return { ...err, name: [gigFormErrors.name] };
-        });
-      }
-    }
-    return parsedName.success;
-  };
-
   return (
     <>
       <form onSubmit={(e) => handleSubmit(e)}>
@@ -259,8 +234,12 @@ const GigForm = ({ gig }: GigFormProps) => {
             placeholder="Gig 1"
             action={(e) => handleChange(e)}
             name="name"
-            condition={displayNameErr(form.name)}
-            // condition={form.name.length >= 3}
+            condition={displayFormError(
+              "name",
+              form.name,
+              z.string().min(3),
+              gigFormErrors.name,
+            )}
             type="text"
             errors={errorMessages.name ?? []}
           />
