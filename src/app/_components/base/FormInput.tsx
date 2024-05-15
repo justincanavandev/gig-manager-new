@@ -43,7 +43,7 @@ const FormInput = ({ ...props }: FormInputProps) => {
       <label className={`${outerClass ?? ""} flex flex-col`}>
         {label}
         <input
-          className={`w-56 border ${styling()}  ${innerClass ?? ""}`}
+          className={`w-56 border focus-visible:outline-none ${styling()}  ${innerClass ?? ""}`}
           onChange={action}
           name={name}
           value={value}

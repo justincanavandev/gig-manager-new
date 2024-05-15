@@ -1,4 +1,5 @@
 import z from "zod";
+import { instruments } from "prisma/seedData";
 
 export const isEmailValid = (email: string) => {
   const emailSchema = z.string().email();
@@ -9,6 +10,10 @@ export const isEmailValid = (email: string) => {
 };
 
 export const phoneValidation = z.string().refine(value => /^1?\d{10}$/.test(value));
+export const instNameValidation = z.string().refine(
+    (val) => instruments.includes(val),
+    (val) => ({ message: `${val} is not a valid instrument!` }),
+  )
 
 export const isPhoneValid = (number: string) => {
 

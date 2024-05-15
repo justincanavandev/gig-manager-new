@@ -2,6 +2,8 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import z from "zod";
 import { TRPCError } from "@trpc/server";
 import { genericErrorHandler } from "~/server/utils/errorHandling";
+import { instruments } from "prisma/seedData";
+import { instNameValidation } from "~/app/validation/validationHelpers";
 
 export const gigRouter = createTRPCRouter({
   getAll: protectedProcedure.query(async ({ ctx }) => {
@@ -63,15 +65,18 @@ export const gigRouter = createTRPCRouter({
         name: z.string().min(3),
         startTime: z.date(),
         endTime: z.date(),
-        venueId: z.string(),
+        venueId: z.string().cuid(),
         musicians: z
           .object({
             name: z.string(),
-            instrument: z.string(),
+            instrument: instNameValidation,
             id: z.string().cuid(),
           })
           .array(),
-        instrumentation: z.string().array(),
+        instrumentation: z.string().refine(
+          (val) => instruments.includes(val),
+          (val) => ({ message: `${val} is not a valid instrument!` }),
+        ).array()
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -202,20 +207,23 @@ export const gigRouter = createTRPCRouter({
         name: z.string().min(3),
         startTime: z.date(),
         endTime: z.date(),
-        venueId: z.string(),
+        venueId: z.string().cuid(),
         musicians: z
           .object({
             name: z.string(),
             instrument: z.object({
               id: z.string().cuid(),
-              name: z.string(),
+              name: instNameValidation,
             }),
             id: z.string().cuid(),
           })
           .array(),
         instrumentation: z
           .object({
-            name: z.string(),
+            name: z.string().refine(
+              (val) => instruments.includes(val),
+              (val) => ({ message: `${val} is not a valid instrument!` }),
+            ),
             id: z.string().cuid(),
           })
           .array(),
