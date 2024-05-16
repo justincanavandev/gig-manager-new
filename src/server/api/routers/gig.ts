@@ -128,7 +128,7 @@ export const gigRouter = createTRPCRouter({
         }
         return gig;
       } catch (e) {
-        console.error("Unable to create gig", e);
+        throw genericErrorHandler(e)
       }
     }),
   getById: protectedProcedure
@@ -275,6 +275,7 @@ export const gigRouter = createTRPCRouter({
               musicianId: {
                 notIn: musicians.map((mus) => mus.id),
               },
+              gigId: id
             },
           });
         });
