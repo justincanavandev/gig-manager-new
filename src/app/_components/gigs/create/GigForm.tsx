@@ -109,24 +109,23 @@ const GigForm = ({ gig }: GigFormProps) => {
   useEffect(() => {
     if (gig) {
       const { name, startTime, endTime, instrumentation, musicians, venue } =
-        gig;
-
-      const confinedMusicians = musicians.map((mus) => {
+        gig;  
+      const confinedMusicians = musicians.map((mus) => {     
         return {
           instrument: {
             name: mus.instrument.name,
             id: mus.instrument.id,
           },
-          id: mus.musicianId,
+          id: mus.musician.id,
           name: mus.musician.name,
         };
       });
 
-      const confinedInstrumentation = instrumentation.map((inst) => {
+      const confinedInstrumentation = instrumentation.map((inst) => {  
         return {
           name: inst.instrument.name,
           id: inst.instrumentId,
-          musicians: inst.instrument.musicians.map((mus) => {
+          musicians: inst.instrument.musicians.map((mus) => {         
             return {
               name: mus.musician.name,
               id: mus.musician.id,
@@ -154,7 +153,8 @@ const GigForm = ({ gig }: GigFormProps) => {
         return obj;
       });
     }
-  }, [gig, setForm, instruments]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

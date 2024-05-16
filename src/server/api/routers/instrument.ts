@@ -10,7 +10,6 @@ export const instrumentRouter = createTRPCRouter({
         select: {
           name: true,
           id: true,
-
           musicians: {
             select: {
               musician: {

@@ -161,6 +161,7 @@ export const gigRouter = createTRPCRouter({
                 musician: {
                   select: {
                     name: true,
+                    id: true,
                     instruments: {
                       select: {
                         instrument: true,
@@ -327,6 +328,7 @@ export const gigRouter = createTRPCRouter({
               instrumentId: {
                 notIn: instrumentation.map((inst) => inst.id),
               },
+              gigId: id
             },
           });
         });

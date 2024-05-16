@@ -21,7 +21,7 @@ type MusicianSelectorProps = {
   isSelectorOpen: Partial<MusicianSelect>;
   toggleInstSelect: Dispatch<SetStateAction<Partial<MusicianSelect>>>;
   instsWithoutMusician: GigFormInstrument[];
-  deleteInst: (inst: GigFormInstrument) => void
+  deleteInst: (inst: GigFormInstrument) => void;
 };
 
 const MusicianSelector = ({
@@ -31,9 +31,8 @@ const MusicianSelector = ({
   isSelectorOpen,
   toggleInstSelect,
   instsWithoutMusician,
-  deleteInst
+  deleteInst,
 }: MusicianSelectorProps) => {
-  
   const isInstOpen = (inst: GigFormInstrument) => {
     if (isInstrumentValid(inst?.name)) {
       const isInstValid = isSelectorOpen[`${inst.name}`];
@@ -43,7 +42,6 @@ const MusicianSelector = ({
 
   const closeInstSelector = (inst: GigFormInstrument) => {
     if (isInstrumentValid(inst.name))
-      deleteInst(inst)
       toggleInstSelect((prev) => {
         return {
           ...prev,
@@ -66,6 +64,14 @@ const MusicianSelector = ({
   };
   const musicianToString = (musician: GigFormMusician) => musician.name;
 
+  const closeMusicianSelector = (inst: GigFormInstrument) => {
+    deleteInst(inst);
+    closeInstSelector(inst);
+  };
+
+  const currentMusicianNames = currentMusicians.map((mus) => mus.name);
+
+
   return (
     <>
       {instrumentation.map(
@@ -82,21 +88,16 @@ const MusicianSelector = ({
               <BaseCombobox
                 data={
                   instrument.musicians
-                    ? instrument.musicians
-                        .filter(
-                          (mus) =>
-                            !currentMusicians.map((m) => m.id).includes(mus.id),
-                        )
-                        .map((mus) => {
-                          return {
-                            ...mus,
-                            instrument: {
-                              name: instrument.name,
-                              id: instrument.id,
-                            },
-                          };
-                        })
-                    : []
+                    ?.filter((mus) => !currentMusicianNames.includes(mus.name))
+                    .map((mus) => {
+                      return {
+                        ...mus,
+                        instrument: {
+                          name: instrument.name,
+                          id: instrument.id,
+                        },
+                      }
+                    }) ?? []
                 }
                 disabledData={currentMusicians.filter(
                   (mus) => mus.instrument.name === instrument.name,
@@ -107,7 +108,7 @@ const MusicianSelector = ({
                 action2={deleteMusician}
               />
               <span
-                onClick={() => closeInstSelector(instrument)}
+                onClick={() => closeMusicianSelector(instrument)}
                 className="mb-[5px]"
               >
                 X
@@ -116,10 +117,11 @@ const MusicianSelector = ({
           ),
       )}
       {instsWithoutMusician?.map((inst) => (
-        <div key={`instSelector, ${inst.name}`}>
+        <div className="flex gap-4" key={`instSelector, ${inst.name}`}>
           <span>
             {inst.name} - <span className="text-red-500">Add {inst.name}</span>
           </span>
+          <span onClick={() => deleteInst(inst)}>X</span>
         </div>
       ))}
 
