@@ -6,6 +6,7 @@ import {
 import { TRPCError } from "@trpc/server";
 import z from "zod";
 import { genericErrorHandler } from "~/server/utils/errorHandling";
+import { phoneValidation } from "~/app/validation/validationHelpers";
 
 export const userRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
@@ -69,13 +70,6 @@ export const userRouter = createTRPCRouter({
                 },
               });
             });
-            // await ctx.db.musiciansOnInstruments.deleteMany({
-            //   where: {
-            //     instrumentId: {
-            //       notIn: instrumentIds.map((id) => id),
-            //     },
-            //   },
-            // });
             await Promise.all(instrumentMusicianJoin);
 
         }
@@ -118,7 +112,7 @@ export const userRouter = createTRPCRouter({
       z.object({
         name: z.string(),
         email: z.string().email(),
-        phoneNumber: z.string().min(1),
+        phoneNumber: phoneValidation,
         instrumentIds: z.string().array(),
       }),
     )

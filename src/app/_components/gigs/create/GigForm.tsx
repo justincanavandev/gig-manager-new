@@ -10,12 +10,7 @@ import type { GigById } from "~/server/types/gigTypes";
 import FormInput from "../../base/FormInput";
 import { defaultGigForm } from "~/default/defaultGigForm";
 import useForm from "~/app/hooks/useForm";
-import {
-  confineInstData,
-  useInstruments,
-  instToString,
-} from "~/lib/features/instrument/instrumentSlice";
-import BaseCombobox from "../../base/BaseCombobox";
+import { useInstruments } from "~/lib/features/instrument/instrumentSlice";
 import type {
   InstrumentName,
   OneInstrument,
@@ -28,6 +23,9 @@ import { displayTRPCError, getZodErrMsg } from "../../../error/errorHelpers";
 import { GigFormSchema } from "~/app/validation/gigFormSchema";
 import { z } from "zod";
 import { gigFormErrors } from "~/app/validation/validationHelpers";
+import InstrumentSelector from "./InstrumentSelector";
+import { doesInstrumentHaveMusician, displayMusicianNames } from "~/server/utils/musicianHelpers";
+
 
 type GigFormProps = {
   gig?: GigById;
@@ -42,11 +40,16 @@ const GigForm = ({ gig }: GigFormProps) => {
     changeValue,
     validate,
     errorMessages,
-    setErrorMessages,
+    displayFormError,
   } = useForm<GigForm>(defaultGigForm, GigFormSchema);
 
   const instruments = useInstruments();
   const utils = api.useUtils();
+
+  const instsWithoutMusician = doesInstrumentHaveMusician(
+    form.musicians,
+    form.instrumentation,
+  );
 
   const { mutate: createGig } = api.gig.create.useMutation({
     onMutate: (gig) => {
@@ -81,8 +84,6 @@ const GigForm = ({ gig }: GigFormProps) => {
       toast.error(message);
     },
   });
-
-  const confinedInsts = instruments.map((inst) => confineInstData(inst));
 
   const [isMusSelectOpen, setIsMusSelectOpen] = useState<
     Partial<MusicianSelect>
@@ -167,6 +168,13 @@ const GigForm = ({ gig }: GigFormProps) => {
 
       toast.error(message);
     } else {
+      // If there's an instrument without a musician, display toast and return
+      if (instsWithoutMusician.length > 0) {
+        const instsForToast = displayMusicianNames(instsWithoutMusician)
+        toast.error(`Musician needs to be added at ${instsForToast}`);
+        return;
+      }
+
       const instrumentNames = instrumentation.map((inst) => inst.name);
 
       if (gig) {
@@ -223,44 +231,22 @@ const GigForm = ({ gig }: GigFormProps) => {
     });
   };
 
-  const displayNameErr = (name: string) => {
-    const nameSchema = z.string().min(3);
-
-    const parsedName = nameSchema.safeParse(name);
-    const doesPropertyExist = errorMessages.hasOwnProperty("name");
-
-    if (parsedName.success) {
-      if (doesPropertyExist) {
-        setErrorMessages((err) => {
-          const filteredErrs = err;
-          delete filteredErrs.name;
-          return {
-            ...filteredErrs,
-          };
-        });
-      }
-    } else {
-      if (!doesPropertyExist) {
-        setErrorMessages((err) => {
-          return { ...err, name: [gigFormErrors.name] };
-        });
-      }
-    }
-    return parsedName.success;
-  };
-
   return (
     <>
       <form onSubmit={(e) => handleSubmit(e)}>
-        <div className="flex flex-col gap-4">
+        <div className="mt-8 flex flex-col items-center gap-4">
           <FormInput
             label="Name"
             value={form.name}
             placeholder="Gig 1"
             action={(e) => handleChange(e)}
             name="name"
-            condition={displayNameErr(form.name)}
-            // condition={form.name.length >= 3}
+            condition={displayFormError(
+              "name",
+              form.name,
+              z.string().min(3),
+              gigFormErrors.name,
+            )}
             type="text"
             errors={errorMessages.name ?? []}
           />
@@ -270,12 +256,10 @@ const GigForm = ({ gig }: GigFormProps) => {
             changeDate={changeValue}
           />
 
-          <BaseCombobox
-            data={confinedInsts}
-            dataToString={instToString}
-            label="Instrumentation"
-            action={addInstrument}
-            action2={deleteInst}
+          <InstrumentSelector
+            allInstruments={instruments}
+            deleteInst={deleteInst}
+            addInst={addInstrument}
           />
 
           <MusicianSelector
@@ -284,6 +268,8 @@ const GigForm = ({ gig }: GigFormProps) => {
             updateMusicians={updateValue}
             currentMusicians={form.musicians}
             instrumentation={form.instrumentation}
+            instsWithoutMusician={instsWithoutMusician}
+            deleteInst={deleteInst}
           />
           <VenueSelector
             setVenue={changeValue}

@@ -13,9 +13,10 @@ import BaseButton from "../../base/BaseButton";
 import toast from "react-hot-toast";
 import { displayTRPCError } from "../../../error/errorHelpers";
 import { UserProfileSchema } from "~/app/validation/userProfileSchema";
-import { isEmailValid, isPhoneValid } from "~/app/validation/validationHelpers";
+import { phoneValidation } from "~/app/validation/validationHelpers";
 import z from "zod";
-import { getZodErrMsg } from "../../../error/errorHelpers";
+import { ValidationError } from "zod-validation-error";
+import { userProfileErrors } from "~/app/validation/validationHelpers";
 
 export type DefaultUserProfile = {
   name: string;
@@ -66,23 +67,30 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
     },
   });
 
-  const { form, handleChange, setForm, updateValue, validate, errorMessages } =
-    useForm<DefaultUserProfile>(
-      {
-        name: user?.name ? user.name : "",
-        phoneNumber: user?.musician ? user.musician?.phoneNumber : "",
-        email: user?.email ? user.email : "",
-        instrumentation: user?.musician?.instruments
-          ? user.musician.instruments.map((inst) => {
-              return {
-                id: inst.instrument.id,
-                name: inst.instrument.name,
-              };
-            })
-          : [],
-      },
-      UserProfileSchema,
-    );
+  const {
+    form,
+    handleChange,
+    setForm,
+    updateValue,
+    validate,
+    errorMessages,
+    displayFormError,
+  } = useForm<DefaultUserProfile>(
+    {
+      name: user?.name ? user.name : "",
+      phoneNumber: user?.musician ? user.musician?.phoneNumber : "",
+      email: user?.email ? user.email : "",
+      instrumentation: user?.musician?.instruments
+        ? user.musician.instruments.map((inst) => {
+            return {
+              id: inst.instrument.id,
+              name: inst.instrument.name,
+            };
+          })
+        : [],
+    },
+    UserProfileSchema,
+  );
 
   const addInstrument = (inst: GigFormInstrument) => {
     if (inst) {
@@ -96,11 +104,10 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
 
       const validateOrError = validate(form);
 
-      if (validateOrError instanceof z.ZodError) {
-        const message = getZodErrMsg(validateOrError);
+      if (validateOrError instanceof ValidationError) {
+        const message = validateOrError.toString();
 
         toast.error(message);
-        
       } else {
         const instrumentIds = instrumentation.map((inst) => inst.id);
 
@@ -159,7 +166,12 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
         label="Name"
         name="name"
         placeholder="John Smith"
-        condition={form.name.length >= 3}
+        condition={displayFormError(
+          "name",
+          form.name,
+          z.string().min(3),
+          userProfileErrors.name,
+        )}
         errors={errorMessages?.name ?? []}
       ></FormInput>
 
@@ -181,7 +193,13 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
           value={form.phoneNumber}
           type="number"
           placeholder="123-456-7890"
-          condition={isPhoneValid(form.phoneNumber)}
+          // condition={isPhoneValid(form.phoneNumber)}
+          condition={displayFormError(
+            "phoneNumber",
+            form.phoneNumber,
+            phoneValidation,
+            userProfileErrors.phoneNumber,
+          )}
           errors={errorMessages?.phoneNumber ?? []}
         ></FormInput>
       )}
@@ -193,7 +211,12 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
         type="text"
         placeholder="johnsmith@gmail.com"
         value={form.email}
-        condition={isEmailValid(form.email)}
+        condition={displayFormError(
+          "email",
+          form.email,
+          z.string().email(),
+          userProfileErrors.email,
+        )}
         errors={errorMessages?.email ?? []}
       ></FormInput>
 

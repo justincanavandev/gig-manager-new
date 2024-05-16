@@ -410,8 +410,8 @@ export const musicians = [
 export const gigs = [
   {
     name: "Rock Fusion Jam",
-    startTime: "2024-04-10T10:00:00Z",
-    endTime: "2024-04-10T13:00:00Z",
+    startTime: "2024-10-10T10:00:00Z",
+    endTime: "2024-10-10T13:00:00Z",
     venue: "United Center",
     musicians: [
       { name: "John Smith", inst: "Electric Guitar" },
@@ -424,8 +424,8 @@ export const gigs = [
   },
   {
     name: "Acoustic Serenade",
-    startTime: "2024-04-11T15:00:00Z",
-    endTime: "2024-04-11T18:00:00Z",
+    startTime: "2024-10-11T15:00:00Z",
+    endTime: "2024-10-11T18:00:00Z",
     venue: "Wrigley Field",
     musicians: [
       { name: "Emma Johnson", inst: "Electric Guitar" },
@@ -438,8 +438,8 @@ export const gigs = [
   },
   {
     name: "Blues Rendezvous",
-    startTime: "2024-04-12T19:00:00Z",
-    endTime: "2024-04-12T22:00:00Z",
+    startTime: "2024-10-12T19:00:00Z",
+    endTime: "2024-10-12T22:00:00Z",
     venue: "Soldier Field",
     musicians: [
       { name: "David Lee", inst: "Electric Guitar" },
@@ -452,8 +452,8 @@ export const gigs = [
   },
   {
     name: "Jazz Night Out",
-    startTime: "2024-04-13T20:00:00Z",
-    endTime: "2024-04-13T23:00:00Z",
+    startTime: "2024-10-13T20:00:00Z",
+    endTime: "2024-10-13T23:00:00Z",
     venue: "Chicago Theatre",
     musicians: [
       { name: "Sarah Clark", inst: "Electric Guitar" },
@@ -466,8 +466,8 @@ export const gigs = [
   },
   {
     name: "Pop Extravaganza",
-    startTime: "2024-04-14T18:00:00Z",
-    endTime: "2024-04-14T21:00:00Z",
+    startTime: "2024-10-14T18:00:00Z",
+    endTime: "2024-10-14T21:00:00Z",
     venue: "Hollywood Casino Amphitheatre",
     musicians: [
       { name: "Michael Thompson", inst: "Electric Guitar" },
@@ -480,8 +480,8 @@ export const gigs = [
   },
   {
     name: "Funk Fusion Fest",
-    startTime: "2024-04-15T16:00:00Z",
-    endTime: "2024-04-15T19:00:00Z",
+    startTime: "2024-10-15T16:00:00Z",
+    endTime: "2024-10-15T19:00:00Z",
     venue: "Grant Park",
     musicians: [
       { name: "Emma Johnson", inst: "Electric Guitar" },
@@ -494,8 +494,8 @@ export const gigs = [
   },
   {
     name: "Indie Showcase",
-    startTime: "2024-04-16T14:00:00Z",
-    endTime: "2024-04-16T17:00:00Z",
+    startTime: "2024-10-16T14:00:00Z",
+    endTime: "2024-10-16T17:00:00Z",
     venue: "House of Blues Chicago",
     musicians: [
       { name: "Olivia White", inst: "Electric Guitar" },
@@ -508,8 +508,8 @@ export const gigs = [
   },
   {
     name: "Soulful Soiree",
-    startTime: "2024-04-17T20:00:00Z",
-    endTime: "2024-04-17T23:00:00Z",
+    startTime: "2024-10-17T20:00:00Z",
+    endTime: "2024-10-17T23:00:00Z",
     venue: "Chicago Symphony Center",
     musicians: [
       { name: "Sophia Garcia", inst: "Electric Guitar" },
@@ -522,8 +522,8 @@ export const gigs = [
   },
   {
     name: "Latin Fusion Fiesta",
-    startTime: "2024-04-18T19:00:00Z",
-    endTime: "2024-04-18T22:00:00Z",
+    startTime: "2024-10-18T19:00:00Z",
+    endTime: "2024-10-18T22:00:00Z",
     venue: "The Riviera Theatre",
     musicians: [
       { name: "Lucas Hernandez", inst: "Electric Guitar" },
@@ -536,8 +536,8 @@ export const gigs = [
   },
   {
     name: "Reggae Revolution",
-    startTime: "2024-04-19T18:00:00Z",
-    endTime: "2024-04-19T21:00:00Z",
+    startTime: "2024-10-19T18:00:00Z",
+    endTime: "2024-10-19T21:00:00Z",
     venue: "Metro Chicago",
     musicians: [
       { name: "John Smith", inst: "Electric Guitar" },
@@ -550,8 +550,8 @@ export const gigs = [
   },
   {
     name: "Country Chillout",
-    startTime: "2024-04-20T17:00:00Z",
-    endTime: "2024-04-20T20:00:00Z",
+    startTime: "2024-10-20T17:00:00Z",
+    endTime: "2024-10-20T20:00:00Z",
     venue: "Hollywood Casino Amphitheatre",
     musicians: [
       { name: "David Lee", inst: "Electric Guitar" },
@@ -564,8 +564,8 @@ export const gigs = [
   },
   {
     name: "R&B Groove",
-    startTime: "2024-04-21T20:00:00Z",
-    endTime: "2024-04-21T23:00:00Z",
+    startTime: "2024-10-21T20:00:00Z",
+    endTime: "2024-10-21T23:00:00Z",
     venue: "Chicago Symphony Center",
     musicians: [
       { name: "Sarah Clark", inst: "Electric Guitar" },
@@ -578,8 +578,8 @@ export const gigs = [
   },
   {
     name: "Classical Elegance",
-    startTime: "2024-04-22T19:00:00Z",
-    endTime: "2024-04-22T22:00:00Z",
+    startTime: "2024-10-22T19:00:00Z",
+    endTime: "2024-10-22T22:00:00Z",
     venue: "The Riviera Theatre",
     musicians: [
       { name: "Michael Thompson", inst: "Electric Guitar" },
@@ -592,8 +592,8 @@ export const gigs = [
   },
   {
     name: "Electronic Beats",
-    startTime: "2024-04-23T18:00:00Z",
-    endTime: "2024-04-23T21:00:00Z",
+    startTime: "2024-10-23T18:00:00Z",
+    endTime: "2024-10-23T21:00:00Z",
     venue: "Grant Park",
     musicians: [
       { name: "William Harris", inst: "Electric Guitar" },
@@ -606,8 +606,8 @@ export const gigs = [
   },
   {
     name: "Hip Hop Showdown",
-    startTime: "2024-04-24T17:00:00Z",
-    endTime: "2024-04-24T20:00:00Z",
+    startTime: "2024-10-24T17:00:00Z",
+    endTime: "2024-10-24T20:00:00Z",
     venue: "House of Blues Chicago",
     musicians: [
       { name: "John Smith", inst: "Electric Guitar" },
@@ -620,8 +620,8 @@ export const gigs = [
   },
   {
     name: "Metal Mayhem",
-    startTime: "2024-04-25T20:00:00Z",
-    endTime: "2024-04-25T23:00:00Z",
+    startTime: "2024-10-25T20:00:00Z",
+    endTime: "2024-10-25T23:00:00Z",
     venue: "Metro Chicago",
     musicians: [
       { name: "Robert Garcia", inst: "Electric Guitar" },
@@ -634,8 +634,8 @@ export const gigs = [
   },
   {
     name: "World Music Gala",
-    startTime: "2024-04-26T19:00:00Z",
-    endTime: "2024-04-26T22:00:00Z",
+    startTime: "2024-10-26T19:00:00Z",
+    endTime: "2024-10-26T22:00:00Z",
     venue: "Chicago Theatre",
     musicians: [
       { name: "William Harris", inst: "Electric Guitar" },
@@ -648,8 +648,8 @@ export const gigs = [
   },
   {
     name: "Experimental Soundscape",
-    startTime: "2024-04-27T18:00:00Z",
-    endTime: "2024-04-27T21:00:00Z",
+    startTime: "2024-10-27T18:00:00Z",
+    endTime: "2024-10-27T21:00:00Z",
     venue: "House of Blues Chicago",
     musicians: [
       { name: "Alex Turner", inst: "Electric Guitar" },
@@ -662,8 +662,8 @@ export const gigs = [
   },
   {
     name: "Gospel Gathering",
-    startTime: "2024-04-28T17:00:00Z",
-    endTime: "2024-04-28T20:00:00Z",
+    startTime: "2024-10-28T17:00:00Z",
+    endTime: "2024-10-28T20:00:00Z",
     venue: "Chicago Symphony Center",
     musicians: [
       { name: "Emma Johnson", inst: "Electric Guitar" },
@@ -676,8 +676,8 @@ export const gigs = [
   },
   {
     name: "Symphonic Spectacle",
-    startTime: "2024-04-29T20:00:00Z",
-    endTime: "2024-04-29T23:00:00Z",
+    startTime: "2024-10-29T20:00:00Z",
+    endTime: "2024-10-29T23:00:00Z",
     venue: "Metro Chicago",
     musicians: [
       { name: "John Smith", inst: "Electric Guitar" },
@@ -689,3 +689,4 @@ export const gigs = [
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Saxophone"],
   },
 ];
+

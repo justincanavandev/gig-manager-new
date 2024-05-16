@@ -1,7 +1,12 @@
-import { useState, type ChangeEvent, type Dispatch, type SetStateAction } from "react";
+import {
+  useState,
+  type ChangeEvent,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { type ZodType, z } from "zod";
-import type { FieldErrors } from "../error/errorHelpers";
-
+// import type { FieldErrors } from "../error/errorHelpers";
+import { fromError, type ValidationError } from "zod-validation-error";
 
 type UseFormProps<Form> = {
   form: Form;
@@ -15,19 +20,22 @@ type UseFormProps<Form> = {
     action: "add" | "delete",
   ) => void;
   changeValue: <Value>(key: keyof Form, value: Value) => void;
-  validate: (inputs: unknown) => Form | z.ZodError | undefined;
-  errorMessages: FieldErrors | Partial<Record<keyof Form, string[]>>
-  setErrorMessages: Dispatch<SetStateAction<FieldErrors | Partial<Record<keyof Form, string[]>>>>;
+  validate: (inputs: unknown) => Form | ValidationError | undefined;
+  errorMessages: Partial<Record<keyof Form, string[]>>;
+  setErrorMessages: Dispatch<
+    SetStateAction<Partial<Record<keyof Form, string[]>>>
+  >;
+  displayFormError: (key: keyof Form, value: string, schema: z.ZodTypeAny, errorMessage: string) => boolean
 };
-
 
 const useForm = <Form extends object>(
   defaultValues: Form,
   validationSchema: ZodType<Form>,
 ): UseFormProps<Form> => {
-  
   const [form, setForm] = useState<Form>(defaultValues);
-  const [errorMessages, setErrorMessages] = useState<FieldErrors | Partial<Record<keyof Form, string[]>>>({});
+  const [errorMessages, setErrorMessages] = useState<
+    Partial<Record<keyof Form, string[]>>
+  >({});
 
   const validate = (inputs: unknown) => {
     try {
@@ -36,13 +44,47 @@ const useForm = <Form extends object>(
       return isValidData;
     } catch (e) {
       if (e instanceof z.ZodError) {
-        const zodErrs = e.flatten();
-        console.log("errors", zodErrs);
+        const validationErr = fromError(e);
+        // const zodErrs = e.flatten();
+        // console.log("errors", zodErrs);
 
-        setErrorMessages(zodErrs.fieldErrors);
-        return e;
+        // setErrorMessages(zodErrs.fieldErrors);
+        return validationErr;
+      } 
+    }
+  };
+
+  const displayFormError = (
+    key: keyof Form,
+    value: string,
+    schema: z.ZodTypeAny,
+    errorMessage: string
+  ) => {
+
+    const parsedVal = schema.safeParse(value);
+    const doesPropertyExist = errorMessages.hasOwnProperty(key);
+
+    if (parsedVal.success) {
+      if (doesPropertyExist) {
+        setErrorMessages((err) => {
+          const filteredErrs = err;
+          delete filteredErrs[key];
+          return {
+            ...filteredErrs,
+          };
+        });
+      }
+    } else {
+      if (!doesPropertyExist) {
+        setErrorMessages((err) => {
+          const updatedErrs = err;
+          updatedErrs[key] = [errorMessage];
+          return updatedErrs;
+        });
       }
     }
+
+    return parsedVal.success;
   };
 
   const handleChange = (
@@ -100,6 +142,7 @@ const useForm = <Form extends object>(
     validate,
     errorMessages,
     setErrorMessages,
+    displayFormError
   };
 };
 
