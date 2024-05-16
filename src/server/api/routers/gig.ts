@@ -4,6 +4,10 @@ import { TRPCError } from "@trpc/server";
 import { genericErrorHandler } from "~/server/utils/errorHandling";
 import { instruments } from "prisma/seedData";
 import { instNameValidation } from "~/app/validation/validationHelpers";
+import {
+  doesInstrumentHaveMusician,
+  displayMusicianNames,
+} from "~/server/utils/musicianHelpers";
 
 export const gigRouter = createTRPCRouter({
   getAll: protectedProcedure.query(async ({ ctx }) => {
@@ -73,10 +77,13 @@ export const gigRouter = createTRPCRouter({
             id: z.string().cuid(),
           })
           .array(),
-        instrumentation: z.string().refine(
-          (val) => instruments.includes(val),
-          (val) => ({ message: `${val} is not a valid instrument!` }),
-        ).array()
+        instrumentation: z
+          .string()
+          .refine(
+            (val) => instruments.includes(val),
+            (val) => ({ message: `${val} is not a valid instrument!` }),
+          )
+          .array(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -128,7 +135,7 @@ export const gigRouter = createTRPCRouter({
         }
         return gig;
       } catch (e) {
-        throw genericErrorHandler(e)
+        throw genericErrorHandler(e);
       }
     }),
   getById: protectedProcedure
@@ -241,6 +248,19 @@ export const gigRouter = createTRPCRouter({
       } = input;
 
       try {
+        const instsWithoutMusician = doesInstrumentHaveMusician(
+          musicians,
+          instrumentation,
+        );
+
+        if (instsWithoutMusician.length > 0) {
+          const message = displayMusicianNames(instsWithoutMusician);
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `Musician needs to be added at ${message}`,
+          });
+        }
+
         const musicianGigJoin = musicians.map(async (mus) => {
           await ctx.db.gigsOnMusiciansOnInstrument.upsert({
             where: {
@@ -275,7 +295,7 @@ export const gigRouter = createTRPCRouter({
               musicianId: {
                 notIn: musicians.map((mus) => mus.id),
               },
-              gigId: id
+              gigId: id,
             },
           });
         });

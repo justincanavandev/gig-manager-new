@@ -21,6 +21,7 @@ type MusicianSelectorProps = {
   isSelectorOpen: Partial<MusicianSelect>;
   toggleInstSelect: Dispatch<SetStateAction<Partial<MusicianSelect>>>;
   instsWithoutMusician: GigFormInstrument[];
+  deleteInst: (inst: GigFormInstrument) => void
 };
 
 const MusicianSelector = ({
@@ -30,7 +31,9 @@ const MusicianSelector = ({
   isSelectorOpen,
   toggleInstSelect,
   instsWithoutMusician,
+  deleteInst
 }: MusicianSelectorProps) => {
+  
   const isInstOpen = (inst: GigFormInstrument) => {
     if (isInstrumentValid(inst?.name)) {
       const isInstValid = isSelectorOpen[`${inst.name}`];
@@ -38,12 +41,13 @@ const MusicianSelector = ({
     }
   };
 
-  const closeInstSelector = (instName: string) => {
-    if (isInstrumentValid(instName))
+  const closeInstSelector = (inst: GigFormInstrument) => {
+    if (isInstrumentValid(inst.name))
+      deleteInst(inst)
       toggleInstSelect((prev) => {
         return {
           ...prev,
-          [`${instName}`]: false,
+          [`${inst.name}`]: false,
         };
       });
   };
@@ -53,7 +57,7 @@ const MusicianSelector = ({
     if (musician?.instrument) {
       updateMusicians("musicians", musician, "add");
 
-      closeInstSelector(musician.instrument.name);
+      closeInstSelector(musician.instrument);
     }
   };
 
@@ -103,7 +107,7 @@ const MusicianSelector = ({
                 action2={deleteMusician}
               />
               <span
-                onClick={() => closeInstSelector(instrument.name)}
+                onClick={() => closeInstSelector(instrument)}
                 className="mb-[5px]"
               >
                 X

@@ -1,43 +1,20 @@
-// export const checkInstrumentation = (
-//     instruments: Instrument[],
-//     musicians: Musician[]
-//   ) => {
-//     const instrumentObj: { [key: string]: string | null } = {}
-  
-//     instruments.forEach(
-//       (instrument) => (instrumentObj[instrument.toLowerCase()] = null)
-//     )
-  
-//     for (let i = 0; i < instruments.length; i++) {
-//       for (let j = 0; j < musicians.length; j++) {
-//         if (instruments[i].includes(musicians[j].instrument)) {
-//           const instrumentKey = instruments[i].toLowerCase()
-//           instrumentObj[instrumentKey] = musicians[j].name
-//         } else {
-//           null
-//         }
-//       }
-//     }
-  
-//     const values = Object.values(instrumentObj)
-//     const instArr = Object.entries(instrumentObj)
-//     const result = values.filter((value) => value !== null)
-  
-//     const neededInstruments: string[] = []
-  
-//     instArr.map((inst) => {
-//       const key = inst[0]
-//       const value = inst[1]
-  
-//       if (value === null) {
-//         neededInstruments.push(key)
-//       }
-//       return neededInstruments
-//     })
-  
-//     if (result.length === instruments.length) {
-//       return true
-//     } else {
-//       return [false, neededInstruments]
-//     }
-//   }
+import type { GigFormInstrument, GigFormMusician } from "../types/gigTypes";
+
+export const doesInstrumentHaveMusician = (
+  musicians: GigFormMusician[],
+  instrumentation: GigFormInstrument[],
+) => {
+  const instrumentWithMusician = musicians.map((mus) => mus.instrument.name);
+  const setOfInstWithMusician = [...new Set(instrumentWithMusician)];
+
+  const instsWithoutMusician = instrumentation.filter(
+    (inst) => !setOfInstWithMusician.includes(inst.name),
+  );
+
+  return instsWithoutMusician;
+};
+
+export const displayMusicianNames = (insts: GigFormInstrument[]) => {
+  const neededMusicianInsts = insts.map((inst) => inst.name).join(", ");
+  return neededMusicianInsts;
+};
