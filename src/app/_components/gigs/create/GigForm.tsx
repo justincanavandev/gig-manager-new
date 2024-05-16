@@ -10,9 +10,7 @@ import type { GigById } from "~/server/types/gigTypes";
 import FormInput from "../../base/FormInput";
 import { defaultGigForm } from "~/default/defaultGigForm";
 import useForm from "~/app/hooks/useForm";
-import {
-  useInstruments,
-} from "~/lib/features/instrument/instrumentSlice";
+import { useInstruments } from "~/lib/features/instrument/instrumentSlice";
 import type {
   InstrumentName,
   OneInstrument,
@@ -26,6 +24,8 @@ import { GigFormSchema } from "~/app/validation/gigFormSchema";
 import { z } from "zod";
 import { gigFormErrors } from "~/app/validation/validationHelpers";
 import InstrumentSelector from "./InstrumentSelector";
+import { doesInstrumentHaveMusician, displayMusicianNames } from "~/server/utils/musicianHelpers";
+
 
 type GigFormProps = {
   gig?: GigById;
@@ -46,12 +46,10 @@ const GigForm = ({ gig }: GigFormProps) => {
   const instruments = useInstruments();
   const utils = api.useUtils();
 
-const instrumentWithMusician = form.musicians.map((mus)=> mus.instrument.name)
-const setOfInstWithMusician = [...new Set(instrumentWithMusician)]
-
-const instsWithoutMusician = form.instrumentation.filter(
-  (inst) => !setOfInstWithMusician.includes(inst.name),
-);
+  const instsWithoutMusician = doesInstrumentHaveMusician(
+    form.musicians,
+    form.instrumentation,
+  );
 
   const { mutate: createGig } = api.gig.create.useMutation({
     onMutate: (gig) => {
@@ -170,6 +168,13 @@ const instsWithoutMusician = form.instrumentation.filter(
 
       toast.error(message);
     } else {
+      // If there's an instrument without a musician, display toast and return
+      if (instsWithoutMusician.length > 0) {
+        const instsForToast = displayMusicianNames(instsWithoutMusician)
+        toast.error(`Musician needs to be added at ${instsForToast}`);
+        return;
+      }
+
       const instrumentNames = instrumentation.map((inst) => inst.name);
 
       if (gig) {
@@ -264,6 +269,7 @@ const instsWithoutMusician = form.instrumentation.filter(
             currentMusicians={form.musicians}
             instrumentation={form.instrumentation}
             instsWithoutMusician={instsWithoutMusician}
+            deleteInst={deleteInst}
           />
           <VenueSelector
             setVenue={changeValue}
