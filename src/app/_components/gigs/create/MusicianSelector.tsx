@@ -20,6 +20,7 @@ type MusicianSelectorProps = {
   ) => void;
   isSelectorOpen: Partial<MusicianSelect>;
   toggleInstSelect: Dispatch<SetStateAction<Partial<MusicianSelect>>>;
+  instsWithoutMusician: GigFormInstrument[];
 };
 
 const MusicianSelector = ({
@@ -28,6 +29,7 @@ const MusicianSelector = ({
   updateMusicians,
   isSelectorOpen,
   toggleInstSelect,
+  instsWithoutMusician,
 }: MusicianSelectorProps) => {
   const isInstOpen = (inst: GigFormInstrument) => {
     if (isInstrumentValid(inst?.name)) {
@@ -60,57 +62,66 @@ const MusicianSelector = ({
   };
   const musicianToString = (musician: GigFormMusician) => musician.name;
 
-
   return (
     <>
       {instrumentation.map(
         (instrument) =>
           isInstOpen(instrument) && (
-              <div
-                className="flex items-end gap-4"
-                key={isInstOpen(instrument) ? `musicianSelector-${instrument.name}` : `selectorHidden-${instrument.name}`}
+            <div
+              className="flex items-end gap-4"
+              key={
+                isInstOpen(instrument)
+                  ? `musicianSelector-${instrument.name}`
+                  : `selectorHidden-${instrument.name}`
+              }
+            >
+              <BaseCombobox
+                data={
+                  instrument.musicians
+                    ? instrument.musicians
+                        .filter(
+                          (mus) =>
+                            !currentMusicians.map((m) => m.id).includes(mus.id),
+                        )
+                        .map((mus) => {
+                          return {
+                            ...mus,
+                            instrument: {
+                              name: instrument.name,
+                              id: instrument.id,
+                            },
+                          };
+                        })
+                    : []
+                }
+                disabledData={currentMusicians.filter(
+                  (mus) => mus.instrument.name === instrument.name,
+                )}
+                dataToString={musicianToString}
+                label={`Add ${instrument.name}`}
+                action={handleAddMusician}
+                action2={deleteMusician}
+              />
+              <span
+                onClick={() => closeInstSelector(instrument.name)}
+                className="mb-[5px]"
               >
-                <BaseCombobox
-                  data={
-                    instrument.musicians
-                      ? instrument.musicians
-                          .filter(
-                            (mus) =>
-                              !currentMusicians
-                                .map((m) => m.id)
-                                .includes(mus.id),
-                          )
-                          .map((mus) => {
-                            return {
-                              ...mus,
-                              instrument: {
-                                name: instrument.name,
-                                id: instrument.id,
-                              },
-                            };
-                          })
-                      : []
-                  }
-                  disabledData={currentMusicians.filter(
-                    (mus) => mus.instrument.name === instrument.name,
-                  )}
-                  dataToString={musicianToString}
-                  label={`Add ${instrument.name}`}
-                  action={handleAddMusician}
-                  action2={deleteMusician}
-                />
-                <span
-                  onClick={() => closeInstSelector(instrument.name)}
-                  className="mb-[5px]"
-                >
-                  X
-                </span>
-              </div>
+                X
+              </span>
+            </div>
           ),
       )}
+      {instsWithoutMusician?.map((inst) => (
+        <div key={`instSelector, ${inst.name}`}>
+          <span>
+            {inst.name} - <span className="text-red-500">Add {inst.name}</span>
+          </span>
+        </div>
+      ))}
+
       {currentMusicians.map((mus) => (
         <div className="flex gap-4" key={`currentMusicians-${mus.id}`}>
-          <span>{`${mus.name} - ${mus.instrument.name}`}</span>
+          <span>{`${mus.instrument.name} - ${mus.name}`}</span>
           <span onClick={() => deleteMusician(mus)}>x</span>
         </div>
       ))}
