@@ -18,12 +18,18 @@ export const gigRouter = createTRPCRouter({
         },
 
         include: {
+          organizer: {
+            select: {
+              id: true,
+            },
+          },
           venue: {
             select: {
               name: true,
               id: true,
             },
           },
+
           musicians: {
             include: {
               musician: {
@@ -70,6 +76,7 @@ export const gigRouter = createTRPCRouter({
         startTime: z.date(),
         endTime: z.date(),
         venueId: z.string().cuid(),
+        pay: z.number().nonnegative(),
         musicians: z
           .object({
             name: z.string(),
@@ -87,8 +94,15 @@ export const gigRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { name, startTime, endTime, venueId, musicians, instrumentation } =
-        input;
+      const {
+        name,
+        startTime,
+        endTime,
+        venueId,
+        musicians,
+        instrumentation,
+        pay,
+      } = input;
 
       try {
         const gig = await ctx.db.gig.create({
@@ -96,6 +110,12 @@ export const gigRouter = createTRPCRouter({
             name,
             startTime,
             endTime,
+            pay,
+            organizer: {
+              connect: {
+                id: ctx.session.user.id,
+              },
+            },
             venue: {
               connect: {
                 id: venueId,
@@ -156,6 +176,11 @@ export const gigRouter = createTRPCRouter({
                 id: true,
               },
             },
+            // organizer: {
+            //   select: {
+            //     id: true,
+            //   },
+            // },
             musicians: {
               include: {
                 musician: {
@@ -216,6 +241,7 @@ export const gigRouter = createTRPCRouter({
         startTime: z.date(),
         endTime: z.date(),
         venueId: z.string().cuid(),
+        pay: z.number().nonnegative(),
         musicians: z
           .object({
             name: z.string(),
@@ -246,7 +272,10 @@ export const gigRouter = createTRPCRouter({
         venueId,
         musicians,
         instrumentation,
+        pay
       } = input;
+
+      console.log('pay', pay)
 
       try {
         const instsWithoutMusician = doesInstrumentHaveMusician(
@@ -328,7 +357,7 @@ export const gigRouter = createTRPCRouter({
               instrumentId: {
                 notIn: instrumentation.map((inst) => inst.id),
               },
-              gigId: id
+              gigId: id,
             },
           });
         });
@@ -343,6 +372,7 @@ export const gigRouter = createTRPCRouter({
             name,
             startTime,
             endTime,
+            pay,
             venueId,
           },
         });

@@ -42,7 +42,7 @@ export const userRouter = createTRPCRouter({
 
       try {
         if (musician) {
-          const { instrumentIds, phoneNumber, musicianId } = musician;
+          const { instrumentIds, musicianId } = musician;
             const instrumentMusicianJoin = instrumentIds.map(async (id) => {
               await ctx.db.musiciansOnInstruments.upsert({
                 where: {
@@ -61,15 +61,19 @@ export const userRouter = createTRPCRouter({
                   musician: {
                     connect: {
                       id: musicianId,
-                      phoneNumber,
-                      name,
-                      email
                     },
-                
                   },
                 },
               });
-            });
+            })
+            await ctx.db.musiciansOnInstruments.deleteMany({
+              where: {
+                instrumentId: {
+                  notIn: instrumentIds
+                },
+                musicianId
+              }
+            })
             await Promise.all(instrumentMusicianJoin);
 
         }
@@ -190,6 +194,7 @@ export const userRouter = createTRPCRouter({
           include: {
             musician: {
               select: {
+                id: true,
                 name: true,
                 phoneNumber: true,
                 email: true,

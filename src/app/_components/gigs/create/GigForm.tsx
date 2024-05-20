@@ -24,8 +24,10 @@ import { GigFormSchema } from "~/app/validation/gigFormSchema";
 import { z } from "zod";
 import { gigFormErrors } from "~/app/validation/validationHelpers";
 import InstrumentSelector from "./InstrumentSelector";
-import { doesInstrumentHaveMusician, displayMusicianNames } from "~/server/utils/musicianHelpers";
-
+import {
+  doesInstrumentHaveMusician,
+  displayMusicianNames,
+} from "~/server/utils/musicianHelpers";
 
 type GigFormProps = {
   gig?: GigById;
@@ -108,9 +110,16 @@ const GigForm = ({ gig }: GigFormProps) => {
 
   useEffect(() => {
     if (gig) {
-      const { name, startTime, endTime, instrumentation, musicians, venue } =
-        gig;  
-      const confinedMusicians = musicians.map((mus) => {     
+      const {
+        name,
+        startTime,
+        endTime,
+        instrumentation,
+        musicians,
+        venue,
+        pay,
+      } = gig;
+      const confinedMusicians = musicians.map((mus) => {
         return {
           instrument: {
             name: mus.instrument.name,
@@ -121,11 +130,11 @@ const GigForm = ({ gig }: GigFormProps) => {
         };
       });
 
-      const confinedInstrumentation = instrumentation.map((inst) => {  
+      const confinedInstrumentation = instrumentation.map((inst) => {
         return {
           name: inst.instrument.name,
           id: inst.instrumentId,
-          musicians: inst.instrument.musicians.map((mus) => {         
+          musicians: inst.instrument.musicians.map((mus) => {
             return {
               name: mus.musician.name,
               id: mus.musician.id,
@@ -139,6 +148,7 @@ const GigForm = ({ gig }: GigFormProps) => {
         venue,
         startTime,
         endTime,
+        pay: Number(pay),
         instrumentation: confinedInstrumentation,
         musicians: confinedMusicians,
       });
@@ -153,12 +163,12 @@ const GigForm = ({ gig }: GigFormProps) => {
         return obj;
       });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { name, startTime, endTime, venue, musicians, instrumentation } =
+    const { name, startTime, endTime, venue, musicians, instrumentation, pay } =
       form;
 
     const validateOrError = validate(form);
@@ -170,7 +180,7 @@ const GigForm = ({ gig }: GigFormProps) => {
     } else {
       // If there's an instrument without a musician, display toast and return
       if (instsWithoutMusician.length > 0) {
-        const instsForToast = displayMusicianNames(instsWithoutMusician)
+        const instsForToast = displayMusicianNames(instsWithoutMusician);
         toast.error(`Musician needs to be added at ${instsForToast}`);
         return;
       }
@@ -191,6 +201,7 @@ const GigForm = ({ gig }: GigFormProps) => {
           name,
           startTime,
           endTime,
+          pay: Number(pay),
           venueId: venue?.id ?? "",
           musicians: updatedMusicians,
           instrumentation,
@@ -207,13 +218,16 @@ const GigForm = ({ gig }: GigFormProps) => {
           name,
           startTime,
           endTime,
+          pay: Number(pay),
           venueId: venue?.id ?? "",
           musicians: createMusicians,
           instrumentation: instrumentNames,
+    
         });
       }
     }
   };
+
 
   const deleteInst = (inst: GigFormInstrument) => {
     const { instrumentation, musicians } = form;
@@ -254,6 +268,21 @@ const GigForm = ({ gig }: GigFormProps) => {
             startTime={form.startTime}
             endTime={form.endTime}
             changeDate={changeValue}
+          />
+          <FormInput
+            label="Pay"
+            value={form.pay}
+            type="number"
+            name="pay"
+            placeholder="400"
+            action={(e) => handleChange(e)}
+            condition={displayFormError(
+              "pay",
+              Number(form.pay),
+              z.number().nonnegative(),
+              gigFormErrors.pay,
+            )}
+            errors={errorMessages.pay ?? []}
           />
 
           <InstrumentSelector

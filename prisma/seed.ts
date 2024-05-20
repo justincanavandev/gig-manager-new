@@ -60,7 +60,7 @@ const seedDatabase = async () => {
   await Promise.all(createVenues);
 
   const createGigs = gigs.map(async (gig) => {
-    const { name, startTime, endTime, venue, musicians, instrumentation } = gig;
+    const { name, startTime, endTime, venue, musicians, instrumentation, pay } = gig;
 
     const musicianObjs = await prisma.musician.findMany({
       select: {
@@ -88,11 +88,19 @@ const seedDatabase = async () => {
       }
     });
 
+    // Make sure to CREATE A USER, GRAB THE ID, and CHANGE ID IN ORGANIZER BELOW every time you run seed!
+
     return await prisma.gig.create({
       data: {
         name,
         startTime,
         endTime,
+        pay,
+        organizer: {
+          connect: {
+            id: 'clwf9lee3000hjssnx12fd971',
+          },
+        },
         venue: {
           connect: {
             name: venue,

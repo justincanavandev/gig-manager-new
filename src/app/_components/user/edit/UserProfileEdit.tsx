@@ -50,7 +50,6 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
       toast.error(message);
     },
   });
-
   const { mutate: updateUser } = api.user.updateUser.useMutation({
     onMutate: (user) => {
       toast.loading(`Updating ${user.name}'s profile!`);
@@ -111,7 +110,7 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
       } else {
         const instrumentIds = instrumentation.map((inst) => inst.id);
 
-        if (!user?.musicianId && musicianAdd) {
+        if (!user?.musician && musicianAdd) {
           // Adds Musician to db and connects Musician to User
           const result = connectMusician({
             name,
@@ -123,14 +122,15 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
           return result;
         } else {
           // Updates Musician who is already connected to user or updates User who is NOT connected to a musician
+          
           const updatedUser = updateUser({
             name,
             email,
-            musician: user?.musicianId
+            musician: user?.musician?.id
               ? {
                   instrumentIds,
                   phoneNumber,
-                  musicianId: user.musicianId,
+                  musicianId: user.musician.id
                 }
               : null,
           });
@@ -193,7 +193,6 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
           value={form.phoneNumber}
           type="number"
           placeholder="123-456-7890"
-          // condition={isPhoneValid(form.phoneNumber)}
           condition={displayFormError(
             "phoneNumber",
             form.phoneNumber,
