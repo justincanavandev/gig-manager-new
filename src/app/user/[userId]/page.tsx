@@ -1,7 +1,7 @@
-import UserProfileEdit from "~/app/_components/user/edit/UserProfileEdit";
 import { api } from "~/trpc/server";
 import GigCard from "~/app/_components/gigs/GigCard";
 import BaseButton from "~/app/_components/base/BaseButton";
+import AreYouMusician from "~/app/_components/user/edit/AreYouMusician";
 
 const UserProfile = async ({ params }: { params: { userId: string } }) => {
   const user = await api.user.getById({
@@ -34,13 +34,8 @@ const UserProfile = async ({ params }: { params: { userId: string } }) => {
         Edit Profile
       </BaseButton>
 
-      {musician === null && (
-        <div>
-          {" "}
-          Are you a musician? Enter your details here to join our database!
-          <UserProfileEdit user={user} musicianAdd={true} />
-        </div>
-      )}
+
+      <AreYouMusician user={user}/>
     </div>
   );
 };

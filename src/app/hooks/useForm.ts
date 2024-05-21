@@ -25,7 +25,7 @@ type UseFormProps<Form> = {
   setErrorMessages: Dispatch<
     SetStateAction<Partial<Record<keyof Form, string[]>>>
   >;
-  displayFormError: (key: keyof Form, value: string, schema: z.ZodTypeAny, errorMessage: string) => boolean
+  displayFormError: (key: keyof Form, value: string | number, schema: z.ZodTypeAny, errorMessage: string) => boolean
 };
 
 const useForm = <Form extends object>(
@@ -45,10 +45,6 @@ const useForm = <Form extends object>(
     } catch (e) {
       if (e instanceof z.ZodError) {
         const validationErr = fromError(e);
-        // const zodErrs = e.flatten();
-        // console.log("errors", zodErrs);
-
-        // setErrorMessages(zodErrs.fieldErrors);
         return validationErr;
       } 
     }
@@ -56,7 +52,7 @@ const useForm = <Form extends object>(
 
   const displayFormError = (
     key: keyof Form,
-    value: string,
+    value: string | number,
     schema: z.ZodTypeAny,
     errorMessage: string
   ) => {

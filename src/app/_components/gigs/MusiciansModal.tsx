@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { useBoolean } from "usehooks-ts";
-import type { MusiciansFromAllGigs } from "~/server/types/gigTypes";
 import BaseButton from "../base/BaseButton";
+import { type MusicianGetAllGigs } from "~/server/types/musicianTypes";
 
 type MusiciansModalProps = {
-  musicians: MusiciansFromAllGigs;
+  musicians: MusicianGetAllGigs
   index: number;
 };
 
@@ -49,9 +49,9 @@ const MusiciansModal = ({ musicians, index }: MusiciansModalProps) => {
       {viewMusicians && eventTargetIndexArr?.includes(index) && (
         <div className="">
           {musicians.map((m) => (
-            <div key={m.musicianId} className="flex">
+            <div key={`musicianModal, ${m.musicianId}`} className="flex">
               <p>{m.musician.name}</p>
-              <p>{m.musician.instruments[0]?.instrument.name}</p>
+              <p>{m.instrument.name}</p>
             </div>
           ))}
         </div>

@@ -47,10 +47,11 @@ model User {
     email         String?   @unique
     emailVerified DateTime?
     image         String?
-    musician      Musician? @relation(fields: [musicianId], references: [id], onDelete: Cascade)
-    musicianId    String?   @unique
+    musician      Musician?
     accounts      Account[]
     sessions      Session[]
+    phoneNumber   String?
+    gig           Gig[]
 }
 
 model VerificationToken {
@@ -70,7 +71,8 @@ model Musician {
     phoneNumber String
     email       String                        @unique
     gigs        GigsOnMusiciansOnInstrument[]
-    user        User?
+    user        User?                         @relation(fields: [userId], references: [id], onDelete: SetNull)
+    userId      String?                       @unique
 }
 
 model Instrument {
@@ -111,14 +113,17 @@ model GigsOnInstrument {
 }
 
 model Gig {
-    id              String             @id @default(cuid())
-    name            String             @unique
+    id              String                        @id @default(cuid())
+    name            String                        @unique
     startTime       DateTime
     endTime         DateTime
-    venue           Venue?             @relation(fields: [venueId], references: [id])
+    venue           Venue?                        @relation(fields: [venueId], references: [id])
     venueId         String
     musicians       GigsOnMusiciansOnInstrument[]
     instrumentation GigsOnInstrument[]
+    organizer       User                          @relation(fields: [organizerId], references: [id])
+    organizerId     String
+    pay             Int
 }
 
 model Venue {

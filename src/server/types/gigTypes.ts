@@ -47,4 +47,5 @@ export type GigForm = {
   endTime: Date
   instrumentation: GigFormInstrument[]
   musicians: GigFormMusician[]
+  pay: number
 };

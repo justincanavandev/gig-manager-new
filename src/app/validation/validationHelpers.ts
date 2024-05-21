@@ -27,7 +27,8 @@ export const gigFormErrors = {
   startTime: "Start Time must be a date",
   endTime: "End Time must be a date",
   instrumentation: "All instruments must have an associated musician",
-  musicians: "All musicians must be a musician in the database"
+  musicians: "All musicians must be a musician in the database",
+  pay: "Pay must be a number above 0"
 
 }
 

@@ -410,8 +410,8 @@ export const musicians = [
 export const gigs = [
   {
     name: "Rock Fusion Jam",
-    startTime: "2024-10-10T10:00:00Z",
-    endTime: "2024-10-10T13:00:00Z",
+    startTime: "2024-06-01T10:00:00Z",
+    endTime: "2024-06-01T13:00:00Z",
     venue: "United Center",
     musicians: [
       { name: "John Smith", inst: "Electric Guitar" },
@@ -421,11 +421,12 @@ export const gigs = [
       { name: "Sophia Lee", inst: "Saxophone" },
     ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Saxophone"],
+    pay: 500,
   },
   {
     name: "Acoustic Serenade",
-    startTime: "2024-10-11T15:00:00Z",
-    endTime: "2024-10-11T18:00:00Z",
+    startTime: "2024-06-08T15:00:00Z",
+    endTime: "2024-06-08T18:00:00Z",
     venue: "Wrigley Field",
     musicians: [
       { name: "Emma Johnson", inst: "Electric Guitar" },
@@ -435,11 +436,12 @@ export const gigs = [
       { name: "Ryan Brown", inst: "Trumpet" },
     ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Trumpet"],
+    pay: 600,
   },
   {
     name: "Blues Rendezvous",
-    startTime: "2024-10-12T19:00:00Z",
-    endTime: "2024-10-12T22:00:00Z",
+    startTime: "2024-06-15T19:00:00Z",
+    endTime: "2024-06-15T22:00:00Z",
     venue: "Soldier Field",
     musicians: [
       { name: "David Lee", inst: "Electric Guitar" },
@@ -449,11 +451,12 @@ export const gigs = [
       { name: "Ella Thompson", inst: "Percussion" },
     ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Percussion"],
+    pay: 550,
   },
   {
     name: "Jazz Night Out",
-    startTime: "2024-10-13T20:00:00Z",
-    endTime: "2024-10-13T23:00:00Z",
+    startTime: "2024-06-22T20:00:00Z",
+    endTime: "2024-06-22T23:00:00Z",
     venue: "Chicago Theatre",
     musicians: [
       { name: "Sarah Clark", inst: "Electric Guitar" },
@@ -463,11 +466,12 @@ export const gigs = [
       { name: "Noah Davis", inst: "Vocals" },
     ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Vocals"],
+    pay: 700,
   },
   {
     name: "Pop Extravaganza",
-    startTime: "2024-10-14T18:00:00Z",
-    endTime: "2024-10-14T21:00:00Z",
+    startTime: "2024-06-29T18:00:00Z",
+    endTime: "2024-06-29T21:00:00Z",
     venue: "Hollywood Casino Amphitheatre",
     musicians: [
       { name: "Michael Thompson", inst: "Electric Guitar" },
@@ -477,11 +481,12 @@ export const gigs = [
       { name: "Ava Hernandez", inst: "Keyboards" },
     ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Keyboards"],
+    pay: 800,
   },
   {
     name: "Funk Fusion Fest",
-    startTime: "2024-10-15T16:00:00Z",
-    endTime: "2024-10-15T19:00:00Z",
+    startTime: "2024-07-06T16:00:00Z",
+    endTime: "2024-07-06T19:00:00Z",
     venue: "Grant Park",
     musicians: [
       { name: "Emma Johnson", inst: "Electric Guitar" },
@@ -491,11 +496,12 @@ export const gigs = [
       { name: "Chloe Taylor", inst: "Trombone" },
     ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Trombone"],
+    pay: 750,
   },
   {
     name: "Indie Showcase",
-    startTime: "2024-10-16T14:00:00Z",
-    endTime: "2024-10-16T17:00:00Z",
+    startTime: "2024-07-13T14:00:00Z",
+    endTime: "2024-07-13T17:00:00Z",
     venue: "House of Blues Chicago",
     musicians: [
       { name: "Olivia White", inst: "Electric Guitar" },
@@ -505,11 +511,12 @@ export const gigs = [
       { name: "Avery Taylor", inst: "Vocals" },
     ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Vocals"],
+    pay: 600,
   },
   {
     name: "Soulful Soiree",
-    startTime: "2024-10-17T20:00:00Z",
-    endTime: "2024-10-17T23:00:00Z",
+    startTime: "2024-07-20T20:00:00Z",
+    endTime: "2024-07-20T23:00:00Z",
     venue: "Chicago Symphony Center",
     musicians: [
       { name: "Sophia Garcia", inst: "Electric Guitar" },
@@ -519,11 +526,12 @@ export const gigs = [
       { name: "Ava Thompson", inst: "Trumpet" },
     ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Trumpet"],
+    pay: 700,
   },
   {
     name: "Latin Fusion Fiesta",
-    startTime: "2024-10-18T19:00:00Z",
-    endTime: "2024-10-18T22:00:00Z",
+    startTime: "2024-07-27T19:00:00Z",
+    endTime: "2024-07-27T22:00:00Z",
     venue: "The Riviera Theatre",
     musicians: [
       { name: "Lucas Hernandez", inst: "Electric Guitar" },
@@ -533,11 +541,12 @@ export const gigs = [
       { name: "Chloe Garcia", inst: "Trombone" },
     ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Trombone"],
+    pay: 800,
   },
   {
     name: "Reggae Revolution",
-    startTime: "2024-10-19T18:00:00Z",
-    endTime: "2024-10-19T21:00:00Z",
+    startTime: "2024-08-03T18:00:00Z",
+    endTime: "2024-08-03T21:00:00Z",
     venue: "Metro Chicago",
     musicians: [
       { name: "John Smith", inst: "Electric Guitar" },
@@ -547,11 +556,12 @@ export const gigs = [
       { name: "Ava Wilson", inst: "Keyboards" },
     ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Keyboards"],
+    pay: 750,
   },
   {
     name: "Country Chillout",
-    startTime: "2024-10-20T17:00:00Z",
-    endTime: "2024-10-20T20:00:00Z",
+    startTime: "2024-08-10T17:00:00Z",
+    endTime: "2024-08-10T20:00:00Z",
     venue: "Hollywood Casino Amphitheatre",
     musicians: [
       { name: "David Lee", inst: "Electric Guitar" },
@@ -561,11 +571,12 @@ export const gigs = [
       { name: "Ella Thompson", inst: "Vocals" },
     ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Vocals"],
+    pay: 650,
   },
   {
     name: "R&B Groove",
-    startTime: "2024-10-21T20:00:00Z",
-    endTime: "2024-10-21T23:00:00Z",
+    startTime: "2024-08-17T20:00:00Z",
+    endTime: "2024-08-17T23:00:00Z",
     venue: "Chicago Symphony Center",
     musicians: [
       { name: "Sarah Clark", inst: "Electric Guitar" },
@@ -575,11 +586,12 @@ export const gigs = [
       { name: "Sophia Garcia", inst: "Percussion" },
     ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Percussion"],
+    pay: 700,
   },
   {
     name: "Classical Elegance",
-    startTime: "2024-10-22T19:00:00Z",
-    endTime: "2024-10-22T22:00:00Z",
+    startTime: "2024-08-24T19:00:00Z",
+    endTime: "2024-08-24T22:00:00Z",
     venue: "The Riviera Theatre",
     musicians: [
       { name: "Michael Thompson", inst: "Electric Guitar" },
@@ -589,11 +601,12 @@ export const gigs = [
       { name: "Chloe Garcia", inst: "Keyboards" },
     ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Keyboards"],
+    pay: 800,
   },
   {
     name: "Electronic Beats",
-    startTime: "2024-10-23T18:00:00Z",
-    endTime: "2024-10-23T21:00:00Z",
+    startTime: "2024-08-31T18:00:00Z",
+    endTime: "2024-08-31T21:00:00Z",
     venue: "Grant Park",
     musicians: [
       { name: "William Harris", inst: "Electric Guitar" },
@@ -603,11 +616,12 @@ export const gigs = [
       { name: "Ava Thompson", inst: "Keyboards" },
     ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Keyboards"],
+    pay: 750,
   },
   {
     name: "Hip Hop Showdown",
-    startTime: "2024-10-24T17:00:00Z",
-    endTime: "2024-10-24T20:00:00Z",
+    startTime: "2024-09-07T17:00:00Z",
+    endTime: "2024-09-07T20:00:00Z",
     venue: "House of Blues Chicago",
     musicians: [
       { name: "John Smith", inst: "Electric Guitar" },
@@ -617,11 +631,12 @@ export const gigs = [
       { name: "Olivia White", inst: "Vocals" },
     ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Vocals"],
+    pay: 600,
   },
   {
     name: "Metal Mayhem",
-    startTime: "2024-10-25T20:00:00Z",
-    endTime: "2024-10-25T23:00:00Z",
+    startTime: "2024-09-14T20:00:00Z",
+    endTime: "2024-09-14T23:00:00Z",
     venue: "Metro Chicago",
     musicians: [
       { name: "Robert Garcia", inst: "Electric Guitar" },
@@ -631,11 +646,12 @@ export const gigs = [
       { name: "Sophia Lee", inst: "Saxophone" },
     ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Saxophone"],
+    pay: 650,
   },
   {
     name: "World Music Gala",
-    startTime: "2024-10-26T19:00:00Z",
-    endTime: "2024-10-26T22:00:00Z",
+    startTime: "2024-09-21T19:00:00Z",
+    endTime: "2024-09-21T22:00:00Z",
     venue: "Chicago Theatre",
     musicians: [
       { name: "William Harris", inst: "Electric Guitar" },
@@ -645,11 +661,12 @@ export const gigs = [
       { name: "Ethan Turner", inst: "Keyboards" },
     ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Keyboards"],
+    pay: 700,
   },
   {
     name: "Experimental Soundscape",
-    startTime: "2024-10-27T18:00:00Z",
-    endTime: "2024-10-27T21:00:00Z",
+    startTime: "2024-09-28T18:00:00Z",
+    endTime: "2024-09-28T21:00:00Z",
     venue: "House of Blues Chicago",
     musicians: [
       { name: "Alex Turner", inst: "Electric Guitar" },
@@ -659,11 +676,12 @@ export const gigs = [
       { name: "Chloe Taylor", inst: "Trombone" },
     ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Trombone"],
+    pay: 750,
   },
   {
     name: "Gospel Gathering",
-    startTime: "2024-10-28T17:00:00Z",
-    endTime: "2024-10-28T20:00:00Z",
+    startTime: "2024-10-05T17:00:00Z",
+    endTime: "2024-10-05T20:00:00Z",
     venue: "Chicago Symphony Center",
     musicians: [
       { name: "Emma Johnson", inst: "Electric Guitar" },
@@ -673,11 +691,12 @@ export const gigs = [
       { name: "Noah Davis", inst: "Vocals" },
     ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Vocals"],
+    pay: 800,
   },
   {
     name: "Symphonic Spectacle",
-    startTime: "2024-10-29T20:00:00Z",
-    endTime: "2024-10-29T23:00:00Z",
+    startTime: "2024-10-12T20:00:00Z",
+    endTime: "2024-10-12T23:00:00Z",
     venue: "Metro Chicago",
     musicians: [
       { name: "John Smith", inst: "Electric Guitar" },
@@ -687,6 +706,6 @@ export const gigs = [
       { name: "Sophia Lee", inst: "Saxophone" },
     ],
     instrumentation: ["Electric Guitar", "Acoustic Guitar", "Bass", "Drums", "Saxophone"],
+    pay: 900,
   },
 ];
-
