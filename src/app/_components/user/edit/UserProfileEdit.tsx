@@ -31,14 +31,11 @@ interface EditProfileProps {
   closeMusicianModal?: () => void;
 }
 
-// interface EditProfileMusModal extends EditProfileProps {
-//   musicianAdd?: boolean;
-//   closeMusicianModal?: () => void;
-// }
-
-// type EditProfileProps = EditProfileSmall | EditPr
-
-const UserProfileEdit = ({ user, musicianAdd, closeMusicianModal }: EditProfileProps) => {
+const UserProfileEdit = ({
+  user,
+  musicianAdd,
+  closeMusicianModal,
+}: EditProfileProps) => {
   const instruments = useInstruments();
   const utils = api.useUtils();
   const { mutate: connectMusician } = api.user.connectMusician.useMutation({
@@ -51,10 +48,9 @@ const UserProfileEdit = ({ user, musicianAdd, closeMusicianModal }: EditProfileP
       toast.success(
         `${musician?.name ?? "Musician"} was added to the database!`,
       );
-    if(closeMusicianModal) {
-      console.log('hello')
-      closeMusicianModal()
-    } 
+      if (closeMusicianModal) {
+        closeMusicianModal();
+      }
     },
     onError: (e) => {
       const message = displayTRPCError(e.data, e.message);
@@ -108,7 +104,6 @@ const UserProfileEdit = ({ user, musicianAdd, closeMusicianModal }: EditProfileP
       updateValue("instrumentation", inst, "add");
     }
   };
-
 
   const handleUpdateUser = () => {
     try {

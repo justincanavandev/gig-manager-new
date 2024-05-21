@@ -176,11 +176,6 @@ export const gigRouter = createTRPCRouter({
                 id: true,
               },
             },
-            // organizer: {
-            //   select: {
-            //     id: true,
-            //   },
-            // },
             musicians: {
               include: {
                 musician: {
@@ -196,7 +191,7 @@ export const gigRouter = createTRPCRouter({
                 },
               },
             },
-            
+          
             instrumentation: {
               include: {
                 instrument: {
@@ -269,8 +264,6 @@ export const gigRouter = createTRPCRouter({
         instrumentation,
         pay
       } = input;
-
-      console.log('pay', pay)
 
       try {
         const instsWithoutMusician = doesInstrumentHaveMusician(
