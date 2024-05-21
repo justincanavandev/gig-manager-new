@@ -16,17 +16,11 @@ export const gigRouter = createTRPCRouter({
         orderBy: {
           startTime: "asc",
         },
-
         include: {
-          organizer: {
-            select: {
-              id: true,
-            },
-          },
           venue: {
             select: {
               name: true,
-              id: true,
+              // id: true,
             },
           },
 
@@ -35,14 +29,20 @@ export const gigRouter = createTRPCRouter({
               musician: {
                 select: {
                   name: true,
-                  id: true,
-                  instruments: {
-                    select: {
-                      instrument: true,
-                    },
-                  },
+                  // id: true,
+                  // instruments: {
+                  //   select: {
+                  //     instrument: true,
+                  //   },
+                  // },
                 },
               },
+              instrument: {
+                select: {
+                  name: true,
+                  // id: true
+                }
+              }
             },
           },
           instrumentation: {
@@ -186,22 +186,17 @@ export const gigRouter = createTRPCRouter({
                 musician: {
                   select: {
                     name: true,
-                    id: true,
-                    instruments: {
-                      select: {
-                        instrument: true,
-                      },
-                    },
                   },
                 },
+                
                 instrument: {
                   select: {
                     name: true,
-                    id: true,
                   },
                 },
               },
             },
+            
             instrumentation: {
               include: {
                 instrument: {

@@ -123,9 +123,9 @@ const GigForm = ({ gig }: GigFormProps) => {
         return {
           instrument: {
             name: mus.instrument.name,
-            id: mus.instrument.id,
+            id: mus.instrumentId,
           },
-          id: mus.musician.id,
+          id: mus.musicianId,
           name: mus.musician.name,
         };
       });

@@ -25,12 +25,20 @@ export type DefaultUserProfile = {
   instrumentation: GigFormInstrument[];
 };
 
-type EditProfileProps = {
+interface EditProfileProps {
   user: GetUserById;
   musicianAdd?: boolean;
-};
+  closeMusicianModal?: () => void;
+}
 
-const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
+// interface EditProfileMusModal extends EditProfileProps {
+//   musicianAdd?: boolean;
+//   closeMusicianModal?: () => void;
+// }
+
+// type EditProfileProps = EditProfileSmall | EditPr
+
+const UserProfileEdit = ({ user, musicianAdd, closeMusicianModal }: EditProfileProps) => {
   const instruments = useInstruments();
   const utils = api.useUtils();
   const { mutate: connectMusician } = api.user.connectMusician.useMutation({
@@ -43,6 +51,10 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
       toast.success(
         `${musician?.name ?? "Musician"} was added to the database!`,
       );
+    if(closeMusicianModal) {
+      console.log('hello')
+      closeMusicianModal()
+    } 
     },
     onError: (e) => {
       const message = displayTRPCError(e.data, e.message);
@@ -97,6 +109,7 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
     }
   };
 
+
   const handleUpdateUser = () => {
     try {
       const { instrumentation, name, email, phoneNumber } = form;
@@ -122,7 +135,7 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
           return result;
         } else {
           // Updates Musician who is already connected to user or updates User who is NOT connected to a musician
-          
+
           const updatedUser = updateUser({
             name,
             email,
@@ -130,7 +143,7 @@ const UserProfileEdit = ({ user, musicianAdd }: EditProfileProps) => {
               ? {
                   instrumentIds,
                   phoneNumber,
-                  musicianId: user.musician.id
+                  musicianId: user.musician.id,
                 }
               : null,
           });
