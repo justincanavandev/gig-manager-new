@@ -7,5 +7,5 @@ export const defaultGigForm: GigForm = {
   endTime: new Date(),
   instrumentation: [],
   musicians: [],
-  pay: 0
+  pay: ""
 };
