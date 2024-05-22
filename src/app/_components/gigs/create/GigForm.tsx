@@ -223,12 +223,10 @@ const GigForm = ({ gig }: GigFormProps) => {
           venueId: venue?.id ?? "",
           musicians: createMusicians,
           instrumentation: instrumentNames,
-    
         });
       }
     }
   };
-
 
   const deleteInst = (inst: GigFormInstrument) => {
     const { instrumentation, musicians } = form;
@@ -249,67 +247,67 @@ const GigForm = ({ gig }: GigFormProps) => {
   return (
     <>
       <form onSubmit={(e) => handleSubmit(e)}>
-        <div className="mt-8 flex flex-col items-center gap-4">
-          <FormInput
-            label="Name"
-            value={form.name}
-            placeholder="Gig 1"
-            action={(e) => handleChange(e)}
-            name="name"
-            condition={displayFormError(
-              "name",
-              form.name,
-              z.string().min(3),
-              gigFormErrors.name,
-            )}
-            type="text"
-            errors={errorMessages.name ?? []}
-          />
-          <DateSelector
-            startTime={form.startTime}
-            endTime={form.endTime}
-            changeDate={changeValue}
-          />
-          <FormInput
-            label="Pay"
-            value={form.pay}
-            type="number"
-            name="pay"
-            placeholder="400"
-            action={(e) => handleChange(e)}
-            condition={displayFormError(
-              "pay",
-              Number(form.pay),
-              z.number().nonnegative(),
-              gigFormErrors.pay,
-            )}
-            errors={errorMessages.pay ?? []}
-          />
+        <div className="mt-8 flex min-h-screen flex-col items-center gap-4">
+            <FormInput
+              label="Name"
+              value={form.name}
+              placeholder="Gig 1"
+              action={(e) => handleChange(e)}
+              name="name"
+              condition={displayFormError(
+                "name",
+                form.name,
+                z.string().min(3),
+                gigFormErrors.name,
+              )}
+              type="text"
+              errors={errorMessages.name ?? []}
+            />
+            <DateSelector
+              startTime={form.startTime}
+              endTime={form.endTime}
+              changeDate={changeValue}
+            />
+            <FormInput
+              label="Pay"
+              value={form.pay}
+              type="number"
+              name="pay"
+              placeholder="400"
+              action={(e) => handleChange(e)}
+              condition={displayFormError(
+                "pay",
+                Number(form.pay),
+                z.number().nonnegative(),
+                gigFormErrors.pay,
+              )}
+              errors={errorMessages.pay ?? []}
+            />
 
-          <InstrumentSelector
-            allInstruments={instruments}
-            deleteInst={deleteInst}
-            addInst={addInstrument}
-          />
+            <InstrumentSelector
+              allInstruments={instruments}
+              deleteInst={deleteInst}
+              addInst={addInstrument}
+            />
 
-          <MusicianSelector
-            toggleInstSelect={setIsMusSelectOpen}
-            isSelectorOpen={isMusSelectOpen}
-            updateMusicians={updateValue}
-            currentMusicians={form.musicians}
-            instrumentation={form.instrumentation}
-            instsWithoutMusician={instsWithoutMusician}
-            deleteInst={deleteInst}
-          />
-          <VenueSelector
-            setVenue={changeValue}
-            venue={form?.venue ? form.venue : null}
-          />
+            <MusicianSelector
+              toggleInstSelect={setIsMusSelectOpen}
+              isSelectorOpen={isMusSelectOpen}
+              updateMusicians={updateValue}
+              currentMusicians={form.musicians}
+              instrumentation={form.instrumentation}
+              instsWithoutMusician={instsWithoutMusician}
+              deleteInst={deleteInst}
+            />
+            <VenueSelector
+              setVenue={changeValue}
+              venue={form?.venue ? form.venue : null}
+            />
 
-          <BaseButton as="button" type="submit">
-            Submit
-          </BaseButton>
-        </div>
+            <BaseButton as="button" type="submit">
+              Submit
+            </BaseButton>
+          </div>
       </form>
     </>
   );
