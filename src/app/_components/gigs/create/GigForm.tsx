@@ -62,6 +62,7 @@ const GigForm = ({ gig }: GigFormProps) => {
       await utils.gig.getById.invalidate();
       toast.dismiss();
       toast.success(`${gig?.name ?? "Gig"} was successfully created!`);
+      setForm(defaultGigForm)
     },
     onError: (e) => {
       const message = displayTRPCError(e.data, e.message);
@@ -148,7 +149,7 @@ const GigForm = ({ gig }: GigFormProps) => {
         venue,
         startTime,
         endTime,
-        pay: Number(pay),
+        pay: pay.toString(),
         instrumentation: confinedInstrumentation,
         musicians: confinedMusicians,
       });

@@ -51,7 +51,9 @@ const FormInput = ({ ...props }: FormInputProps) => {
           type={type}
         ></input>
       </label>
-      {errors?.map((e) => <span key={`inputErrorMsg-${e}`}>{e}</span>)}
+      {typeof value === "string" &&
+        value.length > 0 &&
+        errors?.map((e) => <span key={`inputErrorMsg-${e}`}>{e}</span>)}
     </>
   );
 };
