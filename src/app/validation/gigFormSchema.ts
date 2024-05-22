@@ -35,5 +35,5 @@ export const GigFormSchema: ZodType<GigForm> = z.object({
       }),
     })
     .array(),
-    pay: z.number().nonnegative()
+    pay: z.string().min(1)
 });
