@@ -181,7 +181,7 @@ const GigForm = ({ gig }: GigFormProps) => {
     const validateOrError = validate(form);
 
     if (isValidationErrorLike(validateOrError)) {
-     const messages = getZodErrMsg(validateOrError, gigFormErrors)
+      const messages = getZodErrMsg(validateOrError, gigFormErrors);
       setErrorMessages(messages);
 
       toast.error(validateOrError.message);
@@ -193,16 +193,6 @@ const GigForm = ({ gig }: GigFormProps) => {
         toast.error(`Musician needs to be added at ${instsForToast}`);
         return;
       }
-
-      // if (instrumentation.length === 0) {
-      //   toast.error(`Gig must include at least 1 instrument!`);
-      //   return;
-      // }
-
-      // if (musicians.length === 0) {
-      //   toast.error(`Gig must include at least 1 musician!`);
-      //   return;
-      // }
 
       const instrumentNames = instrumentation.map((inst) => inst.name);
 
@@ -309,6 +299,8 @@ const GigForm = ({ gig }: GigFormProps) => {
             allInstruments={instruments}
             deleteInst={deleteInst}
             addInst={addInstrument}
+            errorMessages={errorMessages}
+            isFormSubmitted={isFormSubmitted}
           />
 
           <MusicianSelector

@@ -16,6 +16,8 @@ type BaseComboboxProps<T> = {
   action: (data: T) => void;
   action2:(data: T) => void;
   label: string;
+  errors?: string[]
+  isFormSubmitted?: boolean
 };
 
 const BaseCombobox = <T extends object>({
@@ -25,7 +27,9 @@ const BaseCombobox = <T extends object>({
   action2,
   disabledData,
   label,
-  value
+  value,
+  errors,
+  isFormSubmitted
 }: BaseComboboxProps<T>) => {
   const [query, setQuery] = useState<string>("");
 
@@ -81,6 +85,15 @@ const BaseCombobox = <T extends object>({
           ))}
         </Combobox.Options>
       </Transition>
+      <div className="absolute bottom-[-1.5rem]">
+          {
+           isFormSubmitted &&
+            errors?.map((e) => (
+              <span className="text-[.7rem]" key={`inputErrorMsg-${e}`}>
+                {e}
+              </span>
+            ))}
+        </div>
     </Combobox>
   );
 };

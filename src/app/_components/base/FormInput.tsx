@@ -9,7 +9,7 @@ interface FormInputProps extends ComponentPropsWithRef<"input"> {
   label: string;
   condition?: boolean;
   errors: string[];
-  isFormSubmitted: boolean
+  isFormSubmitted: boolean;
 }
 
 const FormInput = ({ ...props }: FormInputProps) => {
@@ -24,9 +24,8 @@ const FormInput = ({ ...props }: FormInputProps) => {
     condition,
     errors,
     type,
-    isFormSubmitted
+    isFormSubmitted,
   } = props;
-
 
   const displayIcon = () => {
     if (typeof value === "string") {
@@ -41,12 +40,12 @@ const FormInput = ({ ...props }: FormInputProps) => {
           );
         }
       }
-    } 
+    }
   };
 
   return (
     <>
-      <div className="flex relative w-[14rem] flex-col justify-center rounded-md bg-dark-purple px-2 pb-2 pt-1.5 shadow-lg ">
+      <div className="relative flex w-[14rem] flex-col justify-center rounded-md bg-dark-purple px-2 pb-2 pt-1.5 shadow-lg ">
         <label
           className={`${outerClass ?? ""} relative flex flex-col text-[.7rem] uppercase`}
         >
@@ -63,17 +62,15 @@ const FormInput = ({ ...props }: FormInputProps) => {
         </label>
 
         <div className="absolute bottom-[-1.5rem]">
-        {typeof value === "string" &&
-        (value.length > 0 || isFormSubmitted) &&
-        errors?.map((e) => (
-          <span className="text-[.7rem]" key={`inputErrorMsg-${e}`}>
-            {e}
-          </span>
-        ))}
+          {typeof value === "string" &&
+            (value.length > 0 || isFormSubmitted) &&
+            errors?.map((e) => (
+              <span className="text-[.7rem]" key={`inputErrorMsg-${e}`}>
+                {e}
+              </span>
+            ))}
         </div>
       </div>
-
-
     </>
   );
 };
