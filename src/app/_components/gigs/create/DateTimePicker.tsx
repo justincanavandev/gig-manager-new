@@ -2,6 +2,7 @@ import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { compareTimes } from "~/server/utils/helpers";
 import type { GigForm } from "~/server/types/gigTypes";
+import { CheckIcon, XMarkIcon } from "@heroicons/react/20/solid";
 
 type DateTimeProps = {
   index?: number;
@@ -16,7 +17,6 @@ const DateTimePicker: React.FC<DateTimeProps> = ({
   startTime,
   endTime,
 }) => {
-
   const handleDateChange = (date: Date) => {
     if (index === 0) {
       changeDate("startTime", date);
@@ -26,23 +26,31 @@ const DateTimePicker: React.FC<DateTimeProps> = ({
   };
 
   return (
-    <div>
+    <div className="relative">
       <ReactDatePicker
-        className={
-          compareTimes(new Date(startTime), new Date(endTime))
-            ? "border border-green-500"
-            : "border border-red-500"
-        }
+        className={`min-w-[13rem] rounded-[4px] text-[.9rem] text-black focus-visible:outline-none
+      
+        `}
         minDate={index === 0 ? new Date() : new Date(startTime)}
         showIcon
         showTimeSelect
         timeIntervals={15}
+        popperClassName="w-[21rem]"
         dateFormat="MM/dd/yyyy h:mm aa"
         selected={index === 0 ? new Date(startTime) : new Date(endTime)}
         onChange={(date) => {
           date instanceof Date && handleDateChange(date);
         }}
       />
+      {compareTimes(new Date(startTime), new Date(endTime)) ? (
+        <CheckIcon className="absolute bottom-[6px] right-[5px] h-5 w-5 text-green-500" />
+      ) : (
+        <>
+
+          <XMarkIcon className="absolute bottom-[6px] right-[5px] h-5 w-5 text-red-500" />
+          {/* <span>End Time must be later than Start Time!</span> */}
+        </>
+      )}
     </div>
   );
 };

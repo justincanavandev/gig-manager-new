@@ -44,7 +44,7 @@ const FormInput = ({ ...props }: FormInputProps) => {
 
   return (
     <>
-      <div className="flex relative w-[14rem] flex-col justify-center rounded-md bg-dark-purple px-2 pb-2 pt-1.5 shadow-md ">
+      <div className="flex relative w-[14rem] flex-col justify-center rounded-md bg-dark-purple px-2 pb-2 pt-1.5 shadow-lg ">
         <label
           className={`${outerClass ?? ""} relative flex flex-col text-[.7rem] uppercase`}
         >

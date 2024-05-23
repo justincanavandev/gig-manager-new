@@ -39,18 +39,18 @@ const BaseCombobox = <T extends object>({
   return (
     <Combobox
       as="div"
-      className="relative flex w-fit flex-col "
+      className="relative bg-dark-purple flex flex-col w-[14rem] rounded-md px-2 pb-2 pt-1.5 shadow-lg"
       value={value ? value : null}
       onChange={action}
       nullable
     >
-      <Combobox.Label>{label}</Combobox.Label>
+      <Combobox.Label className="text-[.7rem] pb-0.5 pl-1 uppercase">{label}</Combobox.Label>
       <Combobox.Input
-        className="border border-black"
+        className="border focus-visible:outline-none w-[13rem] rounded-[4px]"
         onChange={(e) => setQuery(e.target.value)}
         displayValue={(val: T)=> val ? dataToString(val) : ""}
       />
-      <Combobox.Button className="absolute right-[2px] top-[1.72rem]">
+      <Combobox.Button className="absolute text-gray-400 right-[9px] top-[1.72rem]">
         <ChevronUpDownIcon className="h-5 w-5" aria-hidden="true" />
       </Combobox.Button>
       <Transition
@@ -62,7 +62,7 @@ const BaseCombobox = <T extends object>({
         leaveTo="scale-0"
         afterLeave={() => setQuery("")}
       >
-        <Combobox.Options className="border border-black" as="div" static>
+        <Combobox.Options className="border bg-white text-black rounded-[4px] border-black" as="div" static>
           {filteredData.map((datum, index) => (
             <Combobox.Option
               key={`combobox-${index}`}
