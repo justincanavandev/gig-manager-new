@@ -9,6 +9,7 @@ interface FormInputProps extends ComponentPropsWithRef<"input"> {
   label: string;
   condition?: boolean;
   errors: string[];
+  isFormSubmitted: boolean
 }
 
 const FormInput = ({ ...props }: FormInputProps) => {
@@ -23,12 +24,13 @@ const FormInput = ({ ...props }: FormInputProps) => {
     condition,
     errors,
     type,
+    isFormSubmitted
   } = props;
 
 
   const displayIcon = () => {
     if (typeof value === "string") {
-      if (value.length > 0) {
+      if (value.length > 0 || isFormSubmitted) {
         if (condition) {
           return (
             <CheckIcon className="absolute right-0.5 top-[1.35rem] h-5 w-5 text-green-500" />
@@ -62,7 +64,7 @@ const FormInput = ({ ...props }: FormInputProps) => {
 
         <div className="absolute bottom-[-1.5rem]">
         {typeof value === "string" &&
-        value.length > 0 &&
+        (value.length > 0 || isFormSubmitted) &&
         errors?.map((e) => (
           <span className="text-[.7rem]" key={`inputErrorMsg-${e}`}>
             {e}

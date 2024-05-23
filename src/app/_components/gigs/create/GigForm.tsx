@@ -19,7 +19,7 @@ import type { MusicianSelect } from "~/server/types/instrumentTypes";
 import { isInstrumentValid } from "~/server/utils/typeGuards";
 import BaseButton from "../../base/BaseButton";
 import toast from "react-hot-toast";
-import { displayTRPCError } from "../../../error/errorHelpers";
+import { displayTRPCError, getZodErrMsg } from "../../../error/errorHelpers";
 import { GigFormSchema } from "~/app/validation/gigFormSchema";
 import { z } from "zod";
 import { gigFormErrors } from "~/app/validation/validationHelpers";
@@ -44,7 +44,9 @@ const GigForm = ({ gig }: GigFormProps) => {
     validate,
     errorMessages,
     displayFormError,
-    // setErrorMessages
+    isFormSubmitted,
+    setFormSubmitTrue,
+    setErrorMessages,
   } = useForm<GigForm>(defaultGigForm, GigFormSchema);
 
   const instruments = useInstruments();
@@ -171,23 +173,16 @@ const GigForm = ({ gig }: GigFormProps) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    setFormSubmitTrue();
     const { name, startTime, endTime, venue, musicians, instrumentation, pay } =
       form;
 
     const validateOrError = validate(form);
 
     if (isValidationErrorLike(validateOrError)) {
-      // const errDetails = validateOrError.details;
-      // const errFields  = errDetails.map((err) => err.path[0]);
-      // const newErrMessages: Partial<Record<keyof GigForm, string[]>> = {};
-      // errFields.forEach((field) => {
-      //   if (field) {
-      //     const gigFormField = field as keyof GigForm
-      //     newErrMessages[gigFormField] = [gigFormErrors[gigFormField]];
-      //   }
-      // });
-      // setErrorMessages(newErrMessages)
-
+     const messages = getZodErrMsg(validateOrError, gigFormErrors)
+      setErrorMessages(messages);
 
       toast.error(validateOrError.message);
     } else {
@@ -285,11 +280,13 @@ const GigForm = ({ gig }: GigFormProps) => {
             )}
             type="text"
             errors={errorMessages.name ?? []}
+            isFormSubmitted={isFormSubmitted}
           />
           <DateSelector
             startTime={form.startTime}
             endTime={form.endTime}
             changeDate={changeValue}
+            isFormSubmitted={isFormSubmitted}
           />
           <FormInput
             label="Pay"
@@ -300,11 +297,12 @@ const GigForm = ({ gig }: GigFormProps) => {
             action={(e) => handleChange(e)}
             condition={displayFormError(
               "pay",
-              Number(form.pay),
-              z.number().nonnegative(),
+              form.pay,
+              z.string().refine((val) => parseInt(val)),
               gigFormErrors.pay,
             )}
             errors={errorMessages.pay ?? []}
+            isFormSubmitted={isFormSubmitted}
           />
 
           <InstrumentSelector

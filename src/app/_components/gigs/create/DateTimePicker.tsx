@@ -10,6 +10,7 @@ type DateTimeProps = {
   endTime: Date;
   changeDate: <Value>(key: keyof GigForm, value: Value) => void;
   currentEndTime: Date;
+  isFormSubmitted: boolean
 };
 
 const DateTimePicker: React.FC<DateTimeProps> = ({
@@ -18,6 +19,7 @@ const DateTimePicker: React.FC<DateTimeProps> = ({
   startTime,
   endTime,
   currentEndTime,
+  isFormSubmitted
 }) => {
   const handleDateChange = (date: Date) => {
     if (index === 0) {
@@ -52,7 +54,7 @@ const DateTimePicker: React.FC<DateTimeProps> = ({
           date instanceof Date && handleDateChange(date);
         }}
       />
-      {hasUserChangedDate() ? (
+      {hasUserChangedDate() || isFormSubmitted ? (
         compareTimes(startTime, endTime) ? (
           <CheckIcon className="absolute bottom-[6px] right-[5px] h-5 w-5 text-green-500" />
         ) : (
@@ -61,8 +63,8 @@ const DateTimePicker: React.FC<DateTimeProps> = ({
               <>
                 <XMarkIcon className="absolute bottom-[6px] right-[5px] h-5 w-5 text-red-500" />
 
-                <span className="absolute left-0 top-12 text-[.61rem]">
-                  End Time must be later than Start Time!
+                <span className="absolute left-0 top-12 ">
+                  End Time must be later than Start Time
                 </span>
               </>
             )}

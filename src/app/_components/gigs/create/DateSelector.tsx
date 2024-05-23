@@ -9,12 +9,14 @@ type DateSelectorProps = {
   startTime: Date;
   endTime: Date;
   changeDate: <Value>(key: keyof GigForm, value: Value) => void;
+  isFormSubmitted: boolean
 };
 
 const DateSelector = ({
   changeDate,
   startTime,
   endTime,
+  isFormSubmitted
 }: DateSelectorProps) => {
 
   // Variable used to see if the user has changed the any dates from the default value
@@ -28,8 +30,8 @@ const DateSelector = ({
           
         >
           <div className="min-w-[14rem] max-w-full flex flex-col gap-4 rounded-md bg-dark-purple px-2 pb-2 pt-1.5 shadow-lg"> 
-          <label className="text-[.7rem] uppercase">
-            <span className="pb-0.5 pl-1">{selection}</span>
+          <label className="text-[.7rem]">
+            <span className="uppercase pb-0.5 pl-1">{selection}</span>
 
             <DateTimePicker
               startTime={startTime}
@@ -37,6 +39,7 @@ const DateSelector = ({
               changeDate={changeDate}
               index={index}
               currentEndTime={currentEndTime}
+              isFormSubmitted={isFormSubmitted}
             />
           </label>
           </div>
