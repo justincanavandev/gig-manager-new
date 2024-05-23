@@ -1,4 +1,4 @@
-import type { typeToFlattenedError, z } from "zod";
+import type { typeToFlattenedError } from "zod";
 // import type { DefaultErrorData } from "@trpc/server/unstable-core-do-not-import";
 /** @todo Check why you cannot import these types */
 
@@ -66,15 +66,17 @@ export const displayZodError = (fieldErrors: FieldErrors) => {
   return errMessages;
 };
 
-export const getZodErrMsg = (err: z.ZodError) => {
-  const flattenedErrs = err.flatten();
-  const errorFields = Object.keys(flattenedErrs.fieldErrors);
-  const errString = errorFields.join(", ")
+// export const getZodErrMsg = (err: ValidationError) => {
 
-  const message =
-  errorFields.length > 0
-    ? `Errors in ${errString} ${errorFields.length === 1 ? "field" : "fields"}`
-    : "There was an error with your form submission!";
+//   // const flattenedErrs = err.flatten();
+//   // const errorFields = Object.keys(flattenedErrs.fieldErrors);
+//   // const errString = errorFields.join(", ")
+//   // console.log('errorFields', errorFields)
+
+//   // const message =
+//   // errorFields.length > 0
+//   //   ? `Errors in ${errString} ${errorFields.length === 1 ? "field" : "fields"}`
+//   //   : "There was an error with your form submission!";
   
-    return message
-}
+//   //   return message
+// }

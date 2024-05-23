@@ -21,7 +21,7 @@ export const GigFormSchema: ZodType<GigForm> = z.object({
       ),
       id: z.string().cuid(),
     })
-    .array(),
+    .array().nonempty(),
   musicians: z
     .object({
       name: z.string().min(3),
@@ -34,6 +34,6 @@ export const GigFormSchema: ZodType<GigForm> = z.object({
         id: z.string().cuid(),
       }),
     })
-    .array(),
+    .array().nonempty(),
     pay: z.string().min(1)
 });

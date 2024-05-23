@@ -5,7 +5,6 @@ import {
   type SetStateAction,
 } from "react";
 import { type ZodType, z } from "zod";
-// import type { FieldErrors } from "../error/errorHelpers";
 import { fromError, type ValidationError } from "zod-validation-error";
 
 type UseFormProps<Form> = {

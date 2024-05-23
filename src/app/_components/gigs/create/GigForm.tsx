@@ -19,7 +19,7 @@ import type { MusicianSelect } from "~/server/types/instrumentTypes";
 import { isInstrumentValid } from "~/server/utils/typeGuards";
 import BaseButton from "../../base/BaseButton";
 import toast from "react-hot-toast";
-import { displayTRPCError, getZodErrMsg } from "../../../error/errorHelpers";
+import { displayTRPCError } from "../../../error/errorHelpers";
 import { GigFormSchema } from "~/app/validation/gigFormSchema";
 import { z } from "zod";
 import { gigFormErrors } from "~/app/validation/validationHelpers";
@@ -28,6 +28,7 @@ import {
   doesInstrumentHaveMusician,
   displayMusicianNames,
 } from "~/server/utils/musicianHelpers";
+import { isValidationErrorLike } from "zod-validation-error";
 
 type GigFormProps = {
   gig?: GigById;
@@ -43,6 +44,7 @@ const GigForm = ({ gig }: GigFormProps) => {
     validate,
     errorMessages,
     displayFormError,
+    // setErrorMessages
   } = useForm<GigForm>(defaultGigForm, GigFormSchema);
 
   const instruments = useInstruments();
@@ -62,7 +64,7 @@ const GigForm = ({ gig }: GigFormProps) => {
       await utils.gig.getById.invalidate();
       toast.dismiss();
       toast.success(`${gig?.name ?? "Gig"} was successfully created!`);
-      setForm(defaultGigForm)
+      setForm(defaultGigForm);
     },
     onError: (e) => {
       const message = displayTRPCError(e.data, e.message);
@@ -174,17 +176,38 @@ const GigForm = ({ gig }: GigFormProps) => {
 
     const validateOrError = validate(form);
 
-    if (validateOrError instanceof z.ZodError) {
-      const message = getZodErrMsg(validateOrError);
+    if (isValidationErrorLike(validateOrError)) {
+      // const errDetails = validateOrError.details;
+      // const errFields  = errDetails.map((err) => err.path[0]);
+      // const newErrMessages: Partial<Record<keyof GigForm, string[]>> = {};
+      // errFields.forEach((field) => {
+      //   if (field) {
+      //     const gigFormField = field as keyof GigForm
+      //     newErrMessages[gigFormField] = [gigFormErrors[gigFormField]];
+      //   }
+      // });
+      // setErrorMessages(newErrMessages)
 
-      toast.error(message);
+
+      toast.error(validateOrError.message);
     } else {
       // If there's an instrument without a musician, display toast and return
+
       if (instsWithoutMusician.length > 0) {
         const instsForToast = displayMusicianNames(instsWithoutMusician);
         toast.error(`Musician needs to be added at ${instsForToast}`);
         return;
       }
+
+      // if (instrumentation.length === 0) {
+      //   toast.error(`Gig must include at least 1 instrument!`);
+      //   return;
+      // }
+
+      // if (musicians.length === 0) {
+      //   toast.error(`Gig must include at least 1 musician!`);
+      //   return;
+      // }
 
       const instrumentNames = instrumentation.map((inst) => inst.name);
 
@@ -247,67 +270,67 @@ const GigForm = ({ gig }: GigFormProps) => {
   return (
     <>
       <form onSubmit={(e) => handleSubmit(e)}>
-        <div className="mt-8 flex min-h-screen flex-col items-center gap-4">
-            <FormInput
-              label="Name"
-              value={form.name}
-              placeholder="Gig 1"
-              action={(e) => handleChange(e)}
-              name="name"
-              condition={displayFormError(
-                "name",
-                form.name,
-                z.string().min(3),
-                gigFormErrors.name,
-              )}
-              type="text"
-              errors={errorMessages.name ?? []}
-            />
-            <DateSelector
-              startTime={form.startTime}
-              endTime={form.endTime}
-              changeDate={changeValue}
-            />
-            <FormInput
-              label="Pay"
-              value={form.pay}
-              type="number"
-              name="pay"
-              placeholder="400"
-              action={(e) => handleChange(e)}
-              condition={displayFormError(
-                "pay",
-                Number(form.pay),
-                z.number().nonnegative(),
-                gigFormErrors.pay,
-              )}
-              errors={errorMessages.pay ?? []}
-            />
+        <div className="mt-8 flex min-h-screen flex-col items-center gap-8">
+          <FormInput
+            label="Name"
+            value={form.name}
+            placeholder="Gig 1"
+            action={(e) => handleChange(e)}
+            name="name"
+            condition={displayFormError(
+              "name",
+              form.name,
+              z.string().min(3),
+              gigFormErrors.name,
+            )}
+            type="text"
+            errors={errorMessages.name ?? []}
+          />
+          <DateSelector
+            startTime={form.startTime}
+            endTime={form.endTime}
+            changeDate={changeValue}
+          />
+          <FormInput
+            label="Pay"
+            value={form.pay}
+            type="number"
+            name="pay"
+            placeholder="400"
+            action={(e) => handleChange(e)}
+            condition={displayFormError(
+              "pay",
+              Number(form.pay),
+              z.number().nonnegative(),
+              gigFormErrors.pay,
+            )}
+            errors={errorMessages.pay ?? []}
+          />
 
-            <InstrumentSelector
-              allInstruments={instruments}
-              deleteInst={deleteInst}
-              addInst={addInstrument}
-            />
+          <InstrumentSelector
+            allInstruments={instruments}
+            deleteInst={deleteInst}
+            addInst={addInstrument}
+          />
 
-            <MusicianSelector
-              toggleInstSelect={setIsMusSelectOpen}
-              isSelectorOpen={isMusSelectOpen}
-              updateMusicians={updateValue}
-              currentMusicians={form.musicians}
-              instrumentation={form.instrumentation}
-              instsWithoutMusician={instsWithoutMusician}
-              deleteInst={deleteInst}
-            />
-            <VenueSelector
-              setVenue={changeValue}
-              venue={form?.venue ? form.venue : null}
-            />
+          <MusicianSelector
+            toggleInstSelect={setIsMusSelectOpen}
+            isSelectorOpen={isMusSelectOpen}
+            updateMusicians={updateValue}
+            currentMusicians={form.musicians}
+            instrumentation={form.instrumentation}
+            instsWithoutMusician={instsWithoutMusician}
+            deleteInst={deleteInst}
+          />
+          <VenueSelector
+            setVenue={changeValue}
+            venue={form?.venue ? form.venue : null}
+          />
 
-            <BaseButton as="button" type="submit">
-              Submit
-            </BaseButton>
-          </div>
+          <BaseButton as="button" type="submit">
+            Submit
+          </BaseButton>
+        </div>
       </form>
     </>
   );

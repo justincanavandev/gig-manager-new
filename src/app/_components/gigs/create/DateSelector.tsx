@@ -16,8 +16,12 @@ const DateSelector = ({
   startTime,
   endTime,
 }: DateSelectorProps) => {
+
+  // Variable used to see if the user has changed the any dates from the default value
+  const currentEndTime = endTime
+
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-8">
       {startOrEnd.map((selection, index) => (
         <div
           key={`${selection}, ${index}`}
@@ -32,6 +36,7 @@ const DateSelector = ({
               endTime={endTime}
               changeDate={changeDate}
               index={index}
+              currentEndTime={currentEndTime}
             />
           </label>
           </div>
