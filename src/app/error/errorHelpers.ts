@@ -1,7 +1,7 @@
-import type { typeToFlattenedError, z } from "zod";
+import type { typeToFlattenedError } from "zod";
+import type { ValidationError } from "zod-validation-error";
 // import type { DefaultErrorData } from "@trpc/server/unstable-core-do-not-import";
 /** @todo Check why you cannot import these types */
-
 
 type DefaultEData<Data> = {
   code:
@@ -66,15 +66,34 @@ export const displayZodError = (fieldErrors: FieldErrors) => {
   return errMessages;
 };
 
-export const getZodErrMsg = (err: z.ZodError) => {
-  const flattenedErrs = err.flatten();
-  const errorFields = Object.keys(flattenedErrs.fieldErrors);
-  const errString = errorFields.join(", ")
+export const getZodErrMsg = <T extends object>(
+  err: ValidationError,
+  errorSchema: Record<keyof T, string>,
+) => {
+  const errDetails = err.details;
+  const errFields = errDetails.map((e) => e.path[0]);
+  const filtered = errFields.filter((val)=> val !== undefined)
+  const newErrMessages: Partial<Record<keyof T, string[]>> = {};
+  filtered.forEach((field) => {
+    if (field) {
+      const formField = field as keyof T;
+      if (formField) {
+        newErrMessages[formField] = [errorSchema[formField]];
+      }
+    }
+  });
 
-  const message =
-  errorFields.length > 0
-    ? `Errors in ${errString} ${errorFields.length === 1 ? "field" : "fields"}`
-    : "There was an error with your form submission!";
-  
-    return message
-}
+  return newErrMessages
+
+  // const flattenedErrs = err.flatten();
+  // const errorFields = Object.keys(flattenedErrs.fieldErrors);
+  // const errString = errorFields.join(", ")
+  // console.log('errorFields', errorFields)
+
+  // const message =
+  // errorFields.length > 0
+  //   ? `Errors in ${errString} ${errorFields.length === 1 ? "field" : "fields"}`
+  //   : "There was an error with your form submission!";
+
+  //   return message
+};

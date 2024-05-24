@@ -28,6 +28,7 @@ import {
   doesInstrumentHaveMusician,
   displayMusicianNames,
 } from "~/server/utils/musicianHelpers";
+import { isValidationErrorLike } from "zod-validation-error";
 
 type GigFormProps = {
   gig?: GigById;
@@ -43,6 +44,9 @@ const GigForm = ({ gig }: GigFormProps) => {
     validate,
     errorMessages,
     displayFormError,
+    isFormSubmitted,
+    setFormSubmitTrue,
+    setErrorMessages,
   } = useForm<GigForm>(defaultGigForm, GigFormSchema);
 
   const instruments = useInstruments();
@@ -62,7 +66,7 @@ const GigForm = ({ gig }: GigFormProps) => {
       await utils.gig.getById.invalidate();
       toast.dismiss();
       toast.success(`${gig?.name ?? "Gig"} was successfully created!`);
-      setForm(defaultGigForm)
+      setForm(defaultGigForm);
     },
     onError: (e) => {
       const message = displayTRPCError(e.data, e.message);
@@ -169,17 +173,21 @@ const GigForm = ({ gig }: GigFormProps) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    setFormSubmitTrue();
     const { name, startTime, endTime, venue, musicians, instrumentation, pay } =
       form;
 
     const validateOrError = validate(form);
 
-    if (validateOrError instanceof z.ZodError) {
-      const message = getZodErrMsg(validateOrError);
+    if (isValidationErrorLike(validateOrError)) {
+      const messages = getZodErrMsg(validateOrError, gigFormErrors);
+      setErrorMessages(messages);
 
-      toast.error(message);
+      toast.error(validateOrError.message);
     } else {
       // If there's an instrument without a musician, display toast and return
+
       if (instsWithoutMusician.length > 0) {
         const instsForToast = displayMusicianNames(instsWithoutMusician);
         toast.error(`Musician needs to be added at ${instsForToast}`);
@@ -223,12 +231,10 @@ const GigForm = ({ gig }: GigFormProps) => {
           venueId: venue?.id ?? "",
           musicians: createMusicians,
           instrumentation: instrumentNames,
-    
         });
       }
     }
   };
-
 
   const deleteInst = (inst: GigFormInstrument) => {
     const { instrumentation, musicians } = form;
@@ -249,7 +255,7 @@ const GigForm = ({ gig }: GigFormProps) => {
   return (
     <>
       <form onSubmit={(e) => handleSubmit(e)}>
-        <div className="mt-8 flex flex-col items-center gap-4">
+        <div className="mt-8 flex min-h-screen flex-col items-center gap-8">
           <FormInput
             label="Name"
             value={form.name}
@@ -264,11 +270,13 @@ const GigForm = ({ gig }: GigFormProps) => {
             )}
             type="text"
             errors={errorMessages.name ?? []}
+            isFormSubmitted={isFormSubmitted}
           />
           <DateSelector
             startTime={form.startTime}
             endTime={form.endTime}
             changeDate={changeValue}
+            isFormSubmitted={isFormSubmitted}
           />
           <FormInput
             label="Pay"
@@ -279,17 +287,20 @@ const GigForm = ({ gig }: GigFormProps) => {
             action={(e) => handleChange(e)}
             condition={displayFormError(
               "pay",
-              Number(form.pay),
-              z.number().nonnegative(),
+              form.pay,
+              z.string().refine((val) => parseInt(val)),
               gigFormErrors.pay,
             )}
             errors={errorMessages.pay ?? []}
+            isFormSubmitted={isFormSubmitted}
           />
 
           <InstrumentSelector
             allInstruments={instruments}
             deleteInst={deleteInst}
             addInst={addInstrument}
+            errorMessages={errorMessages}
+            isFormSubmitted={isFormSubmitted}
           />
 
           <MusicianSelector

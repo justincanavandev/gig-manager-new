@@ -20,27 +20,20 @@ export const gigRouter = createTRPCRouter({
           venue: {
             select: {
               name: true,
-              // id: true,
+ 
             },
           },
-
           musicians: {
             include: {
               musician: {
                 select: {
                   name: true,
-                  // id: true,
-                  // instruments: {
-                  //   select: {
-                  //     instrument: true,
-                  //   },
-                  // },
+  
                 },
               },
               instrument: {
                 select: {
                   name: true,
-                  // id: true
                 }
               }
             },

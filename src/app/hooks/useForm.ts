@@ -5,8 +5,8 @@ import {
   type SetStateAction,
 } from "react";
 import { type ZodType, z } from "zod";
-// import type { FieldErrors } from "../error/errorHelpers";
 import { fromError, type ValidationError } from "zod-validation-error";
+import { useBoolean } from "usehooks-ts";
 
 type UseFormProps<Form> = {
   form: Form;
@@ -25,7 +25,15 @@ type UseFormProps<Form> = {
   setErrorMessages: Dispatch<
     SetStateAction<Partial<Record<keyof Form, string[]>>>
   >;
-  displayFormError: (key: keyof Form, value: string | number, schema: z.ZodTypeAny, errorMessage: string) => boolean
+  displayFormError: (
+    key: keyof Form,
+    value: string | number,
+    schema: z.ZodTypeAny,
+    errorMessage: string,
+  ) => boolean;
+  isFormSubmitted: boolean;
+  setFormSubmitTrue: () => void;
+  // setFormSubmitFalse: () => void;
 };
 
 const useForm = <Form extends object>(
@@ -36,6 +44,10 @@ const useForm = <Form extends object>(
   const [errorMessages, setErrorMessages] = useState<
     Partial<Record<keyof Form, string[]>>
   >({});
+  const {
+    value: isFormSubmitted,
+    setTrue: setFormSubmitTrue,
+  } = useBoolean(false);
 
   const validate = (inputs: unknown) => {
     try {
@@ -46,7 +58,7 @@ const useForm = <Form extends object>(
       if (e instanceof z.ZodError) {
         const validationErr = fromError(e);
         return validationErr;
-      } 
+      }
     }
   };
 
@@ -54,9 +66,8 @@ const useForm = <Form extends object>(
     key: keyof Form,
     value: string | number,
     schema: z.ZodTypeAny,
-    errorMessage: string
+    errorMessage: string,
   ) => {
-
     const parsedVal = schema.safeParse(value);
     const doesPropertyExist = errorMessages.hasOwnProperty(key);
 
@@ -138,7 +149,9 @@ const useForm = <Form extends object>(
     validate,
     errorMessages,
     setErrorMessages,
-    displayFormError
+    displayFormError,
+    isFormSubmitted,
+    setFormSubmitTrue
   };
 };
 
