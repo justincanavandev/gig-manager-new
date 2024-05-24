@@ -252,6 +252,12 @@ const GigForm = ({ gig }: GigFormProps) => {
     });
   };
 
+  const payValidate = (num: number) => {
+    const schema = z.number().nonnegative()
+    const parsedVal = schema.safeParse(num)
+    return parsedVal.success
+  }
+
   return (
     <>
       <form onSubmit={(e) => handleSubmit(e)}>
@@ -288,7 +294,10 @@ const GigForm = ({ gig }: GigFormProps) => {
             condition={displayFormError(
               "pay",
               form.pay,
-              z.string().refine((val) => parseInt(val)),
+              z.string().refine((val) => {
+                const num = parseInt(val);
+                return payValidate(num)
+              }),
               gigFormErrors.pay,
             )}
             errors={errorMessages.pay ?? []}
