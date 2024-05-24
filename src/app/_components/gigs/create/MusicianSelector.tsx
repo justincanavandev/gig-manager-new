@@ -22,6 +22,7 @@ type MusicianSelectorProps = {
   toggleInstSelect: Dispatch<SetStateAction<Partial<MusicianSelect>>>;
   instsWithoutMusician: GigFormInstrument[];
   deleteInst: (inst: GigFormInstrument) => void;
+  deleteMusician: (musician: GigFormMusician) => void;
 };
 
 const MusicianSelector = ({
@@ -30,8 +31,8 @@ const MusicianSelector = ({
   updateMusicians,
   isSelectorOpen,
   toggleInstSelect,
-  instsWithoutMusician,
   deleteInst,
+  deleteMusician,
 }: MusicianSelectorProps) => {
   const isInstOpen = (inst: GigFormInstrument) => {
     if (isInstrumentValid(inst?.name)) {
@@ -59,9 +60,9 @@ const MusicianSelector = ({
     }
   };
 
-  const deleteMusician = (musician: GigFormMusician) => {
-    updateMusicians("musicians", musician, "delete");
-  };
+  // const deleteMusician = (musician: GigFormMusician) => {
+  //   updateMusicians("musicians", musician, "delete");
+  // };
   const musicianToString = (musician: GigFormMusician) => musician.name;
 
   const closeMusicianSelector = (inst: GigFormInstrument) => {
@@ -71,14 +72,13 @@ const MusicianSelector = ({
 
   const currentMusicianNames = currentMusicians.map((mus) => mus.name);
 
-
   return (
     <>
       {instrumentation.map(
         (instrument) =>
           isInstOpen(instrument) && (
             <div
-              className="flex items-end gap-4"
+              className="relative flex items-end gap-4"
               key={
                 isInstOpen(instrument)
                   ? `musicianSelector-${instrument.name}`
@@ -96,7 +96,7 @@ const MusicianSelector = ({
                           name: instrument.name,
                           id: instrument.id,
                         },
-                      }
+                      };
                     }) ?? []
                 }
                 disabledData={currentMusicians.filter(
@@ -109,28 +109,28 @@ const MusicianSelector = ({
               />
               <span
                 onClick={() => closeMusicianSelector(instrument)}
-                className="mb-[5px]"
+                className="absolute right-2 top-[-3px] mb-[5px]"
               >
-                X
+                x
               </span>
             </div>
           ),
       )}
-      {instsWithoutMusician?.map((inst) => (
+      {/* {instsWithoutMusician?.map((inst) => (
         <div className="flex gap-4" key={`instSelector, ${inst.name}`}>
           <span>
             {inst.name} - <span className="text-red-500">Add {inst.name}</span>
           </span>
           <span onClick={() => deleteInst(inst)}>X</span>
         </div>
-      ))}
+      ))} */}
 
-      {currentMusicians.map((mus) => (
+      {/* {currentMusicians.map((mus) => (
         <div className="flex gap-4" key={`currentMusicians-${mus.id}`}>
           <span>{`${mus.instrument.name} - ${mus.name}`}</span>
           <span onClick={() => deleteMusician(mus)}>x</span>
         </div>
-      ))}
+      ))} */}
     </>
   );
 };
