@@ -32,8 +32,6 @@ import { isValidationErrorLike } from "zod-validation-error";
 import MusicianDisplay from "./MusicianDisplay";
 import type { GigFormMusician } from "~/server/types/gigTypes";
 import InstrumentationDisplay from "./InstrumentationDisplay";
-// import { useBoolean } from "usehooks-ts";
-// import BaseDialog from "../../base/BaseDialog";
 
 type GigFormProps = {
   gig?: GigById;
@@ -328,12 +326,6 @@ const GigForm = ({ gig }: GigFormProps) => {
             deleteInst={deleteInst}
             instsWithoutMusician={instsWithoutMusician}
           />
-          {/* <BaseDialog
-            message="hello"
-            open={isMusModalOpen}
-            closeModal={closeMusModal}
-            title="hello"
-          > */}
             <MusicianSelector
               toggleInstSelect={setIsMusSelectOpen}
               isSelectorOpen={isMusSelectOpen}
@@ -344,7 +336,6 @@ const GigForm = ({ gig }: GigFormProps) => {
               deleteInst={deleteInst}
               deleteMusician={deleteMusician}
             />
-          {/* </BaseDialog> */}
 
           <MusicianDisplay
             musicians={form.musicians}
