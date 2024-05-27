@@ -9,6 +9,7 @@ import { type Dispatch, type SetStateAction } from "react";
 import type { MusicianSelect } from "~/server/types/instrumentTypes";
 import BaseCombobox from "../../base/BaseCombobox";
 import { isInstrumentValid } from "~/server/utils/typeGuards";
+import BaseDialog from "../../base/BaseDialog";
 
 type MusicianSelectorProps = {
   currentMusicians: GigFormMusician[];
@@ -60,9 +61,6 @@ const MusicianSelector = ({
     }
   };
 
-  // const deleteMusician = (musician: GigFormMusician) => {
-  //   updateMusicians("musicians", musician, "delete");
-  // };
   const musicianToString = (musician: GigFormMusician) => musician.name;
 
   const closeMusicianSelector = (inst: GigFormInstrument) => {
@@ -74,9 +72,14 @@ const MusicianSelector = ({
 
   return (
     <>
-      {instrumentation.map(
-        (instrument) =>
-          isInstOpen(instrument) && (
+      {instrumentation.map((instrument) => (
+        <>
+          <BaseDialog
+            message={`Select ${instrument.name}!`}
+            open={!!isInstOpen(instrument)}
+            closeModal={() => closeMusicianSelector(instrument)}
+            title={instrument.name}
+          >
             <div
               className="relative flex items-end gap-4"
               key={
@@ -107,30 +110,16 @@ const MusicianSelector = ({
                 action={handleAddMusician}
                 action2={deleteMusician}
               />
-              <span
-                onClick={() => closeMusicianSelector(instrument)}
-                className="absolute right-2 top-[-3px] mb-[5px]"
-              >
-                x
-              </span>
+              {/* <span
+                    onClick={() => closeMusicianSelector(instrument)}
+                    className="absolute right-2 top-[-3px] mb-[5px]"
+                  >
+                    x
+                  </span> */}
             </div>
-          ),
-      )}
-      {/* {instsWithoutMusician?.map((inst) => (
-        <div className="flex gap-4" key={`instSelector, ${inst.name}`}>
-          <span>
-            {inst.name} - <span className="text-red-500">Add {inst.name}</span>
-          </span>
-          <span onClick={() => deleteInst(inst)}>X</span>
-        </div>
-      ))} */}
-
-      {/* {currentMusicians.map((mus) => (
-        <div className="flex gap-4" key={`currentMusicians-${mus.id}`}>
-          <span>{`${mus.instrument.name} - ${mus.name}`}</span>
-          <span onClick={() => deleteMusician(mus)}>x</span>
-        </div>
-      ))} */}
+          </BaseDialog>
+        </>
+      ))}
     </>
   );
 };

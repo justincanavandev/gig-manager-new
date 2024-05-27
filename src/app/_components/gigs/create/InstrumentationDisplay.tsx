@@ -9,13 +9,13 @@ interface InstDisplayProps {
 const InstrumentationDisplay = ({
   instrumentation,
   deleteInst,
-  instsWithoutMusician,
+  // instsWithoutMusician,
 }: InstDisplayProps) => {
 
-  const instWithoutMusNames = instsWithoutMusician.map((inst) => inst.name);
+  // const instWithoutMusNames = instsWithoutMusician.map((inst) => inst.name);
 
-  const doesInstHaveMusician = (inst: GigFormInstrument) =>
-    instWithoutMusNames.includes(inst.name);
+  // const doesInstHaveMusician = (inst: GigFormInstrument) =>
+  //   instWithoutMusNames.includes(inst.name);
 
   return (
     <>
@@ -31,7 +31,7 @@ const InstrumentationDisplay = ({
             >
               <div className="flex flex-col">
                 <span
-                  className={`${doesInstHaveMusician(inst) && "text-red-500"}`}
+                  // className={`${doesInstHaveMusician(inst) && "text-red-500"}`}
                 >
                   {inst.name}
                 </span>

@@ -32,6 +32,8 @@ import { isValidationErrorLike } from "zod-validation-error";
 import MusicianDisplay from "./MusicianDisplay";
 import type { GigFormMusician } from "~/server/types/gigTypes";
 import InstrumentationDisplay from "./InstrumentationDisplay";
+// import { useBoolean } from "usehooks-ts";
+// import BaseDialog from "../../base/BaseDialog";
 
 type GigFormProps = {
   gig?: GigById;
@@ -98,6 +100,8 @@ const GigForm = ({ gig }: GigFormProps) => {
   const [isMusSelectOpen, setIsMusSelectOpen] = useState<
     Partial<MusicianSelect>
   >({});
+
+  // const { value: isMusModalOpen, setFalse: closeMusModal } = useBoolean(false);
 
   const addInstrument = (inst: GigFormInstrument) => {
     if (inst?.name) {
@@ -324,17 +328,23 @@ const GigForm = ({ gig }: GigFormProps) => {
             deleteInst={deleteInst}
             instsWithoutMusician={instsWithoutMusician}
           />
-
-          <MusicianSelector
-            toggleInstSelect={setIsMusSelectOpen}
-            isSelectorOpen={isMusSelectOpen}
-            updateMusicians={updateValue}
-            currentMusicians={form.musicians}
-            instrumentation={form.instrumentation}
-            instsWithoutMusician={instsWithoutMusician}
-            deleteInst={deleteInst}
-            deleteMusician={deleteMusician}
-          />
+          {/* <BaseDialog
+            message="hello"
+            open={isMusModalOpen}
+            closeModal={closeMusModal}
+            title="hello"
+          > */}
+            <MusicianSelector
+              toggleInstSelect={setIsMusSelectOpen}
+              isSelectorOpen={isMusSelectOpen}
+              updateMusicians={updateValue}
+              currentMusicians={form.musicians}
+              instrumentation={form.instrumentation}
+              instsWithoutMusician={instsWithoutMusician}
+              deleteInst={deleteInst}
+              deleteMusician={deleteMusician}
+            />
+          {/* </BaseDialog> */}
 
           <MusicianDisplay
             musicians={form.musicians}
