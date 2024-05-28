@@ -31,7 +31,7 @@ const InstrumentSelector = ({
       <BaseCombobox
         data={confinedInsts}
         dataToString={instToString}
-        label="Instrumentation"
+        label="Add an Instrument"
         action={addInst}
         action2={deleteInst}
         errors={errorMessages.instrumentation ?? []}

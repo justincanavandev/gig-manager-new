@@ -9,6 +9,7 @@ import { type Dispatch, type SetStateAction } from "react";
 import type { MusicianSelect } from "~/server/types/instrumentTypes";
 import BaseCombobox from "../../base/BaseCombobox";
 import { isInstrumentValid } from "~/server/utils/typeGuards";
+import BaseDialog from "../../base/BaseDialog";
 
 type MusicianSelectorProps = {
   currentMusicians: GigFormMusician[];
@@ -22,6 +23,7 @@ type MusicianSelectorProps = {
   toggleInstSelect: Dispatch<SetStateAction<Partial<MusicianSelect>>>;
   instsWithoutMusician: GigFormInstrument[];
   deleteInst: (inst: GigFormInstrument) => void;
+  deleteMusician: (musician: GigFormMusician) => void;
 };
 
 const MusicianSelector = ({
@@ -30,8 +32,8 @@ const MusicianSelector = ({
   updateMusicians,
   isSelectorOpen,
   toggleInstSelect,
-  instsWithoutMusician,
   deleteInst,
+  deleteMusician,
 }: MusicianSelectorProps) => {
   const isInstOpen = (inst: GigFormInstrument) => {
     if (isInstrumentValid(inst?.name)) {
@@ -59,9 +61,6 @@ const MusicianSelector = ({
     }
   };
 
-  const deleteMusician = (musician: GigFormMusician) => {
-    updateMusicians("musicians", musician, "delete");
-  };
   const musicianToString = (musician: GigFormMusician) => musician.name;
 
   const closeMusicianSelector = (inst: GigFormInstrument) => {
@@ -71,14 +70,18 @@ const MusicianSelector = ({
 
   const currentMusicianNames = currentMusicians.map((mus) => mus.name);
 
-
   return (
     <>
-      {instrumentation.map(
-        (instrument) =>
-          isInstOpen(instrument) && (
+      {instrumentation.map((instrument) => (
+        <>
+          <BaseDialog
+            message={`Select ${instrument.name}!`}
+            open={!!isInstOpen(instrument)}
+            closeModal={() => closeMusicianSelector(instrument)}
+            title={instrument.name}
+          >
             <div
-              className="flex items-end gap-4"
+              className="relative flex items-end gap-4"
               key={
                 isInstOpen(instrument)
                   ? `musicianSelector-${instrument.name}`
@@ -96,7 +99,7 @@ const MusicianSelector = ({
                           name: instrument.name,
                           id: instrument.id,
                         },
-                      }
+                      };
                     }) ?? []
                 }
                 disabledData={currentMusicians.filter(
@@ -107,29 +110,15 @@ const MusicianSelector = ({
                 action={handleAddMusician}
                 action2={deleteMusician}
               />
-              <span
-                onClick={() => closeMusicianSelector(instrument)}
-                className="mb-[5px]"
-              >
-                X
-              </span>
+              {/* <span
+                    onClick={() => closeMusicianSelector(instrument)}
+                    className="absolute right-2 top-[-3px] mb-[5px]"
+                  >
+                    x
+                  </span> */}
             </div>
-          ),
-      )}
-      {instsWithoutMusician?.map((inst) => (
-        <div className="flex gap-4" key={`instSelector, ${inst.name}`}>
-          <span>
-            {inst.name} - <span className="text-red-500">Add {inst.name}</span>
-          </span>
-          <span onClick={() => deleteInst(inst)}>X</span>
-        </div>
-      ))}
-
-      {currentMusicians.map((mus) => (
-        <div className="flex gap-4" key={`currentMusicians-${mus.id}`}>
-          <span>{`${mus.instrument.name} - ${mus.name}`}</span>
-          <span onClick={() => deleteMusician(mus)}>x</span>
-        </div>
+          </BaseDialog>
+        </>
       ))}
     </>
   );

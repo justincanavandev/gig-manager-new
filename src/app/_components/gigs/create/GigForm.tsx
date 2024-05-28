@@ -29,6 +29,9 @@ import {
   displayMusicianNames,
 } from "~/server/utils/musicianHelpers";
 import { isValidationErrorLike } from "zod-validation-error";
+import MusicianDisplay from "./MusicianDisplay";
+import type { GigFormMusician } from "~/server/types/gigTypes";
+import InstrumentationDisplay from "./InstrumentationDisplay";
 
 type GigFormProps = {
   gig?: GigById;
@@ -95,6 +98,8 @@ const GigForm = ({ gig }: GigFormProps) => {
   const [isMusSelectOpen, setIsMusSelectOpen] = useState<
     Partial<MusicianSelect>
   >({});
+
+  // const { value: isMusModalOpen, setFalse: closeMusModal } = useBoolean(false);
 
   const addInstrument = (inst: GigFormInstrument) => {
     if (inst?.name) {
@@ -252,11 +257,15 @@ const GigForm = ({ gig }: GigFormProps) => {
     });
   };
 
+  const deleteMusician = (musician: GigFormMusician) => {
+    updateValue("musicians", musician, "delete");
+  };
+
   const payValidate = (num: number) => {
-    const schema = z.number().nonnegative()
-    const parsedVal = schema.safeParse(num)
-    return parsedVal.success
-  }
+    const schema = z.number().nonnegative();
+    const parsedVal = schema.safeParse(num);
+    return parsedVal.success;
+  };
 
   return (
     <>
@@ -296,7 +305,7 @@ const GigForm = ({ gig }: GigFormProps) => {
               form.pay,
               z.string().refine((val) => {
                 const num = parseInt(val);
-                return payValidate(num)
+                return payValidate(num);
               }),
               gigFormErrors.pay,
             )}
@@ -312,14 +321,25 @@ const GigForm = ({ gig }: GigFormProps) => {
             isFormSubmitted={isFormSubmitted}
           />
 
-          <MusicianSelector
-            toggleInstSelect={setIsMusSelectOpen}
-            isSelectorOpen={isMusSelectOpen}
-            updateMusicians={updateValue}
-            currentMusicians={form.musicians}
+          <InstrumentationDisplay
             instrumentation={form.instrumentation}
-            instsWithoutMusician={instsWithoutMusician}
             deleteInst={deleteInst}
+            instsWithoutMusician={instsWithoutMusician}
+          />
+            <MusicianSelector
+              toggleInstSelect={setIsMusSelectOpen}
+              isSelectorOpen={isMusSelectOpen}
+              updateMusicians={updateValue}
+              currentMusicians={form.musicians}
+              instrumentation={form.instrumentation}
+              instsWithoutMusician={instsWithoutMusician}
+              deleteInst={deleteInst}
+              deleteMusician={deleteMusician}
+            />
+
+          <MusicianDisplay
+            musicians={form.musicians}
+            deleteMusician={deleteMusician}
           />
           <VenueSelector
             setVenue={changeValue}
