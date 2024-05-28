@@ -82,6 +82,8 @@ const UserProfileEdit = ({
     validate,
     errorMessages,
     displayFormError,
+    isFormSubmitted,
+    setFormSubmitTrue
   } = useForm<DefaultUserProfile>(
     {
       name: user?.name ? user.name : "",
@@ -107,6 +109,7 @@ const UserProfileEdit = ({
 
   const handleUpdateUser = () => {
     try {
+      setFormSubmitTrue()
       const { instrumentation, name, email, phoneNumber } = form;
 
       const validateOrError = validate(form);
@@ -181,6 +184,7 @@ const UserProfileEdit = ({
           userProfileErrors.name,
         )}
         errors={errorMessages?.name ?? []}
+        isFormSubmitted={isFormSubmitted}
       ></FormInput>
 
       {(user?.musician ?? musicianAdd) && (
@@ -208,6 +212,7 @@ const UserProfileEdit = ({
             userProfileErrors.phoneNumber,
           )}
           errors={errorMessages?.phoneNumber ?? []}
+          isFormSubmitted={isFormSubmitted}
         ></FormInput>
       )}
 
@@ -225,6 +230,7 @@ const UserProfileEdit = ({
           userProfileErrors.email,
         )}
         errors={errorMessages?.email ?? []}
+        isFormSubmitted={isFormSubmitted}
       ></FormInput>
 
       <BaseButton as="button" className="border" onClick={handleUpdateUser}>

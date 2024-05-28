@@ -9,7 +9,7 @@ interface FormInputProps extends ComponentPropsWithRef<"input"> {
   label: string;
   condition?: boolean;
   errors: string[];
-  isFormSubmitted?: boolean;
+  isFormSubmitted: boolean;
 }
 
 const FormInput = ({ ...props }: FormInputProps) => {
