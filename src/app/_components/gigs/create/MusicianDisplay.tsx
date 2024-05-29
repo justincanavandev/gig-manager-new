@@ -9,7 +9,7 @@ const MusicianDisplay = ({ musicians, deleteMusician }: InstDisplayProps) => {
   return (
     <>
       {musicians.length > 0 && (
-        <div className="flex h-fit w-[90%] max-w-[400px] flex-col rounded-md bg-dark-purple px-2 pb-2 pt-1.5 shadow-lg">
+        <div className="flex h-fit w-[300px] sm:w-[90%] max-w-[400px] flex-col rounded-md bg-dark-purple px-2 pb-2 pt-1.5 shadow-lg">
           <div className="flex ">
             <div className="relative w-1/2 pb-0.5 pl-1 text-[.7rem] uppercase">
               Instrument

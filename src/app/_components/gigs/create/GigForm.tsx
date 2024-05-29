@@ -336,6 +336,12 @@ const GigForm = ({ gig }: GigFormProps) => {
             setVenue={changeValue}
             venue={form?.venue ? form.venue : null}
           />
+          <div className="flex justify-center sm:hidden">
+            <MusicianDisplay
+              musicians={form.musicians}
+              deleteMusician={deleteMusician}
+            />
+          </div>
 
           <BaseButton as="button" type="submit">
             Submit
