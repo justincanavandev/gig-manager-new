@@ -73,52 +73,47 @@ const MusicianSelector = ({
   return (
     <>
       {instrumentation.map((instrument) => (
-        <>
-          <BaseDialog
-            message={`Select ${instrument.name}!`}
-            open={!!isInstOpen(instrument)}
-            closeModal={() => closeMusicianSelector(instrument)}
-            title={instrument.name}
+        <BaseDialog
+          key={`musicianSelector, ${instrument.name}`}
+          message={`Select ${instrument.name}!`}
+          open={!!isInstOpen(instrument)}
+          closeModal={() => closeMusicianSelector(instrument)}
+          title={instrument.name}
+        >
+          <div
+            className="relative flex items-end gap-4"
+            key={
+              isInstOpen(instrument)
+                ? `musicianSelector-${instrument.name}`
+                : `selectorHidden-${instrument.name}`
+            }
           >
-            <div
-              className="relative flex items-end gap-4"
-              key={
-                isInstOpen(instrument)
-                  ? `musicianSelector-${instrument.name}`
-                  : `selectorHidden-${instrument.name}`
+            <BaseCombobox
+              data={
+                instrument.musicians
+                  ?.filter((mus) => !currentMusicianNames.includes(mus.name))
+                  .map((mus) => {
+                    return {
+                      ...mus,
+                      instrument: {
+                        name: instrument.name,
+                        id: instrument.id,
+                      },
+                    };
+                  }) ?? []
               }
-            >
-              <BaseCombobox
-                data={
-                  instrument.musicians
-                    ?.filter((mus) => !currentMusicianNames.includes(mus.name))
-                    .map((mus) => {
-                      return {
-                        ...mus,
-                        instrument: {
-                          name: instrument.name,
-                          id: instrument.id,
-                        },
-                      };
-                    }) ?? []
-                }
-                disabledData={currentMusicians.filter(
-                  (mus) => mus.instrument.name === instrument.name,
-                )}
-                dataToString={musicianToString}
-                label={`Add ${instrument.name}`}
-                action={handleAddMusician}
-                action2={deleteMusician}
-              />
-              {/* <span
-                    onClick={() => closeMusicianSelector(instrument)}
-                    className="absolute right-2 top-[-3px] mb-[5px]"
-                  >
-                    x
-                  </span> */}
-            </div>
-          </BaseDialog>
-        </>
+              disabledData={currentMusicians.filter(
+                (mus) => mus.instrument.name === instrument.name,
+              )}
+              dataToString={musicianToString}
+              label={`Add ${instrument.name}`}
+              action={handleAddMusician}
+              action2={deleteMusician}
+            />
+
+          </div>
+        </BaseDialog>
+
       ))}
     </>
   );

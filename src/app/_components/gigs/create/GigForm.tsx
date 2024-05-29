@@ -31,7 +31,6 @@ import {
 import { isValidationErrorLike } from "zod-validation-error";
 import MusicianDisplay from "./MusicianDisplay";
 import type { GigFormMusician } from "~/server/types/gigTypes";
-import InstrumentationDisplay from "./InstrumentationDisplay";
 
 type GigFormProps = {
   gig?: GigById;
@@ -269,8 +268,11 @@ const GigForm = ({ gig }: GigFormProps) => {
 
   return (
     <>
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <div className="mt-8 flex min-h-screen flex-col items-center gap-8">
+      <form
+        className="mt-8 flex w-full justify-center"
+        onSubmit={(e) => handleSubmit(e)}
+      >
+        <div className="flex min-h-screen w-full flex-col items-center gap-8">
           <FormInput
             label="Name"
             value={form.name}
@@ -320,25 +322,14 @@ const GigForm = ({ gig }: GigFormProps) => {
             errorMessages={errorMessages}
             isFormSubmitted={isFormSubmitted}
           />
-
-          <InstrumentationDisplay
+          <MusicianSelector
+            toggleInstSelect={setIsMusSelectOpen}
+            isSelectorOpen={isMusSelectOpen}
+            updateMusicians={updateValue}
+            currentMusicians={form.musicians}
             instrumentation={form.instrumentation}
-            deleteInst={deleteInst}
             instsWithoutMusician={instsWithoutMusician}
-          />
-            <MusicianSelector
-              toggleInstSelect={setIsMusSelectOpen}
-              isSelectorOpen={isMusSelectOpen}
-              updateMusicians={updateValue}
-              currentMusicians={form.musicians}
-              instrumentation={form.instrumentation}
-              instsWithoutMusician={instsWithoutMusician}
-              deleteInst={deleteInst}
-              deleteMusician={deleteMusician}
-            />
-
-          <MusicianDisplay
-            musicians={form.musicians}
+            deleteInst={deleteInst}
             deleteMusician={deleteMusician}
           />
           <VenueSelector
@@ -349,6 +340,13 @@ const GigForm = ({ gig }: GigFormProps) => {
           <BaseButton as="button" type="submit">
             Submit
           </BaseButton>
+        </div>
+        <div className="hidden sm:flex sm:w-full sm:justify-center">
+          {" "}
+          <MusicianDisplay
+            musicians={form.musicians}
+            deleteMusician={deleteMusician}
+          />
         </div>
       </form>
     </>
