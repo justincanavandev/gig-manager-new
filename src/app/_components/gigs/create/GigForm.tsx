@@ -98,8 +98,6 @@ const GigForm = ({ gig }: GigFormProps) => {
     Partial<MusicianSelect>
   >({});
 
-  // const { value: isMusModalOpen, setFalse: closeMusModal } = useBoolean(false);
-
   const addInstrument = (inst: GigFormInstrument) => {
     if (inst?.name) {
       const formInsts = form.instrumentation.map((inst) => inst.name);
@@ -266,6 +264,7 @@ const GigForm = ({ gig }: GigFormProps) => {
     return parsedVal.success;
   };
 
+
   return (
     <>
       <form
@@ -328,7 +327,6 @@ const GigForm = ({ gig }: GigFormProps) => {
             updateMusicians={updateValue}
             currentMusicians={form.musicians}
             instrumentation={form.instrumentation}
-            instsWithoutMusician={instsWithoutMusician}
             deleteInst={deleteInst}
             deleteMusician={deleteMusician}
           />
@@ -340,6 +338,8 @@ const GigForm = ({ gig }: GigFormProps) => {
             <MusicianDisplay
               musicians={form.musicians}
               deleteMusician={deleteMusician}
+              instsWithoutMusician={instsWithoutMusician}
+              deleteInst={deleteInst}
             />
           </div>
 
@@ -352,6 +352,8 @@ const GigForm = ({ gig }: GigFormProps) => {
           <MusicianDisplay
             musicians={form.musicians}
             deleteMusician={deleteMusician}
+            instsWithoutMusician={instsWithoutMusician}
+            deleteInst={deleteInst}
           />
         </div>
       </form>

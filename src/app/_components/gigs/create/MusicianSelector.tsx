@@ -21,7 +21,7 @@ type MusicianSelectorProps = {
   ) => void;
   isSelectorOpen: Partial<MusicianSelect>;
   toggleInstSelect: Dispatch<SetStateAction<Partial<MusicianSelect>>>;
-  instsWithoutMusician: GigFormInstrument[];
+  // instsWithoutMusician: GigFormInstrument[];
   deleteInst: (inst: GigFormInstrument) => void;
   deleteMusician: (musician: GigFormMusician) => void;
 };
@@ -32,7 +32,7 @@ const MusicianSelector = ({
   updateMusicians,
   isSelectorOpen,
   toggleInstSelect,
-  deleteInst,
+  // deleteInst,
   deleteMusician,
 }: MusicianSelectorProps) => {
   const isInstOpen = (inst: GigFormInstrument) => {
@@ -63,10 +63,10 @@ const MusicianSelector = ({
 
   const musicianToString = (musician: GigFormMusician) => musician.name;
 
-  const closeMusicianSelector = (inst: GigFormInstrument) => {
-    deleteInst(inst);
-    closeInstSelector(inst);
-  };
+  // const closeMusicianSelector = (inst: GigFormInstrument) => {
+  //   deleteInst(inst);
+  //   closeInstSelector(inst);
+  // };
 
   const currentMusicianNames = currentMusicians.map((mus) => mus.name);
 
@@ -77,7 +77,7 @@ const MusicianSelector = ({
           key={`musicianSelector, ${instrument.name}`}
           message={`Select ${instrument.name}!`}
           open={!!isInstOpen(instrument)}
-          closeModal={() => closeMusicianSelector(instrument)}
+          closeModal={()=> closeInstSelector(instrument)}
           title={instrument.name}
         >
           <div
