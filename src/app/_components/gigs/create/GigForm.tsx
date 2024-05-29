@@ -272,7 +272,7 @@ const GigForm = ({ gig }: GigFormProps) => {
         className="mt-8 flex w-full justify-center"
         onSubmit={(e) => handleSubmit(e)}
       >
-        <div className="flex min-h-screen w-full flex-col items-center gap-8">
+        <div className="flex min-h-screen w-full flex-col items-center gap-8 mb-8">
           <FormInput
             label="Name"
             value={form.name}
