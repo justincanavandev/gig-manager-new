@@ -214,7 +214,6 @@ export const userRouter = createTRPCRouter({
                         venue: {
                           select: {
                             name: true,
-                            id: true,
                           },
                         },
                         musicians: {

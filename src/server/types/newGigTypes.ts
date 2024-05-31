@@ -36,5 +36,4 @@ export interface Musician {
 
 export type Venue = {
     name: string;
-    id:   string;
 } | null
