@@ -1,12 +1,13 @@
 import { parseDate } from "~/server/utils/helpers";
 import MusiciansModal from "./MusiciansModal";
-import type { SingleGig } from "~/server/types/gigTypes";
+// import type { SingleGig } from "~/server/types/gigTypes";
 import BaseButton from "../base/BaseButton";
 import { getServerAuthSession } from "~/server/auth";
 import { PencilSquareIcon } from "@heroicons/react/20/solid";
+import type { GigCardType } from "~/server/types/newGigTypes";
 
 type GigCardProps = {
-  gig: SingleGig;
+  gig: GigCardType;
   index: number;
 };
 
@@ -19,30 +20,36 @@ const GigCard = async ({ gig, index }: GigCardProps) => {
 
   /** @todo Deal with if endDate !== startDate */
 
-  const { parsedDate: endDate, parsedTime: endTime } = parseDate(gig.endTime);
-
+  const { parsedTime: endTime } = parseDate(gig.endTime);
 
   return (
-    <div className="flex justify-between w-full pl-8 py-1 text-[.7rem]" key={`gigCard-gig-${gig.id}`}>
-      <span className="w-[14.28%] pr-1 truncate">{gig.name}</span>
-      <span className="w-[14.28%] pr-1 truncate">{startDate}</span>
-      <span className="w-[14.28%] pr-1 truncate">{startTime}</span>
-      <span className="w-[14.28%] pr-1 truncate">{endTime}</span>
-      <span className="w-[14.28%] pr-1 truncate">{gig?.venue ? gig.venue?.name : "TBD"}</span>
-      <span className="w-[14.28%] pr-1">{gig.pay}</span>
-      <span className="w-[14.28%] pr-1 truncate">{gig.organizer.name}</span>
-      
-      <div className="flex gap-2 w-[120px]">
-      <MusiciansModal musicians={musicians} index={index} />
-      {session?.user.id === gig.organizerId && (
-        <BaseButton className="h-5 w-5" as="link" href={`/gigs/${gig.id}/edit`}>
-          <PencilSquareIcon/>
-        </BaseButton>
-      )}
+    <div
+      className="flex w-full text-[.7rem] justify-between py-1 pl-2 sm:pl-2"
+      key={`gigCard-gig-${gig.id}`}
+    >
+      <span className="w-[33.33%] sm:w-[15.5%] truncate pr-1">{gig.name}</span>
+      <span className="w-[33.33%] sm:w-[15.5%] truncate pr-1">{startDate}</span>
+      <span className="sm:w-[15.5%] truncate pr-1 hidden sm:block">{startTime}</span>
+      <span className="sm:w-[15.5%] truncate pr-1 hidden sm:block">{endTime}</span>
+      <span className="w-[33.33%] sm:w-[15.5%] truncate pr-1">
+        {gig?.venue?.name ?? "TBD"}
+      </span>
+      <span className="sm:w-[7%] pr-1 hidden sm:block">{gig.pay}</span>
+      <span className="sm:w-[15.5%] truncate pr-1 hidden sm:block">{gig.organizer.name}</span>
+
+      <div className="sm:w-[50px] gap-2 hidden sm:flex">
+        <MusiciansModal musicians={musicians} index={index} />
+        {session?.user.id === gig.organizerId && (
+          <BaseButton
+            className="h-5 w-5"
+            as="link"
+            href={`/gigs/${gig.id}/edit`}
+          >
+            <PencilSquareIcon />
+          </BaseButton>
+        )}
       </div>
     </div>
-
-
   );
 };
 

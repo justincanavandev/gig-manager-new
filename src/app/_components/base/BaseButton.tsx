@@ -29,7 +29,7 @@ const BaseButton = ({ ...props }: BaseButtonProps) => {
 
   return as === "link" ? (
     <Link
-      className={`${className ?? ""} w-24 border border-black text-center`}
+      className={`${className ?? "border border-black text-center"}`}
       {...(isLinkProps(restProps) && restProps)}
       href={props.href}
     >
@@ -38,7 +38,7 @@ const BaseButton = ({ ...props }: BaseButtonProps) => {
   ) : (
     <button
       {...(isButtonProps(restProps) && restProps)}
-      className="w-24 border border-black"
+      className={className ?? "w-24 border border-black"}
       type={props.type}
     >
       {children}

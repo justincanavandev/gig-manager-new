@@ -41,7 +41,7 @@ const getAmOrPm = (hour: number) => {
 export const parseDate = (date: Date) => {
   const luxonDateTime = DateTime.fromJSDate(date);
   const dateTimeCST = luxonDateTime.setZone("America/Chicago");
-  const dayOfWeek = dateTimeCST.weekdayLong;
+  const dayOfWeek = dateTimeCST.weekdayShort;
   const hour = dateTimeCST.hour;
   const minute = dateTimeCST.minute;
   const timeZone = dateTimeCST.offsetNameShort;

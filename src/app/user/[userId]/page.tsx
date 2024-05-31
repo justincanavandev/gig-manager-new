@@ -10,7 +10,7 @@ const UserProfile = async ({ params }: { params: { userId: string } }) => {
 
   const musician = user?.musician ? user.musician : null;
 
-  const columns = [
+  const lgColumns = [
     "Name",
     "Date",
     "Start Time",
@@ -19,6 +19,12 @@ const UserProfile = async ({ params }: { params: { userId: string } }) => {
     "Pay",
     "Organizer",
   ];
+
+  const smColumns = [
+    "Name",
+    "Date",
+    "Venue",
+  ]
 
   return (
     <div className="flex min-h-screen flex-col items-center gap-4">
@@ -33,10 +39,17 @@ const UserProfile = async ({ params }: { params: { userId: string } }) => {
         </span>
       ))}
       <h2>Gig List</h2>
-      <div className="w-[90%]">
-      <div className="flex w-full justify-between border px-8 py-1 text-[.7rem] uppercase pr-[120px]">
-        {columns.map((row) => (
-          <span key={row} className="w-[14.28%]">
+      <div className="w-[96%] sm:w-[90%]">
+      <div className="hidden sm:flex w-full justify-between border sm:pl-2 py-1 text-[.7rem] uppercase pr-[50px]">
+        {lgColumns.map((row) => (
+          <span key={row} className={row !== "Pay" ? "w-[15.5%]" : "w-[7%]"}>
+            {row}
+          </span>
+        ))}
+      </div>
+      <div className="flex w-full justify-between border px-2 py-1 text-[.7rem] uppercase sm:hidden">
+        {smColumns.map((row) => (
+          <span key={row} className="w-[33.33%]">
             {row}
           </span>
         ))}
