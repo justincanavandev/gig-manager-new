@@ -5,7 +5,7 @@ import type { ComponentPropsWithRef } from "react";
 interface BaseDialogProps extends ComponentPropsWithRef<"dialog"> {
   message: string;
   open: boolean;
-  title: string;
+  title?: string;
   closeModal: () => void;
 }
 

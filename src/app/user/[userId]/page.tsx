@@ -10,8 +10,18 @@ const UserProfile = async ({ params }: { params: { userId: string } }) => {
 
   const musician = user?.musician ? user.musician : null;
 
+  const columns = [
+    "Name",
+    "Date",
+    "Start Time",
+    "End Time",
+    "Venue",
+    "Pay",
+    "Organizer",
+  ];
+
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex min-h-screen flex-col items-center gap-4">
       <div className="flex flex-col">
         <span>{user?.name}</span>
         <span>{user?.email}</span>
@@ -23,6 +33,14 @@ const UserProfile = async ({ params }: { params: { userId: string } }) => {
         </span>
       ))}
       <h2>Gig List</h2>
+      <div className="w-[90%]">
+      <div className="flex w-full justify-between border px-8 py-1 text-[.7rem] uppercase pr-[120px]">
+        {columns.map((row) => (
+          <span key={row} className="w-[14.28%]">
+            {row}
+          </span>
+        ))}
+      </div>
       {musician?.gigs.map((gig, index) => (
         <GigCard
           key={`userProfile-gig-${gig.gig.id}`}
@@ -30,12 +48,13 @@ const UserProfile = async ({ params }: { params: { userId: string } }) => {
           index={index}
         />
       ))}
+      </div>
+
       <BaseButton as="link" href={`/user/${user?.id}/edit`}>
         Edit Profile
       </BaseButton>
 
-
-      <AreYouMusician user={user}/>
+      <AreYouMusician user={user} />
     </div>
   );
 };

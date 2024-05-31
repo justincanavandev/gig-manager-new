@@ -1,61 +1,59 @@
 "use client";
 
-import { useState } from "react";
 import { useBoolean } from "usehooks-ts";
 import BaseButton from "../base/BaseButton";
 import { type MusicianGetAllGigs } from "~/server/types/musicianTypes";
+import BaseDialog from "../base/BaseDialog";
+import MusInstRow from "../base/MusInstRow";
 
 type MusiciansModalProps = {
-  musicians: MusicianGetAllGigs
-  index: number;
+  musicians: MusicianGetAllGigs;
+  index?: number;
 };
 
-const MusiciansModal = ({ musicians, index }: MusiciansModalProps) => {
-  const [eventTargetIndexArr, setEventTargetIndexArr] = useState<number[]>([]);
-  const { value: viewMusicians, setTrue: openViewMusicians } =
-    useBoolean(false);
+const MusiciansModal = ({ musicians }: MusiciansModalProps) => {
 
-  const showHideMusicians = (index: number): void => {
-    if (eventTargetIndexArr.length === 0) {
-      setEventTargetIndexArr([...eventTargetIndexArr, index]);
-      if (!viewMusicians) {
-        openViewMusicians();
-      }
-    }
+  const {
+    value: viewMusicians,
+    setTrue: openViewMusicians,
+    setFalse: closeViewMusicians,
+  } = useBoolean(false);
 
-    if (!eventTargetIndexArr.includes(index)) {
-      setEventTargetIndexArr([...eventTargetIndexArr, index]);
-    }
-
-    if (eventTargetIndexArr.includes(index)) {
-      const filteredArr = eventTargetIndexArr.filter(
-        (target) => target !== index,
-      );
-      setEventTargetIndexArr(filteredArr);
-    }
-  };
 
   return (
     <>
       <BaseButton
         as="button"
-        onClick={() => showHideMusicians(index)}
+        onClick={() => openViewMusicians()}
         className="w-[8rem] border"
       >
-        {viewMusicians && eventTargetIndexArr?.includes(index)
-          ? "Hide Musician List"
-          : "View Musician List"}
+        View Musicians
       </BaseButton>
-      {viewMusicians && eventTargetIndexArr?.includes(index) && (
-        <div className="">
-          {musicians.map((m) => (
-            <div key={`musicianModal, ${m.musicianId}`} className="flex">
-              <p>{m.musician.name}</p>
-              <p>{m.instrument.name}</p>
+        <BaseDialog
+          open={viewMusicians}
+          message="Musicians"
+          closeModal={closeViewMusicians}
+        >
+          <div className="flex h-fit flex-col sm:w-[400px] rounded-md bg-dark-purple px-2 pb-2 pt-1.5 shadow-lg ">
+            <div className="flex">
+              <div className="relative w-1/2 pb-0.5 pl-1 text-[.7rem] uppercase">
+                Instrument
+                <h3 className="absolute right-[-60px] top-0 pb-0.5 pl-1 ">
+                  Musician
+                </h3>
+              </div>
             </div>
-          ))}
-        </div>
-      )}
+            {musicians.map((m, i) => (
+              <MusInstRow
+                key={`musicianModal, ${m.musicianId}`}
+                name={m.musician.name}
+                instName={m.instrument.name}
+                condition1={i === 0}
+                condition2={i + 1 === musicians.length}
+              />
+            ))}
+          </div>
+        </BaseDialog>
     </>
   );
 };

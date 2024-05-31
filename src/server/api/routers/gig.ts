@@ -23,6 +23,11 @@ export const gigRouter = createTRPCRouter({
  
             },
           },
+          organizer: {
+            select: {
+              name: true
+            }
+          },
           musicians: {
             include: {
               musician: {
