@@ -43,39 +43,38 @@ export const userRouter = createTRPCRouter({
       try {
         if (musician) {
           const { instrumentIds, musicianId } = musician;
-            const instrumentMusicianJoin = instrumentIds.map(async (id) => {
-              await ctx.db.musiciansOnInstruments.upsert({
-                where: {
-                  musicianId_instrumentId: {
-                    musicianId,
-                    instrumentId: id,
-                  },
-                },
-                update: {},
-                create: {
-                  instrument: {
-                    connect: {
-                      id,
-                    },
-                  },
-                  musician: {
-                    connect: {
-                      id: musicianId,
-                    },
-                  },
-                },
-              });
-            })
-            await ctx.db.musiciansOnInstruments.deleteMany({
+          const instrumentMusicianJoin = instrumentIds.map(async (id) => {
+            await ctx.db.musiciansOnInstruments.upsert({
               where: {
-                instrumentId: {
-                  notIn: instrumentIds
+                musicianId_instrumentId: {
+                  musicianId,
+                  instrumentId: id,
                 },
-                musicianId
-              }
-            })
-            await Promise.all(instrumentMusicianJoin);
-
+              },
+              update: {},
+              create: {
+                instrument: {
+                  connect: {
+                    id,
+                  },
+                },
+                musician: {
+                  connect: {
+                    id: musicianId,
+                  },
+                },
+              },
+            });
+          });
+          await ctx.db.musiciansOnInstruments.deleteMany({
+            where: {
+              instrumentId: {
+                notIn: instrumentIds,
+              },
+              musicianId,
+            },
+          });
+          await Promise.all(instrumentMusicianJoin);
         }
 
         const updatedUser = await ctx.db.user.update({
@@ -207,7 +206,11 @@ export const userRouter = createTRPCRouter({
                   include: {
                     gig: {
                       include: {
-                  
+                        organizer: {
+                          select: {
+                            name: true,
+                          },
+                        },
                         venue: {
                           select: {
                             name: true,
@@ -219,19 +222,13 @@ export const userRouter = createTRPCRouter({
                             musician: {
                               select: {
                                 name: true,
-                                // id: true,
-                                // instruments: {
-                                //   select: {
-                                //     instrument: true,
-                                //   },
-                                // },
                               },
                             },
                             instrument: {
                               select: {
-                                name: true
-                              }
-                            }
+                                name: true,
+                              },
+                            },
                           },
                         },
                         instrumentation: {
