@@ -8,8 +8,8 @@ export default async function Home() {
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
         {/* <BaseButton as="link" href={`/musicians`}>Musicians Page</BaseButton> */}
-        <BaseButton as="link" href={`/gigs`}>Gigs page</BaseButton>
-        <BaseButton as="link" href={`/gigs/create`}>Gig Create page</BaseButton>
+        {/* <BaseButton as="link" href={`/gigs`}>Gigs page</BaseButton> */}
+        <BaseButton as="link" href={`/gigs/create`}>Gig Create</BaseButton>
         {session?.user && <BaseButton as="link" href={`/user/${session.user.id}`}>User page</BaseButton>}
         <div className="flex flex-col items-center gap-2">
           <div className="flex flex-col items-center justify-center gap-4">
@@ -19,7 +19,7 @@ export default async function Home() {
             <BaseButton
               as="link"
               href={session ? "/api/auth/signout" : "/api/auth/signin"}
-              className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
+         
             >
               {session ? "Sign out" : "Sign in"}
             </BaseButton>

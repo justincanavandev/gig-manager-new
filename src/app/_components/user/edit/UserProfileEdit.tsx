@@ -240,7 +240,7 @@ const UserProfileEdit = ({
         isFormSubmitted={isFormSubmitted}
       ></FormInput>
 
-      <BaseButton as="button" className="border" onClick={handleUpdateUser}>
+      <BaseButton as="button" onClick={handleUpdateUser}>
         Update User
       </BaseButton>
     </div>

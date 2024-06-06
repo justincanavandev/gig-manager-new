@@ -29,7 +29,7 @@ const BaseButton = ({ ...props }: BaseButtonProps) => {
 
   return as === "link" ? (
     <Link
-      className={`${className ?? "border border-black text-center"}`}
+      className={`${className ?? "w-32 text-center rounded-full bg-white/10 px-4 py-2 font-semibold no-underline transition hover:bg-white/20"}`}
       {...(isLinkProps(restProps) && restProps)}
       href={props.href}
     >
@@ -38,7 +38,7 @@ const BaseButton = ({ ...props }: BaseButtonProps) => {
   ) : (
     <button
       {...(isButtonProps(restProps) && restProps)}
-      className={className ?? "w-24 border border-black"}
+      className={className ?? "w-32 text-center rounded-full bg-white/10 px-4 py-2 font-semibold no-underline transition hover:bg-white/20"}
       type={props.type}
     >
       {children}
