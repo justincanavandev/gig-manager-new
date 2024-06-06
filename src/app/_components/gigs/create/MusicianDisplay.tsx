@@ -17,48 +17,48 @@ const MusicianDisplay = ({
   instsWithoutMusician,
   deleteInst,
 }: InstDisplayProps) => {
-
-
   return (
     <>
-      {(musicians.length > 0 || instsWithoutMusician.length > 0) && (
-        <div className="flex h-fit w-[300px] max-w-[400px] flex-col rounded-md bg-dark-purple px-2 pb-2 pt-1.5 shadow-lg sm:w-[90%]">
-          <div className="flex">
-            <div className="relative w-1/2 pb-0.5 pl-1 text-[.7rem] uppercase">
-              Instrument
-              <h3 className="absolute right-[-50px] top-0 pb-0.5 pl-1 ">
-                Musician
-              </h3>
-            </div>
+      <div className="flex h-fit w-[300px] max-w-[400px] flex-col rounded-md bg-dark-purple px-2 pb-2 pt-1.5 shadow-lg sm:w-[90%]">
+        <div className="flex">
+          <div className="relative w-1/2 pb-0.5 pl-1 text-[.7rem] uppercase">
+            Instrument
+            <h3 className="absolute right-[-50px] top-0 pb-0.5 pl-1 ">
+              Musician
+            </h3>
           </div>
-          {musicians.map((mus, index) => (
-            <MusInstRow
-              key={`currentMusicians-${mus.id}`}
-              name={mus.name}
-              instName={mus.instrument.name}
-              condition1={index === 0}
-              condition2={
-                index + 1 === musicians.length &&
-                instsWithoutMusician.length === 0
-              }
-              action={() => deleteMusician(mus)}
-            />
-          ))}
-          {instsWithoutMusician.map((inst, index) => (
-            <MusInstRow
-              key={`instWithoutMus-${inst.id}`}
-              name="Please Select!"
-              instName={inst.name}
-              condition1={index === 0 && musicians.length === 0}
-              condition2={
-                index + 1 === musicians.length &&
-                instsWithoutMusician.length === 0
-              }
-              action={() => deleteInst(inst)}
-            />
-          ))}
         </div>
-      )}
+        {(musicians.length > 0 || instsWithoutMusician.length > 0) && (
+          <>
+            {musicians.map((mus, index) => (
+              <MusInstRow
+                key={`currentMusicians-${mus.id}`}
+                name={mus.name}
+                instName={mus.instrument.name}
+                condition1={index === 0}
+                condition2={
+                  index + 1 === musicians.length &&
+                  instsWithoutMusician.length === 0
+                }
+                action={() => deleteMusician(mus)}
+              />
+            ))}
+            {instsWithoutMusician.map((inst, index) => (
+              <MusInstRow
+                key={`instWithoutMus-${inst.id}`}
+                name="Please Select!"
+                instName={inst.name}
+                condition1={index === 0 && musicians.length === 0}
+                condition2={
+                  index + 1 === musicians.length &&
+                  instsWithoutMusician.length === 0
+                }
+                action={() => deleteInst(inst)}
+              />
+            ))}
+          </>
+        )}
+      </div>
     </>
   );
 };

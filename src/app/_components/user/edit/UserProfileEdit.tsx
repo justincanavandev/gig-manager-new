@@ -17,6 +17,7 @@ import { phoneValidation } from "~/app/validation/validationHelpers";
 import z from "zod";
 import { ValidationError } from "zod-validation-error";
 import { userProfileErrors } from "~/app/validation/validationHelpers";
+import InstrumentationDisplay from "../../gigs/create/InstrumentationDisplay";
 
 export type DefaultUserProfile = {
   name: string;
@@ -83,7 +84,7 @@ const UserProfileEdit = ({
     errorMessages,
     displayFormError,
     isFormSubmitted,
-    setFormSubmitTrue
+    setFormSubmitTrue,
   } = useForm<DefaultUserProfile>(
     {
       name: user?.name ? user.name : "",
@@ -109,7 +110,7 @@ const UserProfileEdit = ({
 
   const handleUpdateUser = () => {
     try {
-      setFormSubmitTrue()
+      setFormSubmitTrue();
       const { instrumentation, name, email, phoneNumber } = form;
 
       const validateOrError = validate(form);
@@ -192,11 +193,17 @@ const UserProfileEdit = ({
           data={filteredInstruments}
           disabledData={form.instrumentation}
           dataToString={instToString}
-          label="Instrumentation"
+          label="Add Instrument"
           action={addInstrument}
           action2={deleteInst}
         />
       )}
+
+      <InstrumentationDisplay
+        instrumentation={form.instrumentation}
+        deleteInst={deleteInst}
+      />
+
       {(user?.musician ?? musicianAdd) && (
         <FormInput
           action={(e) => handleChange(e)}

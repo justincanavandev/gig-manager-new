@@ -3,19 +3,12 @@ import type { GigFormInstrument } from "~/server/types/gigTypes";
 interface InstDisplayProps {
   instrumentation: GigFormInstrument[];
   deleteInst: (inst: GigFormInstrument) => void;
-  instsWithoutMusician: GigFormInstrument[];
 }
 
 const InstrumentationDisplay = ({
   instrumentation,
   deleteInst,
-  // instsWithoutMusician,
 }: InstDisplayProps) => {
-
-  // const instWithoutMusNames = instsWithoutMusician.map((inst) => inst.name);
-
-  // const doesInstHaveMusician = (inst: GigFormInstrument) =>
-  //   instWithoutMusNames.includes(inst.name);
 
   return (
     <>
@@ -30,14 +23,7 @@ const InstrumentationDisplay = ({
               key={`instSelector, ${inst.name}`}
             >
               <div className="flex flex-col">
-                <span
-                  // className={`${doesInstHaveMusician(inst) && "text-red-500"}`}
-                >
-                  {inst.name}
-                </span>
-                {/* {doesInstHaveMusician(inst) && (
-                  <span className="text-red-500">Add {inst.name}</span>
-                )} */}
+                <span>{inst.name}</span>
               </div>
               <span onClick={() => deleteInst(inst)}>x</span>
             </div>

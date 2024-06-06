@@ -24,7 +24,7 @@ const GigCard = async ({ gig, index }: GigCardProps) => {
 
   return (
     <div
-      className="flex w-full text-[.7rem] justify-between py-1 pl-2 sm:pl-2"
+      className="flex w-full text-[.57rem] sm:text-[.7rem] justify-between py-1 px-2 sm:pl-2"
       key={`gigCard-gig-${gig.id}`}
     >
       <span className="w-[33.33%] sm:w-[15.5%] truncate pr-1">{gig.name}</span>
