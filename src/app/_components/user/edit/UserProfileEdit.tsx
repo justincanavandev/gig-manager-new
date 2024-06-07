@@ -171,7 +171,7 @@ const UserProfileEdit = ({
   const filteredInstruments = filterInstruments(instruments, currentInstNames);
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-8">
       <FormInput
         value={form.name}
         action={(e) => handleChange(e)}
@@ -241,7 +241,7 @@ const UserProfileEdit = ({
       ></FormInput>
 
       <BaseButton as="button" onClick={handleUpdateUser}>
-        Update User
+        Submit
       </BaseButton>
     </div>
   );

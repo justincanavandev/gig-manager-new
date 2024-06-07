@@ -34,7 +34,7 @@ export const gigFormErrors = {
 
 export const userProfileErrors = {
   name: "Name must include 3 or more characters",
-  phoneNumber: "Phone number must be a valid phone number",
+  phoneNumber: "Number must be a valid phone number",
   email: "Email must be a valid email address",
   instrumentation: "All instruments must be a valid instrument"
 }
