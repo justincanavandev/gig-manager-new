@@ -2,7 +2,7 @@ import type {
   GigFormMusician,
   GigFormInstrument,
 } from "~/server/types/gigTypes";
-import MusInstRow from "../../base/MusInstRow";
+import BaseRow from "../../base/BaseRow";
 
 interface InstDisplayProps {
   musicians: GigFormMusician[];
@@ -31,10 +31,10 @@ const MusicianDisplay = ({
         {(musicians.length > 0 || instsWithoutMusician.length > 0) && (
           <>
             {musicians.map((mus, index) => (
-              <MusInstRow
+              <BaseRow
                 key={`currentMusicians-${mus.id}`}
-                name={mus.name}
-                instName={mus.instrument.name}
+                optionalName={mus.name}
+                requiredName={mus.instrument.name}
                 condition1={index === 0}
                 condition2={
                   index + 1 === musicians.length &&
@@ -42,12 +42,12 @@ const MusicianDisplay = ({
                 }
                 action={() => deleteMusician(mus)}
               />
-            ))}
+            ))} 
             {instsWithoutMusician.map((inst, index) => (
-              <MusInstRow
+              <BaseRow
                 key={`instWithoutMus-${inst.id}`}
-                name="Please Select!"
-                instName={inst.name}
+                optionalName="Please Select!"
+                requiredName={inst.name}
                 condition1={index === 0 && musicians.length === 0}
                 condition2={
                   index + 1 === musicians.length &&

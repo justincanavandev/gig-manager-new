@@ -4,7 +4,7 @@ import { useBoolean } from "usehooks-ts";
 import BaseButton from "../base/BaseButton";
 import { type MusicianGetAllGigs } from "~/server/types/musicianTypes";
 import BaseDialog from "../base/BaseDialog";
-import MusInstRow from "../base/MusInstRow";
+import BaseRow from "../base/BaseRow";
 import { MusicalNoteIcon } from "@heroicons/react/20/solid";
 
 type MusiciansModalProps = {
@@ -43,10 +43,10 @@ const MusiciansModal = ({ musicians }: MusiciansModalProps) => {
             </div>
           </div>
           {musicians.map((m, i) => (
-            <MusInstRow
+            <BaseRow
               key={`musicianModal, ${m.musicianId}`}
-              name={m.musician.name}
-              instName={m.instrument.name}
+              optionalName={m.musician.name}
+              requiredName={m.instrument.name}
               condition1={i === 0}
               condition2={i + 1 === musicians.length}
             />

@@ -31,6 +31,7 @@ import {
 import { isValidationErrorLike } from "zod-validation-error";
 import MusicianDisplay from "./MusicianDisplay";
 import type { GigFormMusician } from "~/server/types/gigTypes";
+import VenueDisplay from "./VenueDisplay";
 
 type GigFormProps = {
   gig?: GigById;
@@ -264,14 +265,13 @@ const GigForm = ({ gig }: GigFormProps) => {
     return parsedVal.success;
   };
 
-
   return (
     <>
       <form
         className="mt-8 flex w-full justify-center"
         onSubmit={(e) => handleSubmit(e)}
       >
-        <div className="flex min-h-screen w-full flex-col items-center gap-8 mb-8">
+        <div className="mb-8 flex min-h-screen w-full flex-col items-center gap-8">
           <FormInput
             label="Name"
             value={form.name}
@@ -330,24 +330,22 @@ const GigForm = ({ gig }: GigFormProps) => {
             deleteInst={deleteInst}
             deleteMusician={deleteMusician}
           />
-          <VenueSelector
-            setVenue={changeValue}
-            venue={form?.venue ? form.venue : null}
-          />
-          <div className="flex justify-center sm:hidden">
+          <VenueSelector setVenue={changeValue} venue={form?.venue ?? null} />
+          <div className="flex flex-col items-center gap-8 sm:hidden">
             <MusicianDisplay
               musicians={form.musicians}
               deleteMusician={deleteMusician}
               instsWithoutMusician={instsWithoutMusician}
               deleteInst={deleteInst}
             />
+                <VenueDisplay venue={form.venue ?? null} setVenue={changeValue} /> 
           </div>
 
           <BaseButton as="button" type="submit">
             Submit
           </BaseButton>
         </div>
-        <div className="hidden sm:flex sm:w-full sm:justify-center">
+        <div className="hidden sm:flex sm:w-full sm:flex-col sm:items-center sm:gap-8">
           {" "}
           <MusicianDisplay
             musicians={form.musicians}
@@ -355,6 +353,7 @@ const GigForm = ({ gig }: GigFormProps) => {
             instsWithoutMusician={instsWithoutMusician}
             deleteInst={deleteInst}
           />
+          <VenueDisplay venue={form.venue ?? null} setVenue={changeValue} /> 
         </div>
       </form>
     </>

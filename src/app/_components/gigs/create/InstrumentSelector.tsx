@@ -31,11 +31,12 @@ const InstrumentSelector = ({
       <BaseCombobox
         data={confinedInsts}
         dataToString={instToString}
-        label="Add an Instrument"
+        label="Instrument"
         action={addInst}
         action2={deleteInst}
         errors={errorMessages.instrumentation ?? []}
         isFormSubmitted={isFormSubmitted}
+        placeholder="Select an Instrument"
       />
     </div>
   );

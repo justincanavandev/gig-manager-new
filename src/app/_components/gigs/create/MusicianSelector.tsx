@@ -109,6 +109,7 @@ const MusicianSelector = ({
               label={`Add ${instrument.name}`}
               action={handleAddMusician}
               action2={deleteMusician}
+              placeholder="Select"
             />
 
           </div>

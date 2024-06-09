@@ -33,12 +33,12 @@ const VenueSelector = ({ setVenue, venue }: VenueSelectorProps) => {
     <>
       <BaseCombobox
         data={enabledVenues}
-        value={venue ?? null}
         disabledData={venue ? [venue] : []}
         dataToString={venueToString}
         label="Venue"
         action={changeVenue}
         action2={deleteVenue}
+        placeholder="Select a Venue"
       />
     </>
   );

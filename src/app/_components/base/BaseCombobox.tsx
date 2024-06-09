@@ -17,6 +17,7 @@ type BaseComboboxProps<T> = {
   action2:(data: T) => void;
   label: string;
   errors?: string[]
+  placeholder: string
   isFormSubmitted?: boolean
 };
 
@@ -29,7 +30,8 @@ const BaseCombobox = <T extends object>({
   label,
   value,
   errors,
-  isFormSubmitted
+  isFormSubmitted,
+  placeholder
 }: BaseComboboxProps<T>) => {
   const [query, setQuery] = useState<string>("");
 
@@ -45,12 +47,14 @@ const BaseCombobox = <T extends object>({
       as="div"
       className="relative bg-dark-purple flex flex-col w-[14rem] rounded-md px-2 pb-2 pt-1.5 shadow-lg"
       value={value ? value : null}
+      // value={query}
       onChange={action}
       nullable
     >
       <Combobox.Label className="text-[.7rem] pb-0.5 pl-1 uppercase">{label}</Combobox.Label>
       <Combobox.Input
-        className="border focus-visible:outline-none w-[13rem] rounded-[4px]"
+        placeholder={placeholder}
+        className="border pl-1 text-black focus-visible:outline-none w-[13rem] rounded-[4px]"
         onChange={(e) => setQuery(e.target.value)}
         displayValue={(val: T)=> val ? dataToString(val) : ""}
       />

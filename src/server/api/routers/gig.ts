@@ -20,27 +20,25 @@ export const gigRouter = createTRPCRouter({
           venue: {
             select: {
               name: true,
- 
             },
           },
           organizer: {
             select: {
-              name: true
-            }
+              name: true,
+            },
           },
           musicians: {
             include: {
               musician: {
                 select: {
                   name: true,
-  
                 },
               },
               instrument: {
                 select: {
                   name: true,
-                }
-              }
+                },
+              },
             },
           },
           instrumentation: {
@@ -181,7 +179,7 @@ export const gigRouter = createTRPCRouter({
                     name: true,
                   },
                 },
-                
+
                 instrument: {
                   select: {
                     name: true,
@@ -189,7 +187,7 @@ export const gigRouter = createTRPCRouter({
                 },
               },
             },
-          
+
             instrumentation: {
               include: {
                 instrument: {
@@ -214,6 +212,31 @@ export const gigRouter = createTRPCRouter({
           throw new TRPCError({
             code: "BAD_REQUEST",
             message: "Gig unable to be fetched",
+          });
+        }
+        return gig;
+      } catch (e) {
+        throw genericErrorHandler(e);
+      }
+    }),
+  delete: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().cuid(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id } = input;
+      try {
+        const gig = await ctx.db.gig.delete({
+          where: {
+            id,
+          },
+        });
+        if (!gig) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Gig unable to be deleted",
           });
         }
         return gig;
@@ -260,7 +283,7 @@ export const gigRouter = createTRPCRouter({
         venueId,
         musicians,
         instrumentation,
-        pay
+        pay,
       } = input;
 
       try {

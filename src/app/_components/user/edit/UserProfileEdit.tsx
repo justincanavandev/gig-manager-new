@@ -196,6 +196,7 @@ const UserProfileEdit = ({
           label="Add Instrument"
           action={addInstrument}
           action2={deleteInst}
+          placeholder="Select an Instrument"
         />
       )}
 

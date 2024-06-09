@@ -33,7 +33,6 @@ type UseFormProps<Form> = {
   ) => boolean;
   isFormSubmitted: boolean;
   setFormSubmitTrue: () => void;
-  // setFormSubmitFalse: () => void;
 };
 
 const useForm = <Form extends object>(
