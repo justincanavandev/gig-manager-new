@@ -18,6 +18,7 @@ import z from "zod";
 import { ValidationError } from "zod-validation-error";
 import { userProfileErrors } from "~/app/validation/validationHelpers";
 import InstrumentationDisplay from "../../gigs/create/InstrumentationDisplay";
+import { useRouter } from "next/navigation";
 
 export type DefaultUserProfile = {
   name: string;
@@ -37,6 +38,7 @@ const UserProfileEdit = ({
   musicianAdd,
   closeMusicianModal,
 }: EditProfileProps) => {
+  const router = useRouter();
   const instruments = useInstruments();
   const utils = api.useUtils();
   const { mutate: connectMusician } = api.user.connectMusician.useMutation({
@@ -67,6 +69,7 @@ const UserProfileEdit = ({
       await utils.user.getById.invalidate();
       toast.dismiss();
       toast.success(`${user.name}'s profile was updated!`);
+      router.push(`/user/${user.id}`);
     },
     onError: (e) => {
       const message = displayTRPCError(e.data, e.message);

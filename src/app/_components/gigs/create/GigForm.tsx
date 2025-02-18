@@ -32,6 +32,7 @@ import { isValidationErrorLike } from "zod-validation-error";
 import MusicianDisplay from "./MusicianDisplay";
 import type { GigFormMusician } from "~/server/types/gigTypes";
 import VenueDisplay from "./VenueDisplay";
+import { useRouter } from "next/navigation";
 
 type GigFormProps = {
   gig?: GigById;
@@ -52,6 +53,7 @@ const GigForm = ({ gig }: GigFormProps) => {
     setErrorMessages,
   } = useForm<GigForm>(defaultGigForm, GigFormSchema);
 
+  const router = useRouter();
   const instruments = useInstruments();
   const utils = api.useUtils();
 
@@ -70,6 +72,7 @@ const GigForm = ({ gig }: GigFormProps) => {
       toast.dismiss();
       toast.success(`${gig?.name ?? "Gig"} was successfully created!`);
       setForm(defaultGigForm);
+      router.push(`/user/${gig.organizerId}`);
     },
     onError: (e) => {
       const message = displayTRPCError(e.data, e.message);
@@ -87,6 +90,7 @@ const GigForm = ({ gig }: GigFormProps) => {
       await utils.gig.getById.invalidate();
       toast.dismiss();
       toast.success(`${gig.name} was successfully edited!`);
+      router.push(`/user/${gig.organizerId}`);
     },
     onError: (e) => {
       const message = displayTRPCError(e.data, e.message);
@@ -338,7 +342,7 @@ const GigForm = ({ gig }: GigFormProps) => {
               instsWithoutMusician={instsWithoutMusician}
               deleteInst={deleteInst}
             />
-                <VenueDisplay venue={form.venue ?? null} setVenue={changeValue} /> 
+            <VenueDisplay venue={form.venue ?? null} setVenue={changeValue} />
           </div>
 
           <BaseButton as="button" type="submit">
@@ -353,7 +357,7 @@ const GigForm = ({ gig }: GigFormProps) => {
             instsWithoutMusician={instsWithoutMusician}
             deleteInst={deleteInst}
           />
-          <VenueDisplay venue={form.venue ?? null} setVenue={changeValue} /> 
+          <VenueDisplay venue={form.venue ?? null} setVenue={changeValue} />
         </div>
       </form>
     </>

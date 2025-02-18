@@ -98,7 +98,7 @@ const seedDatabase = async () => {
         pay,
         organizer: {
           connect: {
-            id: 'clwf9lee3000hjssnx12fd971',
+            id: 'cm7aldj4m00007up9uvnui02j',
           },
         },
         venue: {
